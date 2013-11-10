@@ -28,8 +28,12 @@ public class SpinnerItem  implements Comparable<SpinnerItem>{
 	}
 
 	
-	public String getValue() {
+	public String getRawValue() {
 		return value;
+	}
+	
+	public String getValue() {
+		return value.replaceAll(PATTERN_POSTFIX, "");
 	}
 	
 	/* (non-Javadoc)
@@ -37,8 +41,7 @@ public class SpinnerItem  implements Comparable<SpinnerItem>{
 	 */
 	@SuppressLint("DefaultLocale")
 	@Override
-	public String toString() {
-		
+	public String toString() {		
 		String s = value.replaceAll(PATTERN_POSTFIX, "");
 		s = s.replaceAll(PATTERN_PREFIX, "");
 		

@@ -30,13 +30,14 @@
     <string name="account_label">DHBW Organizer</string>
     <string name="ui_activity_authenticating">ui_activity_authenticating</string>
     
-    <string name="select_ical_activity_top_info_label">select a calendar:</string>
+    
+    <string name="select_ical_activity_newaccount_text">select a calendar:</string>
     <string name="select_ical_activity_ok_button">OK</string>
     
-    <string name="select_ical_activity_loginfail_text_both">login_activity_loginfail_text_both</string>
-    <string name="select_ical_activity_loginfail_text_pwonly">login_activity_loginfail_text_pwonly</string>
+    <string name="select_ical_activity_error">select_ical_activity_error</string>
     
-    <string name="select_ical_activity_newaccount_text">login_activity_newaccount_text</string>
-    <string name="select_ical_activity_loginfail_text_pwmissing">login_activity_loginfail_text_pwmissing</string>
+    
+    
+    
 
 </resources>

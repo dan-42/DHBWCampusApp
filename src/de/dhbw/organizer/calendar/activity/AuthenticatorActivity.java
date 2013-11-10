@@ -34,14 +34,10 @@ import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.provider.CalendarContract.Calendars;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -73,7 +69,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	private String mICalUrl;
 
 	private Spinner mIcalSpinner;
-	
+
 	ArrayList<SpinnerItem> itemList = null;
 
 	/**
@@ -85,32 +81,32 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
-		mAccountManager = AccountManager.get(this);
-
-		final Intent intent = getIntent();
-
-		mICalUrl = intent.getStringExtra(PARAM_ICAL_URL);
+		mAccountManager = AccountManager.get(this);	
+		
 
 		requestWindowFeature(Window.FEATURE_LEFT_ICON);
 		setContentView(R.layout.select_ical_activity);
-		getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, android.R.drawable.ic_dialog_info);
+		getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_calendar_main);
 
 		mMessage = (TextView) findViewById(R.id.message);
-		mMessage.setText(getMessage());
+		mMessage.setText(R.string.select_ical_activity_newaccount_text);
 
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
 
 		String[] calendars = getResources().getStringArray(R.array.calendars_array);
-		
-		
+
 		itemList = new ArrayList<SpinnerItem>();
+
 		
 		for (int i = 0; i < calendars.length; i++) {
 			itemList.add(new SpinnerItem(calendars[i]));
 		}
-		
+
+		//sort
 		Collections.sort(itemList);
 		
+		
+
 		ArrayAdapter<SpinnerItem> adapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_item, itemList);
 
 		// ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -154,13 +150,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		mICalUrl = selected.getValue();
 
 		Log.i(TAG, "Selected : " + mICalUrl);
-
 		Log.i(TAG, "finishLogin()");
+		
 		final Account account = new Account(mICalUrl, Constants.ACCOUNT_TYPE);
 
 		mAccountManager.addAccountExplicitly(account, DEFAULT_PASSWORD, null);
 
-		// Set contacts sync for this account.
+		
 		ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1);
 		ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true);
 		ContentResolver.addPeriodicSync(account, CalendarContract.AUTHORITY, new Bundle(), Constants.SYNC_INTERVALL_IN_SEC);
@@ -172,25 +168,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		setResult(RESULT_OK, intent);
 		finish();
 
-		ContentValues values = new ContentValues();
-
-		values.put(
-
-		Calendars.ACCOUNT_NAME, Constants.ACCOUNT_TYPE);
-
-		values.put(Calendars.ACCOUNT_TYPE, CalendarContract.CALLER_IS_SYNCADAPTER);
-		values.put(Calendars.NAME, mICalUrl);
-		values.put(Calendars.CALENDAR_DISPLAY_NAME, mICalUrl);
-		values.put(Calendars.CALENDAR_COLOR, 0xffff0000);
-		values.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
-		values.put(Calendars.OWNER_ACCOUNT, mICalUrl);
-		values.put(Calendars.CALENDAR_TIME_ZONE, "Europe/Berlin");
-
-		Uri.Builder builder = CalendarContract.Calendars.CONTENT_URI.buildUpon();
-
-		builder.appendQueryParameter(Calendars.ACCOUNT_NAME, mICalUrl);
-		builder.appendQueryParameter(Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
-		builder.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true");
+		
 
 	}
 
@@ -198,18 +176,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		Log.i(TAG, "onAuthenticationCancel()");
 	}
 
-	/**
-	 * Returns the message to be displayed at the top of the login dialog box.
-	 */
-	private CharSequence getMessage() {
-		getString(R.string.account_label);
-		if (TextUtils.isEmpty(mICalUrl)) {
-			// If no username, then we ask the user to log in using an
-			// appropriate service.
-			final CharSequence msg = getText(R.string.select_ical_activity_newaccount_text);
-			return msg;
-		}
-		return null;
-	}
+	
 
 }
