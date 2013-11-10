@@ -75,8 +75,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		HttpResponse httpResponse = null;
 		Log.i(TAG, "SYNCC ME UP!");
 
-
-
 		long lastSyncMarker = getServerSyncMarker(account);
 
 		if (lastSyncMarker == 0) {
@@ -99,11 +97,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			String calendarHttpUrl = Constants.DHBW_ICAL_URL.replace(Constants.CALENDAR_REEPLACE_TOKEN, account.name);
 
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(calendarHttpUrl);			
-			
+			HttpGet httpGet = new HttpGet(calendarHttpUrl);
+
 			if (!httpGet.containsHeader("Accept-Encoding")) {
 				httpGet.addHeader("Accept-Encoding", "gzip");
-            }
+			}
 
 			try {
 
@@ -114,20 +112,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 				HttpEntity entity = httpResponse.getEntity();
 
-				if (httpStatus == 200 && entity != null) {					
-					
-					InputStream instream = AndroidHttpClient.getUngzippedContent( httpResponse.getEntity() );					
-					
-					
+				if (httpStatus == 200 && entity != null) {
+
+					InputStream instream = AndroidHttpClient.getUngzippedContent(entity);
+
 					ICalendar ical = Biweekly.parse(instream).first();
 
 					instream.close();
-
+				
 					ArrayList<VEvent> events = CalendarManager.fixMicrosoftFuckUps((ArrayList<VEvent>) ical.getEvents());
 
-					CalendarManager.deleteAllEvents(mContext, account, calendarId);					
-				
+					CalendarManager.deleteAllEvents(mContext, account, calendarId);
+
 					CalendarManager.insertEvents(mContext, account, calendarId, events);
+					
+					
+					
+					
 
 					// save timestamp of last succsessful sync
 					setServerSyncMarker(account, System.currentTimeMillis());

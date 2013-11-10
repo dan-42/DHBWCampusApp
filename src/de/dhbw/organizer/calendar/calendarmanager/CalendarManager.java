@@ -27,11 +27,14 @@ package de.dhbw.organizer.calendar.calendarmanager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.TimeZone;
 
 import android.accounts.Account;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -41,11 +44,12 @@ import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.util.Log;
 import biweekly.component.VEvent;
+import biweekly.property.ExceptionDates;
 import biweekly.property.RecurrenceId;
 import biweekly.util.Recurrence;
 import biweekly.util.Recurrence.DayOfWeek;
 import de.dhbw.organizer.calendar.Constants;
-import de.dhbw.organizer.calendar.objects.CalendarEvent;
+import de.dhbw.organizer.calendar.objects.RecurringVEvent;
 
 /**
  * @author schoko This class has only static functions to help handle all the
@@ -227,94 +231,6 @@ public class CalendarManager {
 
 	}
 
-	/**
-	 * check if a calenda already exists
-	 * 
-	 * @param context
-	 * @param account
-	 * @return
-	 */
-	public static void printCalendars(Context context) {
-
-		Cursor cur = null;
-
-		ContentResolver cr = context.getContentResolver();
-
-		String[] projection = new String[] { Calendars.ACCOUNT_NAME, Calendars.ACCOUNT_TYPE, Calendars.CALENDAR_DISPLAY_NAME };
-
-		cur = cr.query(Calendars.CONTENT_URI, projection, null, null, null);
-
-		if (cur.moveToFirst()) {
-
-			do {
-				Log.d(TAG, "Calendar.ACCOUNT_NAME = \t " + cur.getString(0));
-				Log.d(TAG, "Calendar.ACCOUNT_TYPE = \t " + cur.getString(1));
-				Log.d(TAG, "Calendar.CALENDAR_DISPLAY_NAME = \t " + cur.getString(2));
-
-				Log.d(TAG, "----------------------------------");
-				Log.d(TAG, "----------------------------------");
-			} while (cur.moveToNext());
-
-		} else {
-			Log.d(TAG, "Coursor is <= 0");
-
-		}
-
-		cur.close();
-
-	}
-
-	public static ArrayList<CalendarEvent> getAllCalendarEvents(Context context, Account account, long calendarId) {
-
-		Cursor cur = null;
-		ArrayList<CalendarEvent> eventList = new ArrayList<CalendarEvent>();
-		ContentResolver cr = context.getContentResolver();
-
-		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-
-		String[] projection = new String[] { Events._ID, Events._SYNC_ID, Events.SYNC_DATA1, Events.TITLE, Events.DTSTART, Events.DTEND,
-				Events.DESCRIPTION, Events.EVENT_LOCATION };
-
-		String selection = "((" + Events.CALENDAR_ID + " = ?) )";
-		String[] selectionArgs = new String[] { Long.toString(calendarId) };
-
-		cur = cr.query(uri, projection, selection, selectionArgs, null);
-
-		if (cur.moveToFirst()) {
-
-			String eventUid = "";
-			long eventId = 0;
-			long eventTimeStamp = 0;
-			long start = 0;
-			long end = 0;
-			String title = "";
-			String location = "";
-			String description = "";
-
-			do {
-
-				eventId = cur.getLong(0);
-				eventUid = cur.getString(1);
-				eventTimeStamp = Long.parseLong(cur.getString(2));
-				title = cur.getString(3);
-				start = cur.getLong(4);
-				end = cur.getLong(5);
-				description = cur.getString(6);
-				location = cur.getString(7);
-
-				eventList.add(new CalendarEvent(eventId, eventUid, eventTimeStamp, start, end, title, description, location));
-
-			} while (cur.moveToNext());
-
-		} else {
-			Log.d(TAG, "getAllCalendarEvents() courser is empty");
-
-		}
-
-		cur.close();
-		return eventList;
-	}
-
 	public static void deleteAllEvents(Context context, Account account, long calendarId) {
 		Log.d(TAG, "delte all Events from CalendarId = " + calendarId);
 
@@ -329,60 +245,92 @@ public class CalendarManager {
 
 	}
 
-	public static void insertEvent(Context context, Account account, long calendarId, CalendarEvent event) {
-
-		Log.d(TAG, "insertEvent() ");
-		ContentResolver cr = context.getContentResolver();
-		ContentValues values = new ContentValues();
-		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-
-		values.put(Events.DTSTART, event.getStartInMillis());
-		values.put(Events.DTEND, event.getEndInMillis());
-		values.put(Events.TITLE, event.getTitle());
-		values.put(Events.DESCRIPTION, event.getDescription());
-		values.put(Events.CALENDAR_ID, calendarId);
-		values.put(Events.EVENT_LOCATION, event.getLocation()); //
-		values.put(Events._SYNC_ID, event.getUid());
-		values.put(Events.SYNC_DATA1, Long.toString(event.getTimeStamp()));
-		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
-
-		cr.insert(uri, values);
-
-	}
-
 	public static void insertEvents(Context context, Account account, long calendarId, ArrayList<VEvent> eventList) {
 		Log.d(TAG, "insertEvents() " + eventList.size() + " events to add in total");
 
-		ArrayList<ArrayList<VEvent>> listListEventCalendar = new ArrayList<ArrayList<VEvent>>();
 		ArrayList<VEvent> smallList = null;
-		int idx = 0;
-		int BATCH_SIZE = 20;
 
-		for (int i = 0; i < eventList.size(); i++) {
-			if (i % BATCH_SIZE == 0) {
+		// NO RRULE, NO RECURRING_ID
+		ArrayList<VEvent> recularEvents = new ArrayList<VEvent>();
 
-				if (smallList != null && smallList.size() > 0) {
-					Log.d(TAG, "insertEvents() new full list ");
-					listListEventCalendar.add(smallList);
-					insertEventsAsBatch(context, account, calendarId, smallList);
-				}
+		ArrayList<RecurringVEvent> recurringEvents = new ArrayList<RecurringVEvent>();
+		ArrayList<VEvent> tempEventList = new ArrayList<VEvent>();
 
-				smallList = new ArrayList<VEvent>();
-				idx = 0;
-
+		/**
+		 * split events into recurring events and recular events
+		 */
+		for (VEvent e : eventList) {
+			if (e.getRecurrenceRule() == null && e.getRecurrenceId() == null) {
+				recularEvents.add(e);
 			}
-			smallList.add(eventList.get(i));
-			idx++;
+
+			else {
+				if (e.getRecurrenceRule() != null) {
+
+					recurringEvents.add(new RecurringVEvent(e));
+
+				} else if (e.getRecurrenceId() != null) {
+
+					boolean isInserted = false;
+					for (RecurringVEvent re : recurringEvents) {
+						if (re.e.getUid().getValue().equals(e.getUid().getValue())) {
+							re.addException(e);
+							isInserted = true;
+							break;
+						}
+					}
+					if (isInserted == false) {
+						// not fitting? keep it for later
+						tempEventList.add(e);
+					}
+				}
+			}
 		}
-		if (idx % BATCH_SIZE != 0) {
-			Log.d(TAG, "insertEvents() last list ");
-			listListEventCalendar.add(smallList);
-			insertEventsAsBatch(context, account, calendarId, smallList);
+
+		// check if some are need sorting in
+		if (!tempEventList.isEmpty()) {
+			for (VEvent e : tempEventList) {
+				boolean isInserted = false;
+				for (RecurringVEvent re : recurringEvents) {
+					if (re.e.getUid().getValue().equals(e.getUid().getValue())) {
+						re.addException(e);
+						isInserted = true;
+						break;
+					}
+				}
+				if (isInserted == false) {
+					Log.e(TAG, "ERRO cannot find fitting Recurring event: evenUID = " + e.getUid().getValue());
+				}
+			}
+		}
+
+		Log.d(TAG, "insert recular Events ");
+		//insertEventsAsBatch(context, account, calendarId, recularEvents);
+		for (VEvent e : recularEvents) {
+			 insertEvent(context, account, calendarId, e, null);
+		}
+
+		Log.d(TAG, "insert recurring Events ");
+		for (RecurringVEvent re : recurringEvents) {
+			Log.d(TAG, "RECURING: " + re.e.getSummary().getValue() );
+			long id = insertEvent(context, account, calendarId, re.e, null);			
+			re.setId(id);
+
+			for (VEvent e : re.getExceptions()) {
+				Log.d(TAG, "RECURING: " + e.getSummary().getValue() );
+				insertEvent(context, account, calendarId, e, re);				
+			}
+			Log.d(TAG, "\n" );
+
 		}
 
 	}
 
 	public static void insertEventsAsBatch(Context context, Account account, long calendarId, ArrayList<VEvent> eventList) {
+
+		for (VEvent vEvent : eventList) {
+			
+		}
 
 		Log.d(TAG, "insertEventsAsBatch() ");
 		ContentResolver cr = context.getContentResolver();
@@ -419,11 +367,17 @@ public class CalendarManager {
 				Log.i(TAG, "RRULE " + rrule);
 				values[idx].put(Events.RRULE, rrule);
 			}
-			
-			if(event.getRecurrenceId() != null){
-				//long orgEventId = getEventByUID(event.getUid().getValue());
+
+			if (!event.getExceptionDates().isEmpty()) {
+				String exdate = buildExdate(event.getExceptionDates());
+				Log.i(TAG, "add EXDATE " + exdate);
+				values[idx].put(Events.EXDATE, exdate);
 			}
-			
+
+			if (event.getRecurrenceId() != null) {
+				// long orgEventId = getEventByUID(event.getUid().getValue());
+			}
+
 			idx++;
 
 		}
@@ -433,43 +387,46 @@ public class CalendarManager {
 
 	}
 
-	/*private static long getEventByUID(Context context, Account account,  String id) {		
-		
-		Cursor cur = null;	
-		ContentResolver cr = context.getContentResolver();
+	/**
+	 * @param exceptionDates
+	 * @return
+	 */
+	private static String buildExdate(List<ExceptionDates> exceptionDates) {
+		if (exceptionDates != null) {
 
-		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+			StringBuilder sb = new StringBuilder();
+			ArrayList<Date> dates = new ArrayList<Date>();
 
-		String[] projection = new String[] { Events._ID, Events._SYNC_ID};
+			String tz = null;
 
-		String selection = "((" + Events._SYNC_ID + " = ?) )";
-		String[] selectionArgs = new String[] { Long.toString(calendarId) };
+			for (ExceptionDates ed : exceptionDates) {
+				dates.addAll(ed.getValues());
+				tz = ed.getTimezoneId();
+			}
 
-		cur = cr.query(uri, projection, selection, selectionArgs, null);
+			if (tz != null) {
+				sb.append("TZID=").append(tz).append(':');
+			}
 
-		if (cur.moveToFirst()) {
+			for (Iterator iterator = dates.iterator(); iterator.hasNext();) {
+				Date date = (Date) iterator.next();
 
-			
+				if (tz != null) {
+					sb.append(parseIcalDateToString(date));
+				} else {
+					sb.append(parseIcalDateToString(date));
+				}
 
-			do {
-
-				
-
-				eventList.add(new CalendarEvent(eventId, eventUid, eventTimeStamp, start, end, title, description, location));
-
-			} while (cur.moveToNext());
-
-		} else {
-			Log.d(TAG, "getAllCalendarEvents() courser is empty");
-
+				if (iterator.hasNext()) {
+					sb.append(",");
+				}
+			}
+			return sb.toString();
 		}
 
-		cur.close();
-		return eventList;
-		
-		return 0;
+		return "";
 	}
-*/
+
 	/**
 	 * RRULE:FREQ=WEEKLY;UNTIL=20131106T080000Z;INTERVAL=1;BYDAY=TU,WE;WKST=MO
 	 * 
@@ -483,7 +440,7 @@ public class CalendarManager {
 
 			sb.append("FREQ=").append(r.getFrequency().toString());
 			if (r.hasTimeUntilDate())
-				sb.append(";UNTIL=").append(parseIcalUtcDate(r.getUntil()));
+				sb.append(";UNTIL=").append(parseIcalDateToString(r.getUntil())).append('Z');
 			else
 				sb.append(";COUNT=").append(r.getCount());
 
@@ -514,7 +471,7 @@ public class CalendarManager {
 					}
 				}
 			}
-			
+
 			// BYHOURE
 			if (!r.getByHour().isEmpty()) {
 				sb.append(";BYHOURE=");
@@ -528,7 +485,7 @@ public class CalendarManager {
 				}
 			}
 
-			//BYDAY
+			// BYDAY
 			if (!r.getByDay().isEmpty()) {
 				sb.append(";BYDAY=");
 				int idx = 0;
@@ -542,12 +499,12 @@ public class CalendarManager {
 				}
 			}
 
-			//BYMONTHDAY
+			// BYMONTHDAY
 			if (!r.getByMonthDay().isEmpty()) {
 				sb.append(";BYMONTHDAY=");
 				int idx = 0;
 
-				for (int  i : r.getByMonthDay()) {
+				for (int i : r.getByMonthDay()) {
 					sb.append(i);
 					idx++;
 					if (idx < r.getByDay().size()) {
@@ -555,14 +512,13 @@ public class CalendarManager {
 					}
 				}
 			}
-			
-			
-			//BYYEARDAY
+
+			// BYYEARDAY
 			if (!r.getByYearDay().isEmpty()) {
 				sb.append(";BYYEARDAY=");
 				int idx = 0;
 
-				for (int  i : r.getByYearDay()) {
+				for (int i : r.getByYearDay()) {
 					sb.append(i);
 					idx++;
 					if (idx < r.getByDay().size()) {
@@ -570,13 +526,13 @@ public class CalendarManager {
 					}
 				}
 			}
-			
-			//BYWEEKNO
+
+			// BYWEEKNO
 			if (!r.getByWeekNo().isEmpty()) {
 				sb.append(";BYWEEKNO=");
 				int idx = 0;
 
-				for (int  i : r.getByWeekNo()) {
+				for (int i : r.getByWeekNo()) {
 					sb.append(i);
 					idx++;
 					if (idx < r.getByDay().size()) {
@@ -584,13 +540,13 @@ public class CalendarManager {
 					}
 				}
 			}
-			
-			//BYMONTH
+
+			// BYMONTH
 			if (!r.getByMonth().isEmpty()) {
 				sb.append(";BYMONTH=");
 				int idx = 0;
 
-				for (int  i : r.getByMonth()) {
+				for (int i : r.getByMonth()) {
 					sb.append(i);
 					idx++;
 					if (idx < r.getByDay().size()) {
@@ -598,13 +554,13 @@ public class CalendarManager {
 					}
 				}
 			}
-			
-			//BYSETPOS
+
+			// BYSETPOS
 			if (!r.getBySetPos().isEmpty()) {
 				sb.append(";BYSETPOS=");
 				int idx = 0;
 
-				for (int  i : r.getBySetPos()) {
+				for (int i : r.getBySetPos()) {
 					sb.append(i);
 					idx++;
 					if (idx < r.getByDay().size()) {
@@ -612,9 +568,7 @@ public class CalendarManager {
 					}
 				}
 			}
-		
-			
-			
+
 			if (r.getWorkweekStarts() != null)
 				sb.append(";WKST=").append(r.getWorkweekStarts().getAbbr());
 
@@ -626,7 +580,7 @@ public class CalendarManager {
 	}
 
 	@SuppressLint("SimpleDateFormat")
-	private static Object parseIcalUtcDate(Date until) {
+	private static String parseIcalDateToString(Date until) {
 
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HHmmSS");
@@ -635,33 +589,8 @@ public class CalendarManager {
 		sb.append(dateFormat.format(until));
 		sb.append("T");
 		sb.append(timeFormat.format(until));
-		sb.append("Z");
 
 		return sb.toString();
-	}
-
-	public static void updateEvent(Context context, Account account, long calendarId, CalendarEvent event) {
-
-		ContentResolver cr = context.getContentResolver();
-		ContentValues values = new ContentValues();
-		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-
-		String where = "((" + Events._ID + " = ?) AND  (" + Events._SYNC_ID + " = ?) )";
-
-		String[] selectionArgs = new String[] { Long.toString(event.getId()), event.getUid() };
-
-		values.put(Events.DTSTART, event.getStartInMillis());
-		values.put(Events.DTEND, event.getEndInMillis());
-		values.put(Events.TITLE, event.getTitle());
-		values.put(Events.DESCRIPTION, event.getDescription());
-		values.put(Events.CALENDAR_ID, calendarId);
-		values.put(Events.EVENT_LOCATION, event.getLocation()); //
-		values.put(Events._SYNC_ID, event.getUid());
-		values.put(Events.SYNC_DATA1, Long.toString(event.getTimeStamp()));
-		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
-
-		cr.update(uri, values, where, selectionArgs);
-
 	}
 
 	/**
@@ -686,43 +615,39 @@ public class CalendarManager {
 			boolean toInsert = true;
 			for (VEvent innerEvent : dirtyList) {
 
-				
-				
-				//not the same Object!
+				// not the same Object!
 				if (!outerEvent.equals(innerEvent)) {
-					
+
 					// events have same UID
 					if (outerEvent.getUid().getValue().equals(innerEvent.getUid().getValue())) {
-						
-						
-						
-						//outer has RRULE  inner has RECURREND-ID
-						if(outerEvent.getRecurrenceRule() != null && innerEvent.getRecurrenceId() != null){
-							
+
+						// outer has RRULE inner has RECURREND-ID
+						if (outerEvent.getRecurrenceRule() != null && innerEvent.getRecurrenceId() != null) {
+
 							/**
 							 * FIX wrong RECURRING-ID
 							 */
-							
-							if(innerEvent.getRecurrenceId().getRange() != null ){
+
+							if (innerEvent.getRecurrenceId().getRange() != null) {
 								System.err.println("RECURRING-ID RANGE NOT SUPPORTED");
-								
+
 							}
 
 							SimpleDateFormat sdfDateOnly = new SimpleDateFormat("yyyyMMdd");
-							
+
 							String outerDTStart = sdfDateOnly.format(outerEvent.getDateStart().getValue());
-							String innerReqId =  sdfDateOnly.format(innerEvent.getRecurrenceId().getValue());
-							
-							//if(outerDTStart.equals(innerReqId)){
-							
-								RecurrenceId rId = new RecurrenceId(outerEvent.getDateStart().getValue(), true);
-								rId.setLocalTime(true);
-								rId.setTimezoneId(outerEvent.getDateStart().getTimezoneId());
-								innerEvent.setRecurrenceId(rId);
-							//}
-							
-						}					
-					
+							String innerReqId = sdfDateOnly.format(innerEvent.getRecurrenceId().getValue());
+
+							// if(outerDTStart.equals(innerReqId)){
+
+							RecurrenceId rId = new RecurrenceId(outerEvent.getDateStart().getValue(), true);
+							rId.setLocalTime(true);
+							rId.setTimezoneId(outerEvent.getDateStart().getTimezoneId());
+							innerEvent.setRecurrenceId(rId);
+							// }
+
+						}
+
 					} // same UID
 				}
 			}
@@ -734,4 +659,161 @@ public class CalendarManager {
 
 		return cleanList;
 	}
+
+	public static long insertEvent(Context context, Account account, long calendarId, VEvent e, RecurringVEvent re) {
+
+		
+		ContentResolver cr = context.getContentResolver();
+		ContentValues values = new ContentValues();
+		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+
+		values.put(Events.CALENDAR_ID, calendarId);
+		values.put(Events.DTSTART, e.getDateStart().getValue().getTime());
+		values.put(Events.DTEND, e.getDateEnd().getValue().getTime());
+		values.put(Events.TITLE, e.getSummary().getValue());
+
+		values.put(Events._SYNC_ID, e.getUid().getValue());
+		values.put(Events.SYNC_DATA1, Long.toString(e.getDateTimeStamp().getValue().getTime()));
+		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
+
+		if (e.getDescription() != null)
+			values.put(Events.DESCRIPTION, e.getDescription().getValue());
+		else
+			values.put(Events.DESCRIPTION, "");
+
+		if (e.getLocation() != null)
+			values.put(Events.EVENT_LOCATION, e.getLocation().getValue());
+
+		if (e.getRecurrenceRule() != null) {
+			String rrule = buildRrule(e);
+			Log.i(TAG, "RRULE " + rrule);
+			values.put(Events.RRULE, rrule);
+		}
+
+		if (!e.getExceptionDates().isEmpty()) {
+			String exdate = buildExdate(e.getExceptionDates());
+			Log.i(TAG, "add EXDATE " + exdate);
+			values.put(Events.EXDATE, exdate);
+		}
+		if (re != null) {
+			values.put(Events.ORIGINAL_ID, re.getId());
+			values.put(Events.ORIGINAL_SYNC_ID, re.e.getUid().getValue());
+
+		}
+
+		Uri ret = cr.insert(uri, values);
+
+		return ContentUris.parseId(ret);
+
+	}
+
+	/*
+	 * public static ArrayList<CalendarEvent> getAllCalendarEvents(Context
+	 * context, Account account, long calendarId) { Cursor cur = null;
+	 * ArrayList<CalendarEvent> eventList = new ArrayList<CalendarEvent>();
+	 * ContentResolver cr = context.getContentResolver();
+	 * 
+	 * Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+	 * 
+	 * String[] projection = new String[] { Events._ID, Events._SYNC_ID,
+	 * Events.SYNC_DATA1, Events.TITLE, Events.DTSTART, Events.DTEND,
+	 * Events.DESCRIPTION, Events.EVENT_LOCATION };
+	 * 
+	 * String selection = "((" + Events.CALENDAR_ID + " = ?) )"; String[]
+	 * selectionArgs = new String[] { Long.toString(calendarId) };
+	 * 
+	 * cur = cr.query(uri, projection, selection, selectionArgs, null);
+	 * 
+	 * if (cur.moveToFirst()) {
+	 * 
+	 * String eventUid = ""; long eventId = 0; long eventTimeStamp = 0; long
+	 * start = 0; long end = 0; String title = ""; String location = ""; String
+	 * description = "";
+	 * 
+	 * do {
+	 * 
+	 * eventId = cur.getLong(0); eventUid = cur.getString(1); eventTimeStamp =
+	 * Long.parseLong(cur.getString(2)); title = cur.getString(3); start =
+	 * cur.getLong(4); end = cur.getLong(5); description = cur.getString(6);
+	 * location = cur.getString(7);
+	 * 
+	 * eventList.add(new CalendarEvent(eventId, eventUid, eventTimeStamp, start,
+	 * end, title, description, location)); } while (cur.moveToNext());
+	 * 
+	 * } else { Log.d(TAG, "getAllCalendarEvents() courser is empty");
+	 * 
+	 * }
+	 * 
+	 * cur.close(); return eventList;
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * /* private static long getEventByUID(Context context, Account account,
+	 * String id) {
+	 * 
+	 * Cursor cur = null; ContentResolver cr = context.getContentResolver();
+	 * 
+	 * Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+	 * 
+	 * String[] projection = new String[] { Events._ID, Events._SYNC_ID};
+	 * 
+	 * String selection = "((" + Events._SYNC_ID + " = ?) )"; String[]
+	 * selectionArgs = new String[] { Long.toString(calendarId) };
+	 * 
+	 * cur = cr.query(uri, projection, selection, selectionArgs, null);
+	 * 
+	 * if (cur.moveToFirst()) {
+	 * 
+	 * 
+	 * 
+	 * do {
+	 * 
+	 * 
+	 * 
+	 * eventList.add(new CalendarEvent(eventId, eventUid, eventTimeStamp, start,
+	 * end, title, description, location));
+	 * 
+	 * } while (cur.moveToNext());
+	 * 
+	 * } else { Log.d(TAG, "getAllCalendarEvents() courser is empty");
+	 * 
+	 * }
+	 * 
+	 * cur.close(); return eventList;
+	 * 
+	 * return 0; }
+	 */
+
+	/*
+	 * public static void updateEvent(Context context, Account account, long
+	 * calendarId, CalendarEvent event) {
+	 * 
+	 * ContentResolver cr = context.getContentResolver(); ContentValues values =
+	 * new ContentValues(); Uri uri = asSyncAdapter(Events.CONTENT_URI,
+	 * account.name, account.type);
+	 * 
+	 * String where = "((" + Events._ID + " = ?) AND  (" + Events._SYNC_ID +
+	 * " = ?) )";
+	 * 
+	 * String[] selectionArgs = new String[] { Long.toString(event.getId()),
+	 * event.getUid() };
+	 * 
+	 * values.put(Events.DTSTART, event.getStartInMillis());
+	 * values.put(Events.DTEND, event.getEndInMillis());
+	 * values.put(Events.TITLE, event.getTitle());
+	 * values.put(Events.DESCRIPTION, event.getDescription());
+	 * values.put(Events.CALENDAR_ID, calendarId);
+	 * values.put(Events.EVENT_LOCATION, event.getLocation()); //
+	 * values.put(Events._SYNC_ID, event.getUid());
+	 * values.put(Events.SYNC_DATA1, Long.toString(event.getTimeStamp()));
+	 * values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
+	 * 
+	 * cr.update(uri, values, where, selectionArgs);
+	 * 
+	 * }
+	 */
+
 }
