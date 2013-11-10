@@ -21,7 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
- 
+
+
 <!-- @author: friedrda -->
 <resources>
 
@@ -29,15 +30,8 @@
     <string name="action_settings">Settings</string>
     <string name="account_label">DHBW Organizer</string>
     <string name="ui_activity_authenticating">ui_activity_authenticating</string>
-    
-    
     <string name="select_ical_activity_newaccount_text">select a calendar:</string>
     <string name="select_ical_activity_ok_button">OK</string>
-    
     <string name="select_ical_activity_error">select_ical_activity_error</string>
-    
-    
-    
-    
 
 </resources>

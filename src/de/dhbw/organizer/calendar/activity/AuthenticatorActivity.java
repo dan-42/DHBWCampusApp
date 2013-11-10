@@ -52,21 +52,14 @@ import de.dhbw.organizer.calendar.objects.SpinnerItem;
  * Activity which displays login screen to the user.
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
-
-	private static final String DEFAULT_PASSWORD = "DEADBEAF";
-	/** The Intent flag to confirm credentials. */
-	public static final String PARAM_CONFIRM_CREDENTIALS = "confirmCredentials";
-
-	/** The Intent extra to store password. */
-	public static final String PARAM_ICAL_URL = "iCalUrl";
-
-	/** The tag used to log to adb console. */
+	
 	private static final String TAG = "iCalAuthenticatorActivity";
+
+	private static final String DEFAULT_PASSWORD = "DEADBEAF";	
+	
 	private AccountManager mAccountManager;
 
-	private TextView mMessage;
-
-	private String mICalUrl;
+	private TextView mMessage;	
 
 	private Spinner mIcalSpinner;
 
@@ -81,8 +74,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
-		mAccountManager = AccountManager.get(this);	
-		
+		mAccountManager = AccountManager.get(this);
 
 		requestWindowFeature(Window.FEATURE_LEFT_ICON);
 		setContentView(R.layout.select_ical_activity);
@@ -97,20 +89,14 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
 		itemList = new ArrayList<SpinnerItem>();
 
-		
 		for (int i = 0; i < calendars.length; i++) {
 			itemList.add(new SpinnerItem(calendars[i]));
 		}
 
-		//sort
+		// sort
 		Collections.sort(itemList);
-		
-		
 
 		ArrayAdapter<SpinnerItem> adapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_item, itemList);
-
-		// ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-		// this, R.array.calendars_array, android.R.layout.simple_spinner_item);
 
 		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		mIcalSpinner.setAdapter(adapter);
@@ -147,16 +133,15 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	public void handleLogin(View view) {
 		SpinnerItem selected = (SpinnerItem) mIcalSpinner.getSelectedItem();
 
-		mICalUrl = selected.getValue();
+		String mICalUrl = selected.getValue();
 
 		Log.i(TAG, "Selected : " + mICalUrl);
 		Log.i(TAG, "finishLogin()");
-		
+
 		final Account account = new Account(mICalUrl, Constants.ACCOUNT_TYPE);
 
 		mAccountManager.addAccountExplicitly(account, DEFAULT_PASSWORD, null);
 
-		
 		ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1);
 		ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true);
 		ContentResolver.addPeriodicSync(account, CalendarContract.AUTHORITY, new Bundle(), Constants.SYNC_INTERVALL_IN_SEC);
@@ -168,14 +153,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		setResult(RESULT_OK, intent);
 		finish();
 
-		
-
 	}
 
 	public void onAuthenticationCancel() {
 		Log.i(TAG, "onAuthenticationCancel()");
 	}
-
-	
 
 }
