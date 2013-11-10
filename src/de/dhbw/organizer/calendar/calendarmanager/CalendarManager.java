@@ -304,24 +304,33 @@ public class CalendarManager {
 			}
 		}
 
-		Log.d(TAG, "insert recular Events ");
-		//insertEventsAsBatch(context, account, calendarId, recularEvents);
-		for (VEvent e : recularEvents) {
-			 insertEvent(context, account, calendarId, e, null);
-		}
+		
 
 		Log.d(TAG, "insert recurring Events ");
 		for (RecurringVEvent re : recurringEvents) {
-			Log.d(TAG, "RECURING: " + re.e.getSummary().getValue() );
+			Log.d(TAG, "RECURING: " + re.e.getSummary().getValue() + "   " + re.e.getDateStart().getRawComponents().toString(true));
 			long id = insertEvent(context, account, calendarId, re.e, null);			
 			re.setId(id);
 
 			for (VEvent e : re.getExceptions()) {
-				Log.d(TAG, "RECURING: " + e.getSummary().getValue() );
+				Log.d(TAG, "-- RECURING-ID: " + e.getSummary().getValue() + "   " + e.getDateStart().getValue().toString());
+				if(e.getRecurrenceId().getRawComponents() != null){
+					Log.d(TAG, "\t" + e.getRecurrenceId().getRawComponents().toString(true));
+				}
+				if(e.getLocation() != null){
+					Log.d(TAG,"\tLOCATION: " + e.getLocation().getValue());
+				}
 				insertEvent(context, account, calendarId, e, re);				
 			}
-			Log.d(TAG, "\n" );
+			Log.d(TAG, "------------------\n" );
 
+		}
+		
+		
+		Log.d(TAG, "insert recular Events ");
+		//insertEventsAsBatch(context, account, calendarId, recularEvents);
+		for (VEvent e : recularEvents) {
+			 insertEvent(context, account, calendarId, e, null);
 		}
 
 	}
