@@ -42,6 +42,7 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
+import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -98,7 +99,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			String calendarHttpUrl = Constants.DHBW_ICAL_URL.replace(Constants.CALENDAR_REEPLACE_TOKEN, account.name);
 
 			HttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(calendarHttpUrl);
+			HttpGet httpGet = new HttpGet(calendarHttpUrl);			
+			
+			if (!httpGet.containsHeader("Accept-Encoding")) {
+				httpGet.addHeader("Accept-Encoding", "gzip");
+            }
 
 			try {
 
@@ -109,9 +114,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 				HttpEntity entity = httpResponse.getEntity();
 
-				if (httpStatus == 200 && entity != null) {
-					InputStream instream = entity.getContent();
-
+				if (httpStatus == 200 && entity != null) {					
+					
+					InputStream instream = AndroidHttpClient.getUngzippedContent( httpResponse.getEntity() );					
+					
+					
 					ICalendar ical = Biweekly.parse(instream).first();
 
 					instream.close();
