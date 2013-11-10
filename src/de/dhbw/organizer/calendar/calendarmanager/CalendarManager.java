@@ -356,7 +356,7 @@ public class CalendarManager {
 		ArrayList<ArrayList<VEvent>> listListEventCalendar = new ArrayList<ArrayList<VEvent>>();
 		ArrayList<VEvent> smallList = null;
 		int idx = 0;
-		int BATCH_SIZE = 40;
+		int BATCH_SIZE = 20;
 
 		for (int i = 0; i < eventList.size(); i++) {
 			if (i % BATCH_SIZE == 0) {
@@ -421,19 +421,19 @@ public class CalendarManager {
 			}
 			
 			if(event.getRecurrenceId() != null){
-				long orgEventId = getEventByUID(event.getUid().getValue());
+				//long orgEventId = getEventByUID(event.getUid().getValue());
 			}
 			
 			idx++;
 
 		}
 
-		Log.d(TAG, "insertEventsAsBatch() FOR done now bulkInsert");
+		Log.d(TAG, "insertEventsAsBatch()  bulkInsert()");
 		cr.bulkInsert(uri, values);
 
 	}
 
-	private static long getEventByUID(Context context, Account account,  String id) {		
+	/*private static long getEventByUID(Context context, Account account,  String id) {		
 		
 		Cursor cur = null;	
 		ContentResolver cr = context.getContentResolver();
@@ -469,7 +469,7 @@ public class CalendarManager {
 		
 		return 0;
 	}
-
+*/
 	/**
 	 * RRULE:FREQ=WEEKLY;UNTIL=20131106T080000Z;INTERVAL=1;BYDAY=TU,WE;WKST=MO
 	 * 

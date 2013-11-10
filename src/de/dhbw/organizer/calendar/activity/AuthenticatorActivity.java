@@ -25,6 +25,9 @@
 
 package de.dhbw.organizer.calendar.activity;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
@@ -38,7 +41,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -48,6 +50,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
+import de.dhbw.organizer.calendar.objects.SpinnerItem;
 
 /**
  * Activity which displays login screen to the user.
@@ -70,11 +73,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	private String mICalUrl;
 
 	private Spinner mIcalSpinner;
-
-
+	
+	ArrayList<SpinnerItem> itemList = null;
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @param mAvailableCalendars
 	 */
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -95,23 +100,23 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
 
-		//mAvailableCalendars = getResources().getStringArray(R.id.ical_calendar_spinner);
-
-		/*String[] calendars = mAvailableCalendars.clone();
-
-		for (int i = 0; i < mAvailableCalendars.length; i++) {
-			calendars[i].replace("kal-", "");
-			calendars[i] = calendars[i].toUpperCase();
-		}
-		ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, calendars);
-*/
+		String[] calendars = getResources().getStringArray(R.array.calendars_array);
 		
+		
+		itemList = new ArrayList<SpinnerItem>();
+		
+		for (int i = 0; i < calendars.length; i++) {
+			itemList.add(new SpinnerItem(calendars[i]));
+		}
+		
+		Collections.sort(itemList);
+		
+		ArrayAdapter<SpinnerItem> adapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_item, itemList);
 
-		 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-		 this, R.array.calendars_array,
-		 android.R.layout.simple_spinner_item);
+		// ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+		// this, R.array.calendars_array, android.R.layout.simple_spinner_item);
 
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		mIcalSpinner.setAdapter(adapter);
 
 	}
@@ -144,18 +149,17 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	 *            The Submit button for which this method is invoked
 	 */
 	public void handleLogin(View view) {
-		String selected = (String) mIcalSpinner.getSelectedItem();
+		SpinnerItem selected = (SpinnerItem) mIcalSpinner.getSelectedItem();
 
-	
-		mICalUrl = selected;
-		
+		mICalUrl = selected.getValue();
+
 		Log.i(TAG, "Selected : " + mICalUrl);
 
 		Log.i(TAG, "finishLogin()");
 		final Account account = new Account(mICalUrl, Constants.ACCOUNT_TYPE);
 
 		mAccountManager.addAccountExplicitly(account, DEFAULT_PASSWORD, null);
-		
+
 		// Set contacts sync for this account.
 		ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1);
 		ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true);
@@ -187,8 +191,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		builder.appendQueryParameter(Calendars.ACCOUNT_NAME, mICalUrl);
 		builder.appendQueryParameter(Calendars.ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
 		builder.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true");
-
-		
 
 	}
 
