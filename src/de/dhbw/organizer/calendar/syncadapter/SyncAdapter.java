@@ -122,17 +122,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					instream.close();
 				
 					//ArrayList<VEvent> events = CalendarManager.fixMicrosoftFuckUps((ArrayList<VEvent>) ical.getEvents());
+					
 					ArrayList<VEvent> events =  (ArrayList<VEvent>) ical.getEvents();
 
 					CalendarManager.deleteAllEvents(mContext, account, calendarId);
 
-					//CalendarManager.insertEvents(mContext, account, calendarId, events);
-					try {
+					CalendarManager.insertEvents(mContext, account, calendarId, events);
+					/*try {
 						CalendarManager.insertTestEvents(mContext, account, calendarId);
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}*/
 					
 					
 					
