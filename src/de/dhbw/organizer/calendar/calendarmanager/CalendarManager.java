@@ -24,12 +24,14 @@
  */
 package de.dhbw.organizer.calendar.calendarmanager;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import android.accounts.Account;
 import android.annotation.SuppressLint;
@@ -42,6 +44,7 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
+import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.util.Log;
 import biweekly.component.VEvent;
 import biweekly.property.ExceptionDates;
@@ -147,7 +150,8 @@ public class CalendarManager {
 		values.put(Calendars.NAME, account.name);
 		values.put(Calendars.CALENDAR_DISPLAY_NAME, Constants.CALENDAR_DISPLAY_NAME_PREFIX + account.name);
 		values.put(Calendars.CALENDAR_COLOR, color);
-		values.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
+//		values.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
+		values.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
 		values.put(Calendars.OWNER_ACCOUNT, account.name);
 		values.put(Calendars.SYNC_EVENTS, 1);
 		values.put(Calendars.VISIBLE, 1);
@@ -304,33 +308,35 @@ public class CalendarManager {
 			}
 		}
 
-		
-
 		Log.d(TAG, "insert recurring Events ");
 		for (RecurringVEvent re : recurringEvents) {
-			Log.d(TAG, "RECURING: " + re.e.getSummary().getValue() + "   " + re.e.getDateStart().getRawComponents().toString(true));
-			long id = insertEvent(context, account, calendarId, re.e, null);			
+
+			Log.d(TAG, "RECURING-Event: " + re.e.getSummary().getValue() + "   " + re.e.getDateStart().getRawComponents().toString(true));
+			Log.d(TAG, "RECURING-Event: UID \t" + re.e.getUid().getValue());
+			Log.d(TAG, "RECURING-Event: DTSTART \t" + re.e.getDateStart().getValue().getTime());
+			long id = insertEvent(context, account, calendarId, re.e, null);
 			re.setId(id);
+			Log.d(TAG, "RECURING-Event: DB-ID " + re.getId());
 
 			for (VEvent e : re.getExceptions()) {
 				Log.d(TAG, "-- RECURING-ID: " + e.getSummary().getValue() + "   " + e.getDateStart().getValue().toString());
-				if(e.getRecurrenceId().getRawComponents() != null){
+				if (e.getRecurrenceId().getRawComponents() != null) {
 					Log.d(TAG, "\t" + e.getRecurrenceId().getRawComponents().toString(true));
 				}
-				if(e.getLocation() != null){
-					Log.d(TAG,"\tLOCATION: " + e.getLocation().getValue());
+				if (e.getLocation() != null) {
+					Log.d(TAG, "\tLOCATION: " + e.getLocation().getValue());
 				}
-				insertEvent(context, account, calendarId, e, re);				
+
+				insertEvent(context, account, calendarId, e, re);
 			}
-			Log.d(TAG, "------------------\n" );
+			Log.d(TAG, "---------------------------------------------\n");
 
 		}
-		
-		
+
 		Log.d(TAG, "insert recular Events ");
-		//insertEventsAsBatch(context, account, calendarId, recularEvents);
+		// insertEventsAsBatch(context, account, calendarId, recularEvents);
 		for (VEvent e : recularEvents) {
-			 insertEvent(context, account, calendarId, e, null);
+			insertEvent(context, account, calendarId, e, null);
 		}
 
 	}
@@ -338,7 +344,7 @@ public class CalendarManager {
 	public static void insertEventsAsBatch(Context context, Account account, long calendarId, ArrayList<VEvent> eventList) {
 
 		for (VEvent vEvent : eventList) {
-			
+
 		}
 
 		Log.d(TAG, "insertEventsAsBatch() ");
@@ -671,32 +677,33 @@ public class CalendarManager {
 
 	public static long insertEvent(Context context, Account account, long calendarId, VEvent e, RecurringVEvent re) {
 
-		
 		ContentResolver cr = context.getContentResolver();
 		ContentValues values = new ContentValues();
 		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
 
-		values.put(Events.CALENDAR_ID, calendarId);
 		values.put(Events.DTSTART, e.getDateStart().getValue().getTime());
-		values.put(Events.DTEND, e.getDateEnd().getValue().getTime());
+
 		values.put(Events.TITLE, e.getSummary().getValue());
 
 		values.put(Events._SYNC_ID, e.getUid().getValue());
 		values.put(Events.SYNC_DATA1, Long.toString(e.getDateTimeStamp().getValue().getTime()));
+
+		// if (re == null) {
+		values.put(Events.CALENDAR_ID, calendarId);
+		values.put(Events.DTEND, e.getDateEnd().getValue().getTime());
 		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
 
 		if (e.getDescription() != null)
 			values.put(Events.DESCRIPTION, e.getDescription().getValue());
-		else
-			values.put(Events.DESCRIPTION, "");
 
 		if (e.getLocation() != null)
 			values.put(Events.EVENT_LOCATION, e.getLocation().getValue());
 
 		if (e.getRecurrenceRule() != null) {
 			String rrule = buildRrule(e);
-			Log.i(TAG, "RRULE " + rrule);
+			Log.i(TAG, "add RRULE " + rrule);
 			values.put(Events.RRULE, rrule);
+
 		}
 
 		if (!e.getExceptionDates().isEmpty()) {
@@ -704,15 +711,97 @@ public class CalendarManager {
 			Log.i(TAG, "add EXDATE " + exdate);
 			values.put(Events.EXDATE, exdate);
 		}
+
+		// }
+
 		if (re != null) {
+
+			// Uri.Builder eventUriBuilder =
+			// asSyncAdapter(Events.CONTENT_EXCEPTION_URI, account.name,
+			// account.type).buildUpon();
+			// ContentUris.appendId(eventUriBuilder, re.getId());
+
+			// uri = eventUriBuilder.build();
+
 			values.put(Events.ORIGINAL_ID, re.getId());
-			values.put(Events.ORIGINAL_SYNC_ID, re.e.getUid().getValue());
+			// values.put(Events.ORIGINAL_SYNC_ID, re.e.getUid().getValue());
+			values.put(Events.ORIGINAL_INSTANCE_TIME, re.e.getDateStart().getValue().getTime());
+
+			Log.d(TAG, "\tRECURRING: Events.ORIGINAL_ID = " + re.getId());
+			Log.d(TAG, "\tRECURRING: Events.ORIGINAL_SYNC_ID " + re.e.getUid().getValue());
+			Log.d(TAG, "\tRECURRING: Events.ORIGINAL_INSTANCE_TIME " + re.e.getDateStart().getValue().getTime());
 
 		}
 
 		Uri ret = cr.insert(uri, values);
 
+		if (ret == null) {
+			Log.e(TAG, " INERT ERROR return URI is null");
+			return 0;
+		}
+
 		return ContentUris.parseId(ret);
+
+	}
+
+	public static void insertTestEvents(Context context, Account account, long calendarId) throws ParseException {
+
+		ContentResolver cr = context.getContentResolver();
+		ContentValues valuesRecurring = new ContentValues();
+		ContentValues valuesException = new ContentValues();
+
+		String uid = UUID.randomUUID().toString();
+		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+
+		long start = new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 01 13:00 ").getTime();
+		long end = new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 01 15:30 ").getTime();
+
+		valuesRecurring.put(Events.DTSTART, start);
+		valuesRecurring.put(Events.DTEND, end);
+
+		valuesRecurring.put(Events.TITLE, "TEST RECURRING ");
+		valuesRecurring.put(Events._SYNC_ID, uid);
+
+		valuesRecurring.put(Events.CALENDAR_ID, calendarId);
+		valuesRecurring.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
+		valuesRecurring.put(Events.RRULE, "FREQ=WEEKLY;UNTIL=20131022T110000Z;INTERVAL=1;BYDAY=TU;WKST=MO");
+
+		Uri ret = cr.insert(uri, valuesRecurring);
+
+		long id = 0;
+		if (ret == null) {
+			Log.e(TAG, " INERT ERROR return URI is null");
+			return;
+
+		} else {
+			id = ContentUris.parseId(ret);
+		}
+
+		Uri.Builder eventUriBuilder = asSyncAdapter(Events.CONTENT_EXCEPTION_URI, account.name, account.type).buildUpon();
+		ContentUris.appendId(eventUriBuilder, id);
+
+		long startEx 	= new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 08 09:00 ").getTime();
+		long startOrg 	= new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 08 13:00 ").getTime();
+		long endEx 		= new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 08 11:30 ").getTime();
+
+		valuesException.put(Events.DTSTART, startEx);
+		valuesException.put(Events.DTEND, endEx);
+
+		valuesException.put(Events.TITLE, "TEST RECURRING EXCEPTION");
+		valuesException.put(Events._SYNC_ID, uid);
+
+		valuesException.put(Events.CALENDAR_ID, calendarId);
+		valuesException.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
+		
+		valuesException.put(Events.ORIGINAL_ID, id);
+		valuesException.put(Events.ORIGINAL_SYNC_ID, uid);
+		valuesException.put(Events.ORIGINAL_INSTANCE_TIME, startOrg);
+
+
+
+		ret = cr.insert(uri, valuesException);
+
+		
 
 	}
 
