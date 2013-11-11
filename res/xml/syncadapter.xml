@@ -29,7 +29,7 @@
     android:contentAuthority="com.android.calendar"
     android:accountType="de.dhbw.organizer.icalsync"
     android:supportsUploading="false"
-    android:allowParallelSyncs="true"
+    android:allowParallelSyncs="false"
     android:isAlwaysSyncable="true"
     android:userVisible="true"
 />

@@ -51,12 +51,14 @@ import android.util.Log;
 
 
 
+
 //A compatibility layer for joda-time
 import com.google.ical.compat.javautil.*;
 
 import biweekly.component.VEvent;
 import biweekly.property.ExceptionDates;
 import biweekly.property.RecurrenceId;
+import biweekly.util.Duration;
 import biweekly.util.Recurrence;
 import biweekly.util.Recurrence.DayOfWeek;
 import de.dhbw.organizer.calendar.Constants;
@@ -427,7 +429,8 @@ public class CalendarManager {
 
 			for (ExceptionDates ed : exceptionDates) {
 				dates.addAll(ed.getValues());
-				tz = ed.getTimezoneId();
+				//tz = TimeZone.getTimeZone(ed.getTimezoneId()).getID();
+				tz = TimeZone.getDefault().getID();
 			}
 
 			if (tz != null) {
@@ -702,7 +705,8 @@ public class CalendarManager {
 		// if (re == null) {
 		values.put(Events.CALENDAR_ID, calendarId);
 		values.put(Events.DTEND, e.getDateEnd().getValue().getTime());
-		values.put(Events.EVENT_TIMEZONE, TimeZone.getTimeZone(e.getDateStart().getTimezoneId()).toString());
+		//values.put(Events.EVENT_TIMEZONE, TimeZone.getTimeZone(e.getDateStart().getTimezoneId()).getID());
+		//values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
 
 		if (e.getDescription() != null)
 			values.put(Events.DESCRIPTION, e.getDescription().getValue());
@@ -724,20 +728,23 @@ public class CalendarManager {
 		}
 
 		// }
+		
+		if(e.getDateStart() != null && e.getDateEnd() != null){
+			Duration duration = Duration.diff(e.getDateStart().getValue(), e.getDateEnd().getValue());
+			values.put(Events.DURATION, duration.toString());	
+		}
+		
 
 		if (re != null) {
-
-			// Uri.Builder eventUriBuilder =
-			// asSyncAdapter(Events.CONTENT_EXCEPTION_URI, account.name,
-			// account.type).buildUpon();
-			// ContentUris.appendId(eventUriBuilder, re.getId());
-
-			// uri = eventUriBuilder.build();
+			
 			
 			Calendar cal = Calendar.getInstance();
 
+			
+			
 			values.put(Events.ORIGINAL_ID, re.getId());
-			// values.put(Events.ORIGINAL_SYNC_ID, re.e.getUid().getValue());
+			
+			values.put(Events.ORIGINAL_SYNC_ID, re.e.getUid().getValue());
 			
 			Date recurrenceID = e.getRecurrenceId().getValue();
 			cal.setTime(recurrenceID);
@@ -749,10 +756,15 @@ public class CalendarManager {
 			
 			String rrule = "RRULE:" + buildRrule(re.e);
 			Date startRec = re.e.getDateStart().getValue();
-			TimeZone tz = TimeZone.getTimeZone(re.e.getDateStart().getTimezoneId());
+			//TimeZone tz = TimeZone.getTimeZone(re.e.getDateStart().getTimezoneId());
+			TimeZone tz = TimeZone.getDefault();
 			DateIterator dif = null;
 			
+			
+			
 			long dateStartOriginal = 0;
+			
+			
 			try {
 				dif = DateIteratorFactory.createDateIterator(rrule, startRec, tz, false);
 				
@@ -825,7 +837,7 @@ public class CalendarManager {
 		valuesRecurring.put(Events._SYNC_ID, uid);
 
 		valuesRecurring.put(Events.CALENDAR_ID, calendarId);
-		valuesRecurring.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
+		valuesRecurring.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
 		valuesRecurring.put(Events.RRULE, "FREQ=WEEKLY;UNTIL=20131022T110000Z;INTERVAL=1;BYDAY=TU;WKST=MO");
 
 		Uri ret = cr.insert(uri, valuesRecurring);
