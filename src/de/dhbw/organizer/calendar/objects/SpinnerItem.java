@@ -54,6 +54,6 @@ public class SpinnerItem  implements Comparable<SpinnerItem>{
 	 */
 	@Override
 	public int compareTo(SpinnerItem another) {		
-		return value.compareTo(another.getValue());
+		return toString().compareTo(another.toString());
 	}
 }
