@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ex:calendars xmlns:ex=""   xmlns:xsi="" xsi:schemaLocation=" ">
+<ex:calendar>
+<ex:name>TIF11A</ex:name/>
+<ex:url>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tif11a@dhbw-loerrach.de/Kalender/calendar.ics</ex:url>
+</ex:calendar>
+<ex:calendar>
+<ex:name>STUV</ex:name/>
+<ex:url>https://webmail.dhbw-loerrach.de/owa/calendar/stuv@dhbw-loerrach.de/Kalender/calendar.ics</ex:url>
+</ex:calendar>
+</ex:calendars>
