@@ -23,6 +23,7 @@ package de.dhbw.organizer.calendar.objects;
 
 import java.util.ArrayList;
 
+import android.util.Log;
 import biweekly.component.VEvent;
 
 /**
@@ -31,6 +32,8 @@ import biweekly.component.VEvent;
  *         thursday, but on XXXX be on 9:00 o'Clock
  */
 public class RecurringVEvent {
+	
+	private static final String TAG = "RecurringVEvent";
 
 	private ArrayList<VEvent> mExceptions = null;
 	
@@ -70,7 +73,13 @@ public class RecurringVEvent {
 
 	public void addException(VEvent e) {
 		if (e.getUid().getValue().equals(e.getUid().getValue())) {
-			mExceptions.add(e);
+			//Exceptions need an recurance ID
+			if(e.getRecurrenceId() != null && e.getRecurrenceId().getValue() != null){
+				mExceptions.add(e);
+			}
+			else {
+				Log.e(TAG, "addException()  event : " + e.getSummary().getValue() + " has no recurring ID");
+			}
 		}
 	}
 

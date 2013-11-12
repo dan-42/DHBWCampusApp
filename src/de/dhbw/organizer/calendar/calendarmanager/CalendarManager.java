@@ -48,18 +48,18 @@ import android.provider.CalendarContract.Events;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.util.Log;
 
-
-
-
-
-
 //A compatibility layer for joda-time
 import com.google.ical.compat.javautil.*;
 
 import biweekly.component.VEvent;
 import biweekly.parameter.ICalParameters;
+import biweekly.property.Categories;
+import biweekly.property.Classification;
 import biweekly.property.ExceptionDates;
+import biweekly.property.Priority;
 import biweekly.property.RecurrenceId;
+import biweekly.property.Status;
+import biweekly.property.Transparency;
 import biweekly.util.Duration;
 import biweekly.util.Recurrence;
 import biweekly.util.Recurrence.DayOfWeek;
@@ -265,8 +265,6 @@ public class CalendarManager {
 	public static void insertEvents(Context context, Account account, long calendarId, ArrayList<VEvent> eventList) {
 		Log.d(TAG, "insertEvents() " + eventList.size() + " events to add in total");
 
-		ArrayList<VEvent> smallList = null;
-
 		// NO RRULE, NO RECURRING_ID
 		ArrayList<VEvent> recularEvents = new ArrayList<VEvent>();
 
@@ -274,19 +272,29 @@ public class CalendarManager {
 		ArrayList<VEvent> tempEventList = new ArrayList<VEvent>();
 
 		/**
-		 * split events into recurring events and recular events
+		 * split events into recurring events and regular events
 		 */
 		for (VEvent e : eventList) {
-			if (e.getRecurrenceRule() == null && e.getRecurrenceId() == null) {
+
+			// no RRULE or nor RECURRENCE-ID
+			if (e.getRecurrenceRule() == null && e.getRecurrenceId() == null) {				
 				recularEvents.add(e);
 			}
 
 			else {
+
 				if (e.getRecurrenceRule() != null) {
+					Log.d(TAG, "Recurring: ");
+					Log.d(TAG, "\t event: " + e.getSummary().getValue() + "  " + e.getDateStart().getValue().toString());
+					Log.d(TAG, "\t e.getRRule() = " + buildRrule(e));
 
 					recurringEvents.add(new RecurringVEvent(e));
 
 				} else if (e.getRecurrenceId() != null) {
+					
+					Log.d(TAG, "Exception: ");
+					Log.d(TAG, "\t event: " + e.getSummary().getValue() + "  " + e.getDateStart().getValue().toString());
+					Log.d(TAG, "\t e.getRecurrenceId() = " + e.getRecurrenceId().getValue().toString());
 
 					boolean isInserted = false;
 					for (RecurringVEvent re : recurringEvents) {
@@ -298,6 +306,7 @@ public class CalendarManager {
 					}
 					if (isInserted == false) {
 						// not fitting? keep it for later
+
 						tempEventList.add(e);
 					}
 				}
@@ -320,44 +329,25 @@ public class CalendarManager {
 			}
 		}
 
-		
 		Log.d(TAG, "insert recurring Events ");
-		for (RecurringVEvent re : recurringEvents) {	
-			
+		for (RecurringVEvent re : recurringEvents) {
+			Log.d(TAG, "INSERT RECURING " + re.e.getSummary().getValue());
+			ArrayList<VEvent> atomarEventList = seperateEvents(re);
 
-			Log.d(TAG, "RECURING-Event: " + re.e.getSummary().getValue() + "   " + re.e.getDateStart().getRawComponents().toString(true));
-			Log.d(TAG, "RECURING-Event: UID \t" + re.e.getUid().getValue());
-			Log.d(TAG, "RECURING-Event: DTSTART \t" + re.e.getDateStart().getValue().getTime());
-			Log.d(TAG, "RECURING-Event: DTSTART \t" + re.e.getDateStart().getValue().toString());
-			
-			long id = insertEvent(context, account, calendarId, re.e, null);
-			re.setId(id);
-			Log.d(TAG, "RECURING-Event: DB-ID " + re.getId());
-
-			for (VEvent e : re.getExceptions()) {
-				Log.d(TAG, "-- RECURING-ID: " + e.getSummary().getValue() + "   " + e.getDateStart().getValue().toString());
-				if (e.getRecurrenceId().getRawComponents() != null) {
-					Log.d(TAG, "\t" + e.getRecurrenceId().getRawComponents().toString(true));
-				}
-				if (e.getLocation() != null) {
-					Log.d(TAG, "\tLOCATION: " + e.getLocation().getValue());
-				}
-
-				insertEvent(context, account, calendarId, e, re);
+			for (VEvent e : atomarEventList) {
+				long id = insertEvent(context, account, calendarId, e);
+				re.setId(id);
 			}
-			Log.d(TAG, "---------------------------------------------\n");
-
 		}
 
 		Log.d(TAG, "insert recular Events ");
 		// insertEventsAsBatch(context, account, calendarId, recularEvents);
 		for (VEvent e : recularEvents) {
-			insertEvent(context, account, calendarId, e, null);
+			insertEvent(context, account, calendarId, e);
 		}
 
 	}
 
-	
 	/**
 	 * @param exceptionDates
 	 * @return
@@ -372,7 +362,7 @@ public class CalendarManager {
 
 			for (ExceptionDates ed : exceptionDates) {
 				dates.addAll(ed.getValues());
-				//tz = TimeZone.getTimeZone(ed.getTimezoneId()).getID();
+				// tz = TimeZone.getTimeZone(ed.getTimezoneId()).getID();
 				tz = TimeZone.getDefault().getID();
 			}
 
@@ -406,8 +396,6 @@ public class CalendarManager {
 	 * @return
 	 */
 	private static String buildRrule(VEvent e) {
-		
-		
 
 		if (e.getRecurrenceRule() != null) {
 			Recurrence r = e.getRecurrenceRule().getValue();
@@ -421,10 +409,8 @@ public class CalendarManager {
 
 			if (r.getWorkweekStarts() != null)
 				sb.append(";WKST=").append(r.getWorkweekStarts().getAbbr());
-			
+
 			sb.append(";INTERVAL=").append(r.getInterval());
-			
-			
 
 			// BYSECOND
 			if (!r.getBySecond().isEmpty()) {
@@ -549,98 +535,193 @@ public class CalendarManager {
 				}
 			}
 
-			
-
 			return sb.toString();
 		} else {
 			return "";
 		}
 
 	}
-	
-	private ArrayList<VEvent> seperateEvents(RecurringVEvent rve){
+
+	private static ArrayList<VEvent> seperateEvents(RecurringVEvent rve) {
+
+		ArrayList<VEvent> cleanEventList = new ArrayList<VEvent>();
+
+		if (rve != null && rve.e != null && rve.e.getRecurrenceRule() != null) {
+
+			ArrayList<VEvent> exceptions = rve.getExceptions();
+			ArrayList<VEvent> atomarEvents = seperateRecurringEvent(rve.e);
+
+			Calendar cal = Calendar.getInstance();
+			for (VEvent atom : atomarEvents) {
+
+				cal.setTime(atom.getDateStart().getValue());
+				int atomYear = cal.get(Calendar.YEAR);
+				int atomMonth = cal.get(Calendar.MONTH);
+				int atomDay = cal.get(Calendar.DAY_OF_MONTH);
+				// int atomDstOff = cal.get(Calendar.DST_OFFSET);
+
+				boolean inserted = false;
+
+				for (VEvent ex : exceptions) {
+					if (ex.getRecurrenceId() == null) {
+						Log.e(TAG, "MISSING RecurrenceID HELP! in seperateEvents() " + ex.getSummary().getValue() + " on Date " + ex.getDateStart().getValue().toString());
+						break;
+					}
+					Date recId = ex.getRecurrenceId().getValue();
+
+					cal.setTime(recId);
+					int exYear = cal.get(Calendar.YEAR);
+					int exMonth = cal.get(Calendar.MONTH);
+					int exDay = cal.get(Calendar.DAY_OF_MONTH);
+					// int exDstOff = cal.get(Calendar.DST_OFFSET);
+
+					// this here should always be the case!
+					if (ex.getUid().getValue().equals(atom.getUid().getValue())) {
+
+						// found atomar Event of reccuring, for which this
+						// exception fits
+						if (atomYear == exYear && atomMonth == exMonth && atomDay == exDay) {
+							//ex.removeProperties(RecurrenceId.class);
+							cleanEventList.add(ex);
+							inserted = true;
+							// if (!atomarEvents.remove(atom)) {
+							// Log.e(TAG,
+							// "can't remove VEvent from atomarEvents List");
+							// }
+							break;
+						}
+
+					} else {
+						Log.e(TAG, "Missmatching UID in seperateEvents o0 WTF?");
+					}
+				}// inner for
+				if (!inserted) {
+					cleanEventList.add(atom);
+				}
+			}
+
+		} else {
+			Log.e(TAG, "ERROR rve != null && rve.e != null && rve.e.getRecurrenceRule() != null");
+			// add single Event?
+		}
+		/*
+		 * for (VEvent e : cleanEventList) { Log.d(TAG, "RECURRING EVENT : " +
+		 * e.getSummary().getValue() + "  " +
+		 * e.getDateStart().getValue().toString()); }
+		 */
+		return cleanEventList;
+	}
+
+	/**
+	 * seperates a single recurring Event with an RRULE and EXDATE into a List
+	 * of SingleEvents
+	 * 
+	 * @author friedrda
+	 * @param recurringEvent
+	 * @return List of events
+	 */
+	private static ArrayList<VEvent> seperateRecurringEvent(VEvent recurringEvent) {
+
 		ArrayList<VEvent> atomarEvents = new ArrayList<VEvent>();
-		
-		if(rve != null && rve.e != null && rve.e.getRecurrenceRule() != null){
-			
-			Date startDate = rve.e.getDateStart().getValue();
-			Date endDate = rve.e.getDateEnd().getValue();
-			
+
+		if (recurringEvent != null && recurringEvent.getRecurrenceRule() != null && recurringEvent.getRecurrenceId() == null) {
+
+			Date startDate = recurringEvent.getDateStart().getValue();
+			Date endDate = recurringEvent.getDateEnd().getValue();
+
 			Duration duration = Duration.diff(startDate, endDate);
-			
-			String title = rve.e.getSummary().getValue();
+
+			String title = recurringEvent.getSummary().getValue();
 			String description = "";
-			if(rve.e.getDescription() != null){
-				description = rve.e.getDescription().getValue();
+			if (recurringEvent.getDescription() != null) {
+				description = recurringEvent.getDescription().getValue();
 			}
 			String location = "";
-			if(rve.e.getLocation() != null){
-				location = rve.e.getLocation().getValue();
+			if (recurringEvent.getLocation() != null) {
+				location = recurringEvent.getLocation().getValue();
 			}
-			String rdata = "RRULE:"+buildRrule(rve.e);
-			
-			if(rve.e.getExceptionDates() != null && rve.e.getExceptionDates().size() > 0){
-				rdata = rdata + "\nEXDATE;" + buildExdate(rve.e.getExceptionDates());
+			String rdata = "RRULE:" + buildRrule(recurringEvent);
+
+			if (recurringEvent.getExceptionDates() != null && recurringEvent.getExceptionDates().size() > 0) {
+				rdata = rdata + "\nEXDATE;" + buildExdate(recurringEvent.getExceptionDates());
 			}
-			
-			TimeZone tz = TimeZone.getDefault();
-			
-			
-			
+
+			String uid = recurringEvent.getUid().getValue();
+
+			Status status = recurringEvent.getStatus();
+
+			Classification eventCalss = recurringEvent.getClassification();
+
+			Priority prio = recurringEvent.getPriority();
+
+			int sequence = recurringEvent.getSequence().getValue();
+			Transparency transp = recurringEvent.getTransparency();
+
+			List<String> categories = new ArrayList<String>();
+
+			if (recurringEvent.getCategories() != null && !recurringEvent.getCategories().isEmpty())
+				categories = recurringEvent.getCategories().get(0).getValues();
+
+			TimeZone tz = TimeZone.getTimeZone(recurringEvent.getDateStart().getTimezoneId());
+
 			try {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(startDate);
-				DateIterator dif = DateIteratorFactory.createDateIterator(rdata, startDate, tz, true);
-				Log.e(TAG, "RRULE = " + rdata);
 				
-				while(dif.hasNext()){
+				int startDstOffset = cal.get(Calendar.DST_OFFSET);
+				DateIterator dif = DateIteratorFactory.createDateIterator(rdata, startDate, tz, true);
+
+				//Log.d(TAG, "EVENT: " + recurringEvent.getSummary().getValue() + " Recurrs on: ");
+
+				
+				
+				while (dif.hasNext()) {
 					Date d = dif.next();
+
+					cal.setTime(d);
 					
+					int dstOffset = cal.get(Calendar.DST_OFFSET);
+					// create VEvent with this date
 					VEvent e = new VEvent();
+					e.setUid(uid);
 					e.setSummary(title);
 					e.setDescription(description);
 					e.setLocation(location);
+
+					e.setStatus(status);
+					e.setClassification(eventCalss);
+					e.setPriority(prio);
+					e.setDateTimeStamp(new Date());
+					e.setSequence(sequence);
+					e.setTransparency(transp);
+					e.addCategories(categories);
+
 					
-					e.setDateStart(d);
-					
-					Log.e(TAG, "RRULE DATES = " + d.toString());
-					
-					cal.setTime(d);
-					int year 	= cal.get(Calendar.YEAR);
-					int month = cal.get(Calendar.MONTH);
-					int day 	= cal.get(Calendar.DAY_OF_MONTH);
-					int dstOff = cal.get(Calendar.DST_OFFSET);
-					
-					if(recIdYear == year && recIdMonth == month && recIdDay == day){
-						
-						if(recIdDstOff != dstOff){
-							Log.e(TAG, "\t WIRED_SHIT   recIdDstOff=" + recIdDstOff + " != dstOff="+dstOff);
-						}	
-						dateStartOriginal = d.getTime() + (3600000 - dstOff);
-						Log.e(TAG, "\t DST_OFF  = " + dstOff);
-						Log.e(TAG, "\t START DATE  = " + d.toString());
-						Log.e(TAG, "\t START DATE  = " + d.getTime());
-						values.put(Events.ORIGINAL_INSTANCE_TIME, dateStartOriginal);
-						
-						break;
+					if(startDstOffset != dstOffset){
+						//Log.i(TAG, "startDstOffset = " + startDstOffset + "\t dstOffset = " + dstOffset);
 					}
+					e.setDateStart(new Date(d.getTime() + startDstOffset - dstOffset));
+					
+
+					Date end = new Date(d.getTime() + duration.toMillis()+ startDstOffset - dstOffset);
+					//Log.d(TAG, "Date FROM " + d.toString() + "  to: " + end.toString());
+					
+					e.setDateEnd(end);
+
+					atomarEvents.add(e);
+
 				}
-				
+
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}	
-			
-			
-			
-			
+			}
 
-		}else {
-			//TODO throw exception?
+		} else {
+			Log.e(TAG, "NULL ERROR");
 		}
-		
-		
 		return atomarEvents;
+
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -724,24 +805,18 @@ public class CalendarManager {
 		return cleanList;
 	}
 
-	public static long insertEvent(Context context, Account account, long calendarId, VEvent e, RecurringVEvent re) {
+	public static long insertEvent(Context context, Account account, long calendarId, VEvent e) {
 
 		ContentResolver cr = context.getContentResolver();
 		ContentValues values = new ContentValues();
 		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
 
-		values.put(Events.DTSTART, e.getDateStart().getValue().getTime());
-
+		values.put(Events.CALENDAR_ID, calendarId);
 		values.put(Events.TITLE, e.getSummary().getValue());
-
+		values.put(Events.DTSTART, e.getDateStart().getValue().getTime());
+		values.put(Events.DTEND, e.getDateEnd().getValue().getTime());
 		values.put(Events._SYNC_ID, e.getUid().getValue());
 		values.put(Events.SYNC_DATA1, Long.toString(e.getDateTimeStamp().getValue().getTime()));
-
-		// if (re == null) {
-		values.put(Events.CALENDAR_ID, calendarId);
-		values.put(Events.DTEND, e.getDateEnd().getValue().getTime());
-		//values.put(Events.EVENT_TIMEZONE, TimeZone.getTimeZone(e.getDateStart().getTimezoneId()).getID());
-		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
 
 		if (e.getDescription() != null)
 			values.put(Events.DESCRIPTION, e.getDescription().getValue());
@@ -749,115 +824,15 @@ public class CalendarManager {
 		if (e.getLocation() != null)
 			values.put(Events.EVENT_LOCATION, e.getLocation().getValue());
 
-		if (e.getRecurrenceRule() != null) {
-			String rrule = buildRrule(e);
-			Log.i(TAG, "add RRULE " + rrule);			
-			values.put(Events.RRULE, rrule);
-
-		}
-
-		if (!e.getExceptionDates().isEmpty()) {
-			String exdate = buildExdate(e.getExceptionDates());
-			Log.i(TAG, "add EXDATE " + exdate);
-			values.put(Events.EXDATE, exdate);
-		}
-
-		// }
-		
-		if((e.getRecurrenceRule() != null || re != null) && e.getDateStart() != null && e.getDateEnd() != null){
-			Duration duration = Duration.diff(e.getDateStart().getValue(), e.getDateEnd().getValue());
-			values.put(Events.DURATION, duration.toString());	
-		}
-		
-
-		if (re != null) {
-			
-			
-			Calendar cal = Calendar.getInstance();
-
-			
-			
-			values.put(Events.ORIGINAL_ID, re.getId());
-			
-			values.put(Events.ORIGINAL_SYNC_ID, re.e.getUid().getValue());
-
-			
-			Date recurrenceID = e.getRecurrenceId().getValue();
-			cal.setTime(recurrenceID);
-			int recIdYear 	= cal.get(Calendar.YEAR);
-			int recIdMonth 	= cal.get(Calendar.MONTH);
-			int recIdDay 	= cal.get(Calendar.DAY_OF_MONTH);
-			int recIdDstOff = cal.get(Calendar.DST_OFFSET);
-			
-			
-			String rrule = "RRULE:" + buildRrule(re.e);
-			
-			String exdate = "";
-			if(re.e.getExceptionDates() != null && re.e.getExceptionDates().size() > 0){
-				exdate = "\nEXDATE;" + buildExdate(re.e.getExceptionDates());
-			}
-			Date startRec = re.e.getDateStart().getValue();
-			//TimeZone tz = TimeZone.getTimeZone(re.e.getDateStart().getTimezoneId());
-			TimeZone tz = TimeZone.getDefault();
-			DateIterator dif = null;
-			
-			
-			
-			long dateStartOriginal = 0;
-			
-			
-			try {
-				String rdata = rrule  + exdate;
-				dif = DateIteratorFactory.createDateIterator(rdata, startRec, tz, false);
-				Log.e(TAG, "RRULE = " + rrule);
-				
-				while(dif.hasNext()){
-					Date d = dif.next();
-					
-					
-					Log.e(TAG, "RRULE DATES = " + d.toString());
-					
-					cal.setTime(d);
-					int year 	= cal.get(Calendar.YEAR);
-					int month = cal.get(Calendar.MONTH);
-					int day 	= cal.get(Calendar.DAY_OF_MONTH);
-					int dstOff = cal.get(Calendar.DST_OFFSET);
-					
-					if(recIdYear == year && recIdMonth == month && recIdDay == day){
-						
-						if(recIdDstOff != dstOff){
-							Log.e(TAG, "\t WIRED_SHIT   recIdDstOff=" + recIdDstOff + " != dstOff="+dstOff);
-						}	
-						dateStartOriginal = d.getTime() + (3600000 - dstOff);
-						Log.e(TAG, "\t DST_OFF  = " + dstOff);
-						Log.e(TAG, "\t START DATE  = " + d.toString());
-						Log.e(TAG, "\t START DATE  = " + d.getTime());
-						values.put(Events.ORIGINAL_INSTANCE_TIME, dateStartOriginal);
-						
-						break;
-					}
-				}
-				
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}	
-			
-			
-
-			Log.d(TAG, "\tRECURRING: Events.ORIGINAL_ID = " + re.getId());
-			Log.d(TAG, "\tRECURRING: Events.ORIGINAL_SYNC_ID " + re.e.getUid().getValue());
-			Log.d(TAG, "\tRECURRING: Events.ORIGINAL_INSTANCE_TIME " + dateStartOriginal);
-
-		}
+		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
 
 		Uri ret = cr.insert(uri, values);
 
 		if (ret == null) {
 			Log.e(TAG, " INERT ERROR return URI is null");
 			return 0;
-		}else {
-			//Log.d(TAG, " INERTed to " + ret.toString());
+		} else {
+			// Log.d(TAG, " INERTed to " + ret.toString());
 		}
 
 		return ContentUris.parseId(ret);
@@ -883,7 +858,8 @@ public class CalendarManager {
 		valuesRecurring.put(Events._SYNC_ID, uid);
 
 		valuesRecurring.put(Events.CALENDAR_ID, calendarId);
-	//	valuesRecurring.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
+		// valuesRecurring.put(Events.EVENT_TIMEZONE,
+		// TimeZone.getDefault().getID());
 		valuesRecurring.put(Events.RRULE, "FREQ=WEEKLY;UNTIL=20131022T110000Z;INTERVAL=1;BYDAY=TU;WKST=MO");
 
 		Uri ret = cr.insert(uri, valuesRecurring);
@@ -911,7 +887,8 @@ public class CalendarManager {
 		valuesException.put(Events._SYNC_ID, uid);
 
 		valuesException.put(Events.CALENDAR_ID, calendarId);
-		//valuesException.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
+		// valuesException.put(Events.EVENT_TIMEZONE,
+		// TimeZone.getDefault().toString());
 
 		valuesException.put(Events.ORIGINAL_ID, id);
 		valuesException.put(Events.ORIGINAL_SYNC_ID, uid);
@@ -1029,67 +1006,65 @@ public class CalendarManager {
 	 * 
 	 * }
 	 */
-	
-/*	public static void insertEventsAsBatch(Context context, Account account, long calendarId, ArrayList<VEvent> eventList) {
 
-		for (VEvent vEvent : eventList) {
-
-		}
-
-		Log.d(TAG, "insertEventsAsBatch() ");
-		ContentResolver cr = context.getContentResolver();
-		ContentValues[] values = new ContentValues[eventList.size()];
-
-		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-
-		Log.d(TAG, "insertEventsAsBatch() " + eventList.size() + " events to add");
-
-		int idx = 0;
-		for (VEvent event : eventList) {
-
-			values[idx] = new ContentValues();
-			values[idx].put(Events.CALENDAR_ID, calendarId);
-			values[idx].put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
-
-			values[idx].put(Events.DTSTART, event.getDateStart().getValue().getTime());
-			values[idx].put(Events.DTEND, event.getDateEnd().getValue().getTime());
-			values[idx].put(Events.TITLE, event.getSummary().getValue());
-
-			values[idx].put(Events._SYNC_ID, event.getUid().getValue());
-			values[idx].put(Events.SYNC_DATA1, Long.toString(event.getDateTimeStamp().getValue().getTime()));
-
-			if (event.getDescription() != null)
-				values[idx].put(Events.DESCRIPTION, event.getDescription().getValue());
-			else
-				values[idx].put(Events.DESCRIPTION, "");
-
-			if (event.getLocation() != null)
-				values[idx].put(Events.EVENT_LOCATION, event.getLocation().getValue());
-
-			if (event.getRecurrenceRule() != null) {
-				String rrule = buildRrule(event);
-				Log.i(TAG, "RRULE " + rrule);
-				values[idx].put(Events.RRULE, rrule);
-			}
-
-			if (!event.getExceptionDates().isEmpty()) {
-				String exdate = buildExdate(event.getExceptionDates());
-				Log.i(TAG, "add EXDATE " + exdate);
-				values[idx].put(Events.EXDATE, exdate);
-			}
-
-			if (event.getRecurrenceId() != null) {
-				// long orgEventId = getEventByUID(event.getUid().getValue());
-			}
-
-			idx++;
-
-		}
-
-		Log.d(TAG, "insertEventsAsBatch()  bulkInsert()");
-		cr.bulkInsert(uri, values);
-
-	}
-*/
+	/*
+	 * public static void insertEventsAsBatch(Context context, Account account,
+	 * long calendarId, ArrayList<VEvent> eventList) {
+	 * 
+	 * for (VEvent vEvent : eventList) {
+	 * 
+	 * }
+	 * 
+	 * Log.d(TAG, "insertEventsAsBatch() "); ContentResolver cr =
+	 * context.getContentResolver(); ContentValues[] values = new
+	 * ContentValues[eventList.size()];
+	 * 
+	 * Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+	 * 
+	 * Log.d(TAG, "insertEventsAsBatch() " + eventList.size() +
+	 * " events to add");
+	 * 
+	 * int idx = 0; for (VEvent event : eventList) {
+	 * 
+	 * values[idx] = new ContentValues(); values[idx].put(Events.CALENDAR_ID,
+	 * calendarId); values[idx].put(Events.EVENT_TIMEZONE,
+	 * TimeZone.getDefault().toString());
+	 * 
+	 * values[idx].put(Events.DTSTART,
+	 * event.getDateStart().getValue().getTime()); values[idx].put(Events.DTEND,
+	 * event.getDateEnd().getValue().getTime()); values[idx].put(Events.TITLE,
+	 * event.getSummary().getValue());
+	 * 
+	 * values[idx].put(Events._SYNC_ID, event.getUid().getValue());
+	 * values[idx].put(Events.SYNC_DATA1,
+	 * Long.toString(event.getDateTimeStamp().getValue().getTime()));
+	 * 
+	 * if (event.getDescription() != null) values[idx].put(Events.DESCRIPTION,
+	 * event.getDescription().getValue()); else
+	 * values[idx].put(Events.DESCRIPTION, "");
+	 * 
+	 * if (event.getLocation() != null) values[idx].put(Events.EVENT_LOCATION,
+	 * event.getLocation().getValue());
+	 * 
+	 * if (event.getRecurrenceRule() != null) { String rrule =
+	 * buildRrule(event); Log.i(TAG, "RRULE " + rrule);
+	 * values[idx].put(Events.RRULE, rrule); }
+	 * 
+	 * if (!event.getExceptionDates().isEmpty()) { String exdate =
+	 * buildExdate(event.getExceptionDates()); Log.i(TAG, "add EXDATE " +
+	 * exdate); values[idx].put(Events.EXDATE, exdate); }
+	 * 
+	 * if (event.getRecurrenceId() != null) { // long orgEventId =
+	 * getEventByUID(event.getUid().getValue()); }
+	 * 
+	 * idx++;
+	 * 
+	 * }
+	 * 
+	 * Log.d(TAG, "insertEventsAsBatch()  bulkInsert()"); cr.bulkInsert(uri,
+	 * values);
+	 * 
+	 * }
+	 */
 
 }
