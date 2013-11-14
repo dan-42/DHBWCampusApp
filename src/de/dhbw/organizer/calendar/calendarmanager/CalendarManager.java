@@ -24,6 +24,9 @@
  */
 package de.dhbw.organizer.calendar.calendarmanager;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,26 +37,31 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
+import org.xml.sax.SAXException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import android.accounts.Account;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
-import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.util.Log;
-
-//A compatibility layer for joda-time
-import com.google.ical.compat.javautil.*;
-
 import biweekly.component.VEvent;
-import biweekly.parameter.ICalParameters;
-import biweekly.property.Categories;
 import biweekly.property.Classification;
 import biweekly.property.ExceptionDates;
 import biweekly.property.Priority;
@@ -63,8 +71,14 @@ import biweekly.property.Transparency;
 import biweekly.util.Duration;
 import biweekly.util.Recurrence;
 import biweekly.util.Recurrence.DayOfWeek;
+
+//A compatibility layer for joda-time
+import com.google.ical.compat.javautil.DateIterator;
+import com.google.ical.compat.javautil.DateIteratorFactory;
+
 import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.objects.RecurringVEvent;
+import de.dhbw.organizer.calendar.objects.SpinnerItem;
 
 /**
  * @author schoko This class has only static functions to help handle all the
@@ -72,6 +86,95 @@ import de.dhbw.organizer.calendar.objects.RecurringVEvent;
  */
 public class CalendarManager {
 	private static final String TAG = "CalendarManager";
+
+	private static final String XML_SCHEMA_VERSION = "1.0";
+
+	private static final String ASSET_XML_SCHEMA_CALENDAR_LIST = "xsd/calendar_calendarlist.xsd";
+
+	private static final String ASSET_DEFAULT_CALENDAR_LIST = "xml/calendar_calendars.xml";
+
+	private static final String DATA_EXTERN_CALENDAR_LIST = "xml/calendar_calendars.xml";
+
+	// private static final
+
+	private Context mContext = null;
+
+	public CalendarManager(Context context) {
+		mContext = context;
+	}
+
+	public static List<SpinnerItem> getSelectableCalendars(Context mContext) {
+		Log.d(TAG, "getSelectableCalendars()");
+		AssetManager assetManager = mContext.getAssets();
+		InputStream isCalendarsDefaultXml = null;
+		InputStream isCalendarsXSD = null;
+
+		try {
+			// get Validator for validating XML Schema
+			isCalendarsXSD = assetManager.open(ASSET_XML_SCHEMA_CALENDAR_LIST);
+			StreamSource ssCalendarXsd = new StreamSource(isCalendarsXSD);
+			
+			
+		/*	SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Schema schema = factory.newSchema(ssCalendarXsd);
+			Validator validator = schema.newValidator();
+
+			StreamSource ssXMLDefault = new StreamSource(assetManager.open(ASSET_DEFAULT_CALENDAR_LIST));
+
+			validator.validate(ssXMLDefault);
+*/
+			isCalendarsDefaultXml = assetManager.open(ASSET_DEFAULT_CALENDAR_LIST);
+			
+			XmlPullParserFactory parserfactory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = parserfactory.newPullParser();
+			parser.setInput(new InputStreamReader(isCalendarsDefaultXml));
+
+			
+			String xmlNameSpace = parser.getNamespace();
+			parser.next();
+			String xmlVersion = parser.getAttributeValue(xmlNameSpace, "Version");
+			String xmlLastUpdate = parser.getAttributeValue(xmlNameSpace, "LastUpdate");
+			
+
+			Log.i(TAG, "XMLversion = " + xmlVersion + "  xmlLastUpdate = " + xmlLastUpdate + " Namsespace = " + xmlNameSpace);
+			
+			parser.require(XmlPullParser.START_TAG, null, "Calendars");
+		    while (parser.next() != XmlPullParser.END_TAG) {
+		        if (parser.getEventType() != XmlPullParser.START_TAG) {
+		            continue;
+		        }
+		        String name = parser.getName();
+		        // Starts by looking for the entry tag
+		        if (name.equals("Calendar")) {
+		            readCalendar(parser);
+		        } else {
+		            skip(parser);
+		        }
+		    }  
+		    
+
+			
+			    
+
+
+		} catch (IOException e) {
+			Log.e(TAG, "IOException " + e.getMessage());
+			e.printStackTrace();
+		}
+		/*catch (SAXException e) {
+			Log.e(TAG, "SAXException " + e.getMessage());
+			e.printStackTrace();
+		}*/ catch (XmlPullParserException e) {
+			Log.e(TAG, "XmlPullParserException " + e.getMessage());
+			e.printStackTrace();
+		} catch(IllegalArgumentException e){
+			Log.e(TAG, "IllegalArgumentException " + e.getMessage());
+		}
+
+		
+		return null;
+	}
 
 	/**
 	 * check if a calenda already exists
@@ -81,6 +184,7 @@ public class CalendarManager {
 	 * @return
 	 */
 	public static boolean calendarExists(Context context, Account account) {
+		getSelectableCalendars(context);
 
 		Cursor cur = null;
 		boolean calendarExists = false;
@@ -263,6 +367,9 @@ public class CalendarManager {
 	}
 
 	public static void insertEvents(Context context, Account account, long calendarId, ArrayList<VEvent> eventList) {
+		
+		getSelectableCalendars(context);
+		
 		Log.d(TAG, "insertEvents() " + eventList.size() + " events to add in total");
 
 		// NO RRULE, NO RECURRING_ID
@@ -277,24 +384,24 @@ public class CalendarManager {
 		for (VEvent e : eventList) {
 
 			// no RRULE or nor RECURRENCE-ID
-			if (e.getRecurrenceRule() == null && e.getRecurrenceId() == null) {				
+			if (e.getRecurrenceRule() == null && e.getRecurrenceId() == null) {
 				recularEvents.add(e);
 			}
 
 			else {
 
 				if (e.getRecurrenceRule() != null) {
-					Log.d(TAG, "Recurring: ");
-					Log.d(TAG, "\t event: " + e.getSummary().getValue() + "  " + e.getDateStart().getValue().toString());
-					Log.d(TAG, "\t e.getRRule() = " + buildRrule(e));
+				//	Log.d(TAG, "Recurring: ");
+				//	Log.d(TAG, "\t event: " + e.getSummary().getValue() + "  " + e.getDateStart().getValue().toString());
+				//	Log.d(TAG, "\t e.getRRule() = " + buildRrule(e));
 
 					recurringEvents.add(new RecurringVEvent(e));
 
 				} else if (e.getRecurrenceId() != null) {
-					
-					Log.d(TAG, "Exception: ");
-					Log.d(TAG, "\t event: " + e.getSummary().getValue() + "  " + e.getDateStart().getValue().toString());
-					Log.d(TAG, "\t e.getRecurrenceId() = " + e.getRecurrenceId().getValue().toString());
+
+				//	Log.d(TAG, "Exception: ");
+				//	Log.d(TAG, "\t event: " + e.getSummary().getValue() + "  " + e.getDateStart().getValue().toString());
+				//	Log.d(TAG, "\t e.getRecurrenceId() = " + e.getRecurrenceId().getValue().toString());
 
 					boolean isInserted = false;
 					for (RecurringVEvent re : recurringEvents) {
@@ -331,7 +438,7 @@ public class CalendarManager {
 
 		Log.d(TAG, "insert recurring Events ");
 		for (RecurringVEvent re : recurringEvents) {
-			Log.d(TAG, "INSERT RECURING " + re.e.getSummary().getValue());
+		//	Log.d(TAG, "INSERT RECURING " + re.e.getSummary().getValue());
 			ArrayList<VEvent> atomarEventList = seperateEvents(re);
 
 			for (VEvent e : atomarEventList) {
@@ -564,7 +671,8 @@ public class CalendarManager {
 
 				for (VEvent ex : exceptions) {
 					if (ex.getRecurrenceId() == null) {
-						Log.e(TAG, "MISSING RecurrenceID HELP! in seperateEvents() " + ex.getSummary().getValue() + " on Date " + ex.getDateStart().getValue().toString());
+						Log.e(TAG, "MISSING RecurrenceID HELP! in seperateEvents() " + ex.getSummary().getValue() + " on Date "
+								+ ex.getDateStart().getValue().toString());
 						break;
 					}
 					Date recId = ex.getRecurrenceId().getValue();
@@ -581,7 +689,7 @@ public class CalendarManager {
 						// found atomar Event of reccuring, for which this
 						// exception fits
 						if (atomYear == exYear && atomMonth == exMonth && atomDay == exDay) {
-							//ex.removeProperties(RecurrenceId.class);
+							// ex.removeProperties(RecurrenceId.class);
 							cleanEventList.add(ex);
 							inserted = true;
 							// if (!atomarEvents.remove(atom)) {
@@ -667,19 +775,18 @@ public class CalendarManager {
 			try {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(startDate);
-				
+
 				int startDstOffset = cal.get(Calendar.DST_OFFSET);
 				DateIterator dif = DateIteratorFactory.createDateIterator(rdata, startDate, tz, true);
 
-				//Log.d(TAG, "EVENT: " + recurringEvent.getSummary().getValue() + " Recurrs on: ");
+				// Log.d(TAG, "EVENT: " + recurringEvent.getSummary().getValue()
+				// + " Recurrs on: ");
 
-				
-				
 				while (dif.hasNext()) {
 					Date d = dif.next();
 
 					cal.setTime(d);
-					
+
 					int dstOffset = cal.get(Calendar.DST_OFFSET);
 					// create VEvent with this date
 					VEvent e = new VEvent();
@@ -696,16 +803,16 @@ public class CalendarManager {
 					e.setTransparency(transp);
 					e.addCategories(categories);
 
-					
-					if(startDstOffset != dstOffset){
-						//Log.i(TAG, "startDstOffset = " + startDstOffset + "\t dstOffset = " + dstOffset);
+					if (startDstOffset != dstOffset) {
+						// Log.i(TAG, "startDstOffset = " + startDstOffset +
+						// "\t dstOffset = " + dstOffset);
 					}
 					e.setDateStart(new Date(d.getTime() + startDstOffset - dstOffset));
-					
 
-					Date end = new Date(d.getTime() + duration.toMillis()+ startDstOffset - dstOffset);
-					//Log.d(TAG, "Date FROM " + d.toString() + "  to: " + end.toString());
-					
+					Date end = new Date(d.getTime() + duration.toMillis() + startDstOffset - dstOffset);
+					// Log.d(TAG, "Date FROM " + d.toString() + "  to: " +
+					// end.toString());
+
 					e.setDateEnd(end);
 
 					atomarEvents.add(e);
