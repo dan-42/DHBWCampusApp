@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * LICENSE: GPL v3 
+ * 
+ * Copyright (c) 2013 by
+ * Daniel Friedrich <friedrda@dhbw-loerrach.de>
+ * Simon Riedinger <riedings@dhbw-loerrach.de>
+ * Patrick Strittmatter <strittpa@dhbw-loerrach.de> 
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3.0 as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+ <!-- @author: friedrda -->
+
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.dhbw-loerrach.de/DhbwOrganizerCalendars/"
+	targetNamespace="http://www.dhbw-loerrach.de/DhbwOrganizerCalendars/"
+	elementFormDefault="qualified">
+	<!-- 
+	XML-schema to exchange a list of available ICALS for the Android abb DHBW Organizer
+	
+	VERSION: 1.0.0
+	 -->
+
+	<element name="Calendars">
+		<complexType>
+			<sequence>
+				<element name="Calendar" maxOccurs="unbounded">
+
+					<complexType>
+						<sequence>
+							<element name="DisplayName">
+								<simpleType>
+									<restriction base="string">
+										<minLength value="4">
+										</minLength>
+										<maxLength value="16"></maxLength>
+									</restriction>
+								</simpleType>
+							</element>
+							<element name="iCalUrl" type="anyURI"></element>
+						</sequence>
+					</complexType>
+
+				</element>
+			</sequence>
+			<attribute name="Version">
+				<simpleType>
+					<restriction base="string">
+						<minLength value="3" />
+					</restriction>
+				</simpleType>
+			</attribute>
+			<attribute name="LastUpdate">
+				<simpleType>
+					<restriction base="date">
+						<minExclusive value="2003-05-06" />
+					</restriction>
+				</simpleType>
+			</attribute>
+		</complexType>
+	</element>
+
+</schema>

@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+DEFAULT LIST , 
+this list is shipped with the Android App DHBW-Organizer
+
+ -->
+<Calendars xmlns="http://www.dhbw-loerrach.de/DhbwOrganizerCalendars/"
+    Version="1.0"     
+    LastUpdate="2013-11-14" >
+
+   <Calendar>
+	<DisplayName>STUV</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/stuv@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TEL10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tel10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TIT10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tit10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB10B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb10b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TTR10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-ttr10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TWW10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tww10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WFD10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wfd10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHC10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whc10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHC10B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whc10b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHD10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whd10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHD10B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whd10b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WIN10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-win10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WIN10B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-win10b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WPM10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wpm10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP10B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp10b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP10C</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp10c@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD10B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd10b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WWI10A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wwi10a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WWI10B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wwi10b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TEL11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tel11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TIF11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tif11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB11B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb11b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TTR11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-ttr11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TWW11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tww11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WFD11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wfd11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHC11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whc11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHC11B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whc11b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHD11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whd11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHD11B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whd11b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WIN11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-win11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WIN11B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-win11b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WPM11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wpm11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP11B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp11b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP11C</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp11c@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD11B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd11b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD11C</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd11c@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WAM11A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wam11a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSE11B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wse11b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TEL12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tel12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TEL12B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tel12b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TIF12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tif12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB12B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb12b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TTR12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-ttr12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TWW12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tww12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WBU12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wbu12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WFD12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wfd12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHC12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whc12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHC12B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whc12b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHD12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whd12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHD12B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whd12b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WIN12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-win12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WIN12B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-win12b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WPM12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wpm12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP12B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp12b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP12C</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp12c@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD12B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd12b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD12C</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd12c@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTR12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtr12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTR12B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtr12b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WWI12A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wwi12a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WWI12B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wwi12b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WWI12C</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wwi12c@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>AIO13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-aio13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TIF13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tif13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB13B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb13b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB13B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb13b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TMB13B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tmb13b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TTR13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-ttr13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>TWW13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-tww13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WBU13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wbu13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WFD13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wfd13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHC13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whc13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHC13B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whc13b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHD13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whd13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WHD13B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-whd13b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WIN13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-win13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WIN13B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-win13b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WPM13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wpm13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WPT13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wpt13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WSP13I</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wsp13i@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD13B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd13b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTD13C</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtd13c@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTR13A</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtr13a@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WTR13B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wtr13b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WWI13B</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wwi13b@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+<Calendar>
+	<DisplayName>WWI13C</DisplayName>
+	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/kal-wwi13c@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
+</Calendar>
+
+</Calendars>
