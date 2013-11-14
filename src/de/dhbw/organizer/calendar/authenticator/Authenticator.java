@@ -42,6 +42,8 @@ import android.util.Log;
 
 class Authenticator extends AbstractAccountAuthenticator {
 
+	
+	
     /** The tag used to log to adb console. **/
     private static final String TAG = "Ical Authenticator";
 

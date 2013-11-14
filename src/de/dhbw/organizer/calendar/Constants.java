@@ -38,17 +38,17 @@ public class Constants {
      */
     public static final String AUTHTOKEN_TYPE = "de.dhbw.organizer.icalsync";
     
+    /**
+     * token to rertive Calendar URL from AccountManager
+     */
+    public static final String KEY_ACCOUNT_CAL_URL = "de.dhbw.organizer.callendar.url";
     
     /**
      * the token which will be replaced in the calendar url
      */
     public static final String CALENDAR_REEPLACE_TOKEN = "{{CALENDAR}}";
     
-    /**
-     * URL where to find the ICAL file
-     * to use rplace {{CALENDAR}} with the proper name         * 
-     */
-    public static final String DHBW_ICAL_URL = "https://webmail.dhbw-loerrach.de/owa/calendar/" + CALENDAR_REEPLACE_TOKEN + "@dhbw-loerrach.de/Kalender/calendar.ics";
+    
     
     /**
      * this String is added in front of every Calendar 

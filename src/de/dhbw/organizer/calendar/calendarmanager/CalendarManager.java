@@ -35,15 +35,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.UUID;
 
-import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 
-import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -65,7 +63,6 @@ import biweekly.component.VEvent;
 import biweekly.property.Classification;
 import biweekly.property.ExceptionDates;
 import biweekly.property.Priority;
-import biweekly.property.RecurrenceId;
 import biweekly.property.Status;
 import biweekly.property.Transparency;
 import biweekly.util.Duration;
@@ -103,77 +100,69 @@ public class CalendarManager {
 		mContext = context;
 	}
 
-	public static List<SpinnerItem> getSelectableCalendars(Context mContext) {
+	public List<SpinnerItem> getSelectableCalendars2() throws ParserConfigurationException {
+
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+
+		Document doc = db.newDocument();
+
+		return null;
+	}
+
+	public List<SpinnerItem> getSelectableCalendars() {
 		Log.d(TAG, "getSelectableCalendars()");
 		AssetManager assetManager = mContext.getAssets();
 		InputStream isCalendarsDefaultXml = null;
 		InputStream isCalendarsXSD = null;
 
+		ArrayList<SpinnerItem> selectableCalendars = null;
+
 		try {
 			// get Validator for validating XML Schema
 			isCalendarsXSD = assetManager.open(ASSET_XML_SCHEMA_CALENDAR_LIST);
 			StreamSource ssCalendarXsd = new StreamSource(isCalendarsXSD);
-			
-			
-		/*	SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = factory.newSchema(ssCalendarXsd);
-			Validator validator = schema.newValidator();
 
-			StreamSource ssXMLDefault = new StreamSource(assetManager.open(ASSET_DEFAULT_CALENDAR_LIST));
-
-			validator.validate(ssXMLDefault);
-*/
+			/*
+			 * SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			 * SchemaFactory factory =
+			 * SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			 * Schema schema = factory.newSchema(ssCalendarXsd); Validator
+			 * validator = schema.newValidator();
+			 * 
+			 * StreamSource ssXMLDefault = new
+			 * StreamSource(assetManager.open(ASSET_DEFAULT_CALENDAR_LIST));
+			 * 
+			 * validator.validate(ssXMLDefault);
+			 */
 			isCalendarsDefaultXml = assetManager.open(ASSET_DEFAULT_CALENDAR_LIST);
-			
+
 			XmlPullParserFactory parserfactory = XmlPullParserFactory.newInstance();
 			XmlPullParser parser = parserfactory.newPullParser();
 			parser.setInput(new InputStreamReader(isCalendarsDefaultXml));
 
-			
 			String xmlNameSpace = parser.getNamespace();
 			parser.next();
 			String xmlVersion = parser.getAttributeValue(xmlNameSpace, "Version");
 			String xmlLastUpdate = parser.getAttributeValue(xmlNameSpace, "LastUpdate");
-			
 
 			Log.i(TAG, "XMLversion = " + xmlVersion + "  xmlLastUpdate = " + xmlLastUpdate + " Namsespace = " + xmlNameSpace);
-			
-			parser.require(XmlPullParser.START_TAG, null, "Calendars");
-		    while (parser.next() != XmlPullParser.END_TAG) {
-		        if (parser.getEventType() != XmlPullParser.START_TAG) {
-		            continue;
-		        }
-		        String name = parser.getName();
-		        // Starts by looking for the entry tag
-		        if (name.equals("Calendar")) {
-		            readCalendar(parser);
-		        } else {
-		            skip(parser);
-		        }
-		    }  
-		    
 
-			
-			    
+			CalendarXmlParser calParser = new CalendarXmlParser(xmlNameSpace);
 
+			selectableCalendars = calParser.readCalendars(parser);
 
 		} catch (IOException e) {
 			Log.e(TAG, "IOException " + e.getMessage());
 			e.printStackTrace();
-		}
-		/*catch (SAXException e) {
-			Log.e(TAG, "SAXException " + e.getMessage());
-			e.printStackTrace();
-		}*/ catch (XmlPullParserException e) {
+		} catch (XmlPullParserException e) {
 			Log.e(TAG, "XmlPullParserException " + e.getMessage());
 			e.printStackTrace();
-		} catch(IllegalArgumentException e){
+		} catch (IllegalArgumentException e) {
 			Log.e(TAG, "IllegalArgumentException " + e.getMessage());
 		}
 
-		
-		return null;
+		return selectableCalendars;
 	}
 
 	/**
@@ -184,7 +173,6 @@ public class CalendarManager {
 	 * @return
 	 */
 	public static boolean calendarExists(Context context, Account account) {
-		getSelectableCalendars(context);
 
 		Cursor cur = null;
 		boolean calendarExists = false;
@@ -266,8 +254,6 @@ public class CalendarManager {
 		values.put(Calendars.NAME, account.name);
 		values.put(Calendars.CALENDAR_DISPLAY_NAME, Constants.CALENDAR_DISPLAY_NAME_PREFIX + account.name);
 		values.put(Calendars.CALENDAR_COLOR, color);
-		// values.put(Calendars.CALENDAR_ACCESS_LEVEL,
-		// Calendars.CAL_ACCESS_READ);
 		values.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
 		values.put(Calendars.OWNER_ACCOUNT, account.name);
 		values.put(Calendars.SYNC_EVENTS, 1);
@@ -367,9 +353,7 @@ public class CalendarManager {
 	}
 
 	public static void insertEvents(Context context, Account account, long calendarId, ArrayList<VEvent> eventList) {
-		
-		getSelectableCalendars(context);
-		
+
 		Log.d(TAG, "insertEvents() " + eventList.size() + " events to add in total");
 
 		// NO RRULE, NO RECURRING_ID
@@ -391,17 +375,20 @@ public class CalendarManager {
 			else {
 
 				if (e.getRecurrenceRule() != null) {
-				//	Log.d(TAG, "Recurring: ");
-				//	Log.d(TAG, "\t event: " + e.getSummary().getValue() + "  " + e.getDateStart().getValue().toString());
-				//	Log.d(TAG, "\t e.getRRule() = " + buildRrule(e));
+					// Log.d(TAG, "Recurring: ");
+					// Log.d(TAG, "\t event: " + e.getSummary().getValue() +
+					// "  " + e.getDateStart().getValue().toString());
+					// Log.d(TAG, "\t e.getRRule() = " + buildRrule(e));
 
 					recurringEvents.add(new RecurringVEvent(e));
 
 				} else if (e.getRecurrenceId() != null) {
 
-				//	Log.d(TAG, "Exception: ");
-				//	Log.d(TAG, "\t event: " + e.getSummary().getValue() + "  " + e.getDateStart().getValue().toString());
-				//	Log.d(TAG, "\t e.getRecurrenceId() = " + e.getRecurrenceId().getValue().toString());
+					// Log.d(TAG, "Exception: ");
+					// Log.d(TAG, "\t event: " + e.getSummary().getValue() +
+					// "  " + e.getDateStart().getValue().toString());
+					// Log.d(TAG, "\t e.getRecurrenceId() = " +
+					// e.getRecurrenceId().getValue().toString());
 
 					boolean isInserted = false;
 					for (RecurringVEvent re : recurringEvents) {
@@ -438,7 +425,7 @@ public class CalendarManager {
 
 		Log.d(TAG, "insert recurring Events ");
 		for (RecurringVEvent re : recurringEvents) {
-		//	Log.d(TAG, "INSERT RECURING " + re.e.getSummary().getValue());
+			// Log.d(TAG, "INSERT RECURING " + re.e.getSummary().getValue());
 			ArrayList<VEvent> atomarEventList = seperateEvents(re);
 
 			for (VEvent e : atomarEventList) {
@@ -477,7 +464,7 @@ public class CalendarManager {
 				sb.append("TZID=").append(tz).append(':');
 			}
 
-			for (Iterator iterator = dates.iterator(); iterator.hasNext();) {
+			for (Iterator<Date> iterator = dates.iterator(); iterator.hasNext();) {
 				Date date = (Date) iterator.next();
 
 				if (tz != null) {
@@ -818,9 +805,7 @@ public class CalendarManager {
 					atomarEvents.add(e);
 
 				}
-
 			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -843,73 +828,6 @@ public class CalendarManager {
 		sb.append(timeFormat.format(until));
 
 		return sb.toString();
-	}
-
-	/**
-	 * This function cleans up some fuckUps from Microsoft! FIRST sometimes in
-	 * the iCal-Files there are two Events with same attributes except the
-	 * sequencnumber. The SequenceNumber should only be increased, not being
-	 * duplicated!
-	 * 
-	 * SECOND Microsoft uses an own property called X-MICROSOFT-CDO-INSTTYPE to
-	 * indicate if an event is once, recurring or an exception of an recurring
-	 * But there are no further information about this, so we have to filter for
-	 * those by ourselves
-	 * 
-	 * @param dirtyList
-	 * @return cleanList
-	 */
-	public static ArrayList<VEvent> fixMicrosoftFuckUps(ArrayList<VEvent> dirtyList) {
-
-		ArrayList<VEvent> cleanList = new ArrayList<VEvent>();
-
-		for (VEvent outerEvent : dirtyList) {
-			boolean toInsert = true;
-			for (VEvent innerEvent : dirtyList) {
-
-				// not the same Object!
-				if (!outerEvent.equals(innerEvent)) {
-
-					// events have same UID
-					if (outerEvent.getUid().getValue().equals(innerEvent.getUid().getValue())) {
-
-						// outer has RRULE inner has RECURREND-ID
-						if (outerEvent.getRecurrenceRule() != null && innerEvent.getRecurrenceId() != null) {
-
-							/**
-							 * FIX wrong RECURRING-ID
-							 */
-
-							if (innerEvent.getRecurrenceId().getRange() != null) {
-								System.err.println("RECURRING-ID RANGE NOT SUPPORTED");
-
-							}
-
-							SimpleDateFormat sdfDateOnly = new SimpleDateFormat("yyyyMMdd");
-
-							String outerDTStart = sdfDateOnly.format(outerEvent.getDateStart().getValue());
-							String innerReqId = sdfDateOnly.format(innerEvent.getRecurrenceId().getValue());
-
-							// if(outerDTStart.equals(innerReqId)){
-
-							RecurrenceId rId = new RecurrenceId(outerEvent.getDateStart().getValue(), true);
-							rId.setLocalTime(true);
-							rId.setTimezoneId(outerEvent.getDateStart().getTimezoneId());
-							innerEvent.setRecurrenceId(rId);
-							// }
-
-						}
-
-					} // same UID
-				}
-			}
-
-			if (toInsert) {
-				cleanList.add(outerEvent);
-			}
-		}
-
-		return cleanList;
 	}
 
 	public static long insertEvent(Context context, Account account, long calendarId, VEvent e) {
@@ -946,232 +864,104 @@ public class CalendarManager {
 
 	}
 
-	public static void insertTestEvents(Context context, Account account, long calendarId) throws ParseException {
+	static class CalendarXmlParser {
 
-		ContentResolver cr = context.getContentResolver();
-		ContentValues valuesRecurring = new ContentValues();
-		ContentValues valuesException = new ContentValues();
+		private static final String XML_TAG_CALENDARS = "Calendars";
+		private static final String XML_TAG_DISPLAY_NAME = "DisplayName";
+		private static final String XML_TAG_ICAL_URL = "iCalUrl";
+		private static final String XML_TAG_CALENDAR = "Calendar";
+		private String mNameSpace = "";
 
-		String uid = UUID.randomUUID().toString();
-		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-
-		long start = new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 01 13:00 ").getTime();
-		long end = new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 01 15:30 ").getTime();
-
-		valuesRecurring.put(Events.DTSTART, start);
-		valuesRecurring.put(Events.DTEND, end);
-
-		valuesRecurring.put(Events.TITLE, "TEST RECURRING ");
-		valuesRecurring.put(Events._SYNC_ID, uid);
-
-		valuesRecurring.put(Events.CALENDAR_ID, calendarId);
-		// valuesRecurring.put(Events.EVENT_TIMEZONE,
-		// TimeZone.getDefault().getID());
-		valuesRecurring.put(Events.RRULE, "FREQ=WEEKLY;UNTIL=20131022T110000Z;INTERVAL=1;BYDAY=TU;WKST=MO");
-
-		Uri ret = cr.insert(uri, valuesRecurring);
-
-		long id = 0;
-		if (ret == null) {
-			Log.e(TAG, " INERT ERROR return URI is null");
-			return;
-
-		} else {
-			id = ContentUris.parseId(ret);
+		public CalendarXmlParser(String nameSpace) {
+			this.mNameSpace = nameSpace;
 		}
 
-		Uri.Builder eventUriBuilder = asSyncAdapter(Events.CONTENT_EXCEPTION_URI, account.name, account.type).buildUpon();
-		ContentUris.appendId(eventUriBuilder, id);
+		public ArrayList<SpinnerItem> readCalendars(XmlPullParser parser) throws XmlPullParserException, IOException {
+			ArrayList<SpinnerItem> cals = new ArrayList<SpinnerItem>();
 
-		long startEx = new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 08 09:00 ").getTime();
-		long startOrg = new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 08 13:00 ").getTime();
-		long endEx = new SimpleDateFormat("yyyy MM dd HH:mm").parse("2013 10 08 11:30 ").getTime();
+			parser.require(XmlPullParser.START_TAG, mNameSpace, XML_TAG_CALENDARS);
+			while (parser.next() != XmlPullParser.END_TAG) {
+				if (parser.getEventType() != XmlPullParser.START_TAG) {
+					continue;
+				}
+				String name = parser.getName();
+				// Starts by looking for the entry tag
+				if (name.equals(XML_TAG_CALENDAR)) {
+					cals.add(readCalendar(parser));
+				} else {
+					skip(parser);
+				}
+			}
 
-		valuesException.put(Events.DTSTART, startEx);
-		valuesException.put(Events.DTEND, endEx);
+			return cals;
 
-		valuesException.put(Events.TITLE, "TEST RECURRING EXCEPTION");
-		valuesException.put(Events._SYNC_ID, uid);
+		}
 
-		valuesException.put(Events.CALENDAR_ID, calendarId);
-		// valuesException.put(Events.EVENT_TIMEZONE,
-		// TimeZone.getDefault().toString());
+		private SpinnerItem readCalendar(XmlPullParser parser) throws XmlPullParserException, IOException {
 
-		valuesException.put(Events.ORIGINAL_ID, id);
-		valuesException.put(Events.ORIGINAL_SYNC_ID, uid);
-		valuesException.put(Events.ORIGINAL_INSTANCE_TIME, startOrg);
+			parser.require(XmlPullParser.START_TAG, mNameSpace, XML_TAG_CALENDAR);
+			String displayName = null;
+			String iCalUrl = null;
 
-		ret = cr.insert(uri, valuesException);
+			while (parser.next() != XmlPullParser.END_TAG) {
+				if (parser.getEventType() != XmlPullParser.START_TAG) {
+					continue;
+				}
+				String name = parser.getName();
+				if (name.equals(XML_TAG_DISPLAY_NAME)) {
+					displayName = readDisplayName(parser);
+				} else if (name.equals(XML_TAG_ICAL_URL)) {
+					iCalUrl = readICalUrl(parser);
 
+				} else {
+					skip(parser);
+				}
+			}
+			return new SpinnerItem(displayName, iCalUrl);
+		}
+
+		private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+			if (parser.getEventType() != XmlPullParser.START_TAG) {
+				throw new IllegalStateException();
+			}
+			int depth = 1;
+			while (depth != 0) {
+				switch (parser.next()) {
+				case XmlPullParser.END_TAG:
+					depth--;
+					break;
+				case XmlPullParser.START_TAG:
+					depth++;
+					break;
+				}
+			}
+		}
+
+		private String readICalUrl(XmlPullParser parser) throws XmlPullParserException, IOException {
+
+			parser.require(XmlPullParser.START_TAG, mNameSpace, XML_TAG_ICAL_URL);
+			String iCalUrl = readText(parser);
+			parser.require(XmlPullParser.END_TAG, mNameSpace, XML_TAG_ICAL_URL);
+			return iCalUrl;
+		}
+
+		private String readDisplayName(XmlPullParser parser) throws XmlPullParserException, IOException {
+
+			parser.require(XmlPullParser.START_TAG, mNameSpace, XML_TAG_DISPLAY_NAME);
+			String displayName = readText(parser);
+			parser.require(XmlPullParser.END_TAG, mNameSpace, XML_TAG_DISPLAY_NAME);
+			return displayName;
+		}
+
+		// For the tags title and summary, extracts their text values.
+		private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+			String result = "";
+			if (parser.next() == XmlPullParser.TEXT) {
+				result = parser.getText();
+				parser.nextTag();
+			}
+			return result;
+		}
 	}
-
-	/*
-	 * public static ArrayList<CalendarEvent> getAllCalendarEvents(Context
-	 * context, Account account, long calendarId) { Cursor cur = null;
-	 * ArrayList<CalendarEvent> eventList = new ArrayList<CalendarEvent>();
-	 * ContentResolver cr = context.getContentResolver();
-	 * 
-	 * Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-	 * 
-	 * String[] projection = new String[] { Events._ID, Events._SYNC_ID,
-	 * Events.SYNC_DATA1, Events.TITLE, Events.DTSTART, Events.DTEND,
-	 * Events.DESCRIPTION, Events.EVENT_LOCATION };
-	 * 
-	 * String selection = "((" + Events.CALENDAR_ID + " = ?) )"; String[]
-	 * selectionArgs = new String[] { Long.toString(calendarId) };
-	 * 
-	 * cur = cr.query(uri, projection, selection, selectionArgs, null);
-	 * 
-	 * if (cur.moveToFirst()) {
-	 * 
-	 * String eventUid = ""; long eventId = 0; long eventTimeStamp = 0; long
-	 * start = 0; long end = 0; String title = ""; String location = ""; String
-	 * description = "";
-	 * 
-	 * do {
-	 * 
-	 * eventId = cur.getLong(0); eventUid = cur.getString(1); eventTimeStamp =
-	 * Long.parseLong(cur.getString(2)); title = cur.getString(3); start =
-	 * cur.getLong(4); end = cur.getLong(5); description = cur.getString(6);
-	 * location = cur.getString(7);
-	 * 
-	 * eventList.add(new CalendarEvent(eventId, eventUid, eventTimeStamp, start,
-	 * end, title, description, location)); } while (cur.moveToNext());
-	 * 
-	 * } else { Log.d(TAG, "getAllCalendarEvents() courser is empty");
-	 * 
-	 * }
-	 * 
-	 * cur.close(); return eventList;
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * /* private static long getEventByUID(Context context, Account account,
-	 * String id) {
-	 * 
-	 * Cursor cur = null; ContentResolver cr = context.getContentResolver();
-	 * 
-	 * Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-	 * 
-	 * String[] projection = new String[] { Events._ID, Events._SYNC_ID};
-	 * 
-	 * String selection = "((" + Events._SYNC_ID + " = ?) )"; String[]
-	 * selectionArgs = new String[] { Long.toString(calendarId) };
-	 * 
-	 * cur = cr.query(uri, projection, selection, selectionArgs, null);
-	 * 
-	 * if (cur.moveToFirst()) {
-	 * 
-	 * 
-	 * 
-	 * do {
-	 * 
-	 * 
-	 * 
-	 * eventList.add(new CalendarEvent(eventId, eventUid, eventTimeStamp, start,
-	 * end, title, description, location));
-	 * 
-	 * } while (cur.moveToNext());
-	 * 
-	 * } else { Log.d(TAG, "getAllCalendarEvents() courser is empty");
-	 * 
-	 * }
-	 * 
-	 * cur.close(); return eventList;
-	 * 
-	 * return 0; }
-	 */
-
-	/*
-	 * public static void updateEvent(Context context, Account account, long
-	 * calendarId, CalendarEvent event) {
-	 * 
-	 * ContentResolver cr = context.getContentResolver(); ContentValues values =
-	 * new ContentValues(); Uri uri = asSyncAdapter(Events.CONTENT_URI,
-	 * account.name, account.type);
-	 * 
-	 * String where = "((" + Events._ID + " = ?) AND  (" + Events._SYNC_ID +
-	 * " = ?) )";
-	 * 
-	 * String[] selectionArgs = new String[] { Long.toString(event.getId()),
-	 * event.getUid() };
-	 * 
-	 * values.put(Events.DTSTART, event.getStartInMillis());
-	 * values.put(Events.DTEND, event.getEndInMillis());
-	 * values.put(Events.TITLE, event.getTitle());
-	 * values.put(Events.DESCRIPTION, event.getDescription());
-	 * values.put(Events.CALENDAR_ID, calendarId);
-	 * values.put(Events.EVENT_LOCATION, event.getLocation()); //
-	 * values.put(Events._SYNC_ID, event.getUid());
-	 * values.put(Events.SYNC_DATA1, Long.toString(event.getTimeStamp()));
-	 * values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
-	 * 
-	 * cr.update(uri, values, where, selectionArgs);
-	 * 
-	 * }
-	 */
-
-	/*
-	 * public static void insertEventsAsBatch(Context context, Account account,
-	 * long calendarId, ArrayList<VEvent> eventList) {
-	 * 
-	 * for (VEvent vEvent : eventList) {
-	 * 
-	 * }
-	 * 
-	 * Log.d(TAG, "insertEventsAsBatch() "); ContentResolver cr =
-	 * context.getContentResolver(); ContentValues[] values = new
-	 * ContentValues[eventList.size()];
-	 * 
-	 * Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-	 * 
-	 * Log.d(TAG, "insertEventsAsBatch() " + eventList.size() +
-	 * " events to add");
-	 * 
-	 * int idx = 0; for (VEvent event : eventList) {
-	 * 
-	 * values[idx] = new ContentValues(); values[idx].put(Events.CALENDAR_ID,
-	 * calendarId); values[idx].put(Events.EVENT_TIMEZONE,
-	 * TimeZone.getDefault().toString());
-	 * 
-	 * values[idx].put(Events.DTSTART,
-	 * event.getDateStart().getValue().getTime()); values[idx].put(Events.DTEND,
-	 * event.getDateEnd().getValue().getTime()); values[idx].put(Events.TITLE,
-	 * event.getSummary().getValue());
-	 * 
-	 * values[idx].put(Events._SYNC_ID, event.getUid().getValue());
-	 * values[idx].put(Events.SYNC_DATA1,
-	 * Long.toString(event.getDateTimeStamp().getValue().getTime()));
-	 * 
-	 * if (event.getDescription() != null) values[idx].put(Events.DESCRIPTION,
-	 * event.getDescription().getValue()); else
-	 * values[idx].put(Events.DESCRIPTION, "");
-	 * 
-	 * if (event.getLocation() != null) values[idx].put(Events.EVENT_LOCATION,
-	 * event.getLocation().getValue());
-	 * 
-	 * if (event.getRecurrenceRule() != null) { String rrule =
-	 * buildRrule(event); Log.i(TAG, "RRULE " + rrule);
-	 * values[idx].put(Events.RRULE, rrule); }
-	 * 
-	 * if (!event.getExceptionDates().isEmpty()) { String exdate =
-	 * buildExdate(event.getExceptionDates()); Log.i(TAG, "add EXDATE " +
-	 * exdate); values[idx].put(Events.EXDATE, exdate); }
-	 * 
-	 * if (event.getRecurrenceId() != null) { // long orgEventId =
-	 * getEventByUID(event.getUid().getValue()); }
-	 * 
-	 * idx++;
-	 * 
-	 * }
-	 * 
-	 * Log.d(TAG, "insertEventsAsBatch()  bulkInsert()"); cr.bulkInsert(uri,
-	 * values);
-	 * 
-	 * }
-	 */
 
 }

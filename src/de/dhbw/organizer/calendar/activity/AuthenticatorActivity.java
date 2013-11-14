@@ -46,20 +46,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
+import de.dhbw.organizer.calendar.calendarmanager.CalendarManager;
 import de.dhbw.organizer.calendar.objects.SpinnerItem;
 
 /**
  * Activity which displays login screen to the user.
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
-	
+
 	private static final String TAG = "iCalAuthenticatorActivity";
 
-	private static final String DEFAULT_PASSWORD = "DEADBEAF";	
-	
+	private static final String DEFAULT_PASSWORD = "DEADBEAF";
+
 	private AccountManager mAccountManager;
 
-	private TextView mMessage;	
+	private TextView mMessage;
 
 	private Spinner mIcalSpinner;
 
@@ -83,15 +84,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		mMessage = (TextView) findViewById(R.id.message);
 		mMessage.setText(R.string.select_ical_activity_newaccount_text);
 
+		CalendarManager cm = new CalendarManager(this);
+
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
 
-		String[] calendars = getResources().getStringArray(R.array.calendars_array);
-
-		itemList = new ArrayList<SpinnerItem>();
-
-		for (int i = 0; i < calendars.length; i++) {
-			itemList.add(new SpinnerItem(calendars[i]));
-		}
+		itemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
 
 		// sort
 		Collections.sort(itemList);
@@ -133,21 +130,26 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	public void handleLogin(View view) {
 		SpinnerItem selected = (SpinnerItem) mIcalSpinner.getSelectedItem();
 
-		String mICalUrl = selected.getValue();
+		String iCalUrl = selected.getmIcalUrl();
+		String displayName = selected.getmDisplayName();
 
-		Log.i(TAG, "Selected : " + mICalUrl);
+		Log.i(TAG, "Selected : " + iCalUrl);
 		Log.i(TAG, "finishLogin()");
 
-		final Account account = new Account(mICalUrl, Constants.ACCOUNT_TYPE);
+		final Account account = new Account(displayName, Constants.ACCOUNT_TYPE);
 
 		mAccountManager.addAccountExplicitly(account, DEFAULT_PASSWORD, null);
+
+		mAccountManager.setUserData(account, Constants.KEY_ACCOUNT_CAL_URL, iCalUrl);
 
 		ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1);
 		ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true);
 		ContentResolver.addPeriodicSync(account, CalendarContract.AUTHORITY, new Bundle(), Constants.SYNC_INTERVALL_IN_SEC);
 
 		final Intent intent = new Intent();
-		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mICalUrl);
+
+		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, displayName);
+
 		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
 		setAccountAuthenticatorResult(intent.getExtras());
 		setResult(RESULT_OK, intent);

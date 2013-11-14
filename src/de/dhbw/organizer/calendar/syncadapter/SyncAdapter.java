@@ -95,7 +95,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 			long calendarId = CalendarManager.getCalendarId(mContext, account);
 
-			String calendarHttpUrl = Constants.DHBW_ICAL_URL.replace(Constants.CALENDAR_REEPLACE_TOKEN, account.name);
+			String calendarHttpUrl = mAccountManager.getUserData(account, Constants.KEY_ACCOUNT_CAL_URL);
 
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(calendarHttpUrl);

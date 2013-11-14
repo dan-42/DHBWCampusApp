@@ -7,53 +7,51 @@ import android.annotation.SuppressLint;
 
 /**
  * @author friedrda
- *
+ * 
  */
-public class SpinnerItem  implements Comparable<SpinnerItem>{
+@SuppressLint("DefaultLocale")
+public class SpinnerItem implements Comparable<SpinnerItem> {
 
-	private static final String PATTERN_PREFIX = "^kal-";
-	private static final String PATTERN_POSTFIX = "-(.){2}$";
-	
-	//  shoud macht  kal-tif11a  and kal-tif11a-it
-	
-	
-	
-	private String value = null;
-	
+	private String mDisplayName = null;
+	private String mIcalUrl = null;
+
+	public SpinnerItem(String displayName, String icalUrl) {
+		mDisplayName = displayName;
+		mIcalUrl = icalUrl;
+	}
+
 	/**
-	 * 
+	 * @return the mDisplayName
 	 */
-	public SpinnerItem(String value) {
-		this.value = value;
+	public String getmDisplayName() {
+		return mDisplayName.toUpperCase();
 	}
 
-	
-	public String getRawValue() {
-		return value;
+	/**
+	 * @return the mIcalUrl
+	 */
+	public String getmIcalUrl() {
+		return mIcalUrl;
 	}
-	
-	public String getValue() {
-		return value.replaceAll(PATTERN_POSTFIX, "");
-	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
-	@SuppressLint("DefaultLocale")
 	@Override
-	public String toString() {		
-		String s = value.replaceAll(PATTERN_POSTFIX, "");
-		s = s.replaceAll(PATTERN_PREFIX, "");
-		
-		return s.toUpperCase();
+	public String toString() {
+
+		return mDisplayName.toUpperCase();
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	@Override
-	public int compareTo(SpinnerItem another) {		
+	public int compareTo(SpinnerItem another) {
 		return toString().compareTo(another.toString());
 	}
 }
