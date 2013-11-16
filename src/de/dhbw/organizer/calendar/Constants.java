@@ -74,6 +74,9 @@ public class Constants {
 	 * sync intervall in seconds e.g. 60 * 60 * 12 for 12h
 	 */
 	public static final long SYNC_INTERVALL_IN_SEC = 60 * 60 * 12;
-
 	
+	/**
+	 * URL wehere the XML is to optain the up to date calendar list
+	 */
+	public static final String EXTERNAL_CALENDAR_LIST_URL = "http://hemera.bf-it.eu/dh/calendar_calendars.xml";
 }

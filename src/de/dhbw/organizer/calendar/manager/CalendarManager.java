@@ -24,11 +24,16 @@
  */
 package de.dhbw.organizer.calendar.manager;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -48,6 +53,12 @@ import mf.javax.xml.validation.SchemaFactory;
 import mf.javax.xml.validation.Validator;
 import mf.org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -62,6 +73,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.net.http.AndroidHttpClient;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
@@ -169,6 +181,7 @@ public class CalendarManager {
 	 * @throws IOException
 	 */
 	public List<SpinnerItem> getSelectableCalendars() throws IOException {
+
 		Log.d(TAG, "getSelectableCalendars()");
 		boolean takeLocalXml = false;
 
@@ -199,7 +212,9 @@ public class CalendarManager {
 
 		// check if external file exitsts, and is valid
 		try {
+
 			isExternalCalList = mContext.openFileInput(DATA_EXTERN_CALENDAR_LIST);
+			
 			if (validate(isExternalCalList, isCalendarsXSD)) {
 				// after validation, we need to reset the InputStreams
 				isExternalCalList.close();
@@ -280,6 +295,52 @@ public class CalendarManager {
 		return selectableCalendars;
 	}
 
+	private void loadExternalXml() {
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpGet httpGet = new HttpGet(Constants.EXTERNAL_CALENDAR_LIST_URL);
+
+		if (!httpGet.containsHeader("Accept-Encoding")) {
+			httpGet.addHeader("Accept-Encoding", "gzip");
+		}
+
+		Log.i(TAG, "http execute()");
+		HttpResponse httpResponse;
+		try {
+			httpResponse = httpClient.execute(httpGet);
+
+			int httpStatus = httpResponse.getStatusLine().getStatusCode();
+
+			HttpEntity entity = httpResponse.getEntity();
+
+			if (httpStatus == 200 && entity != null) {
+
+				byte[] buffer = new byte[512];
+				InputStream instream = AndroidHttpClient.getUngzippedContent(entity);
+
+				FileOutputStream fos = mContext.openFileOutput(DATA_EXTERN_CALENDAR_LIST, Context.MODE_PRIVATE);
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+
+				BufferedReader reader = new BufferedReader(new InputStreamReader(instream));
+				String s = "";
+				while ((s = reader.readLine()) != null) {
+					writer.write(s);
+				}
+				reader.close();
+				writer.close();			
+				
+				fos.flush();
+				fos.close();
+				instream.close();
+
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	/**
 	 * check if a calendar already exists
 	 * 
@@ -288,6 +349,8 @@ public class CalendarManager {
 	 * @return
 	 */
 	public boolean calendarExists(Account account) {
+
+		loadExternalXml();
 
 		Cursor cur = null;
 		boolean calendarExists = false;
