@@ -27,7 +27,6 @@ package de.dhbw.organizer.calendar.syncadapter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -51,7 +50,7 @@ import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import de.dhbw.organizer.calendar.Constants;
-import de.dhbw.organizer.calendar.calendarmanager.CalendarManager;
+import de.dhbw.organizer.calendar.manager.CalendarManager;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -61,12 +60,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private final Context mContext;
 
+	private final CalendarManager mCalendarManager;
+
 	private static final String SYNC_MARKER_KEY = "de.dhbw.organizer.calendar.syncadapter";
 
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
 		mContext = context;
 		mAccountManager = AccountManager.get(context);
+		mCalendarManager = CalendarManager.get(mContext);
 
 	}
 
@@ -76,24 +78,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		HttpResponse httpResponse = null;
 		Log.i(TAG, "SYNCC ME UP!");
 
-		long lastSyncMarker = getServerSyncMarker(account);
+		long lastSyncMarker = getLastServerSyncMarker(account);
 
-		if (lastSyncMarker == 0) {
-
-			if (!CalendarManager.calendarExists(mContext, account)) {
-				Log.i(TAG, "Calendar doesn't exists");
-				CalendarManager.createCalendar(mContext, account);
-			} else {
-				Log.i(TAG, "Calendar does exists");
-			}
+		// make sure Calendar exists, other wise create it
+		// could be deleted, by user interaction or by first Sync
+		if (!mCalendarManager.calendarExists(account)) {
+			mCalendarManager.createCalendar(account);
 		}
 
 		long nowInMillis = System.currentTimeMillis();
 
 		// make sure we have some time between the last and new sync
+		// some how the sync is triggerd twice in a very short intervall
+		// to prevent this, we allow resync only every
+		// MIN_SYNC_INTERVRALL_IN_MILLIS = 10 sec
 		if (nowInMillis >= (lastSyncMarker + Constants.MIN_SYNC_INTERVRALL_IN_MILLIS)) {
 
-			long calendarId = CalendarManager.getCalendarId(mContext, account);
+			long calendarId = mCalendarManager.getCalendarId(account);
 
 			String calendarHttpUrl = mAccountManager.getUserData(account, Constants.KEY_ACCOUNT_CAL_URL);
 
@@ -120,26 +121,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					ICalendar ical = Biweekly.parse(instream).first();
 
 					instream.close();
-				
-					//ArrayList<VEvent> events = CalendarManager.fixMicrosoftFuckUps((ArrayList<VEvent>) ical.getEvents());
-					
-					ArrayList<VEvent> events =  (ArrayList<VEvent>) ical.getEvents();
 
-					CalendarManager.deleteAllEvents(mContext, account, calendarId);
 
-					CalendarManager.insertEvents(mContext, account, calendarId, events);
-					/*try {
-						CalendarManager.insertTestEvents(mContext, account, calendarId);
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}*/
+					ArrayList<VEvent> events = (ArrayList<VEvent>) ical.getEvents();
 					
 					
+
+					//mCalendarManager.deleteAllEvents(account, calendarId);
+
+					//mCalendarManager.insertEvents(account, calendarId, events);
 					
+					mCalendarManager.updateEvents(account, calendarId, events);
 
 					// save timestamp of last succsessful sync
-					setServerSyncMarker(account, System.currentTimeMillis());
+					setLastServerSyncMarker(account, System.currentTimeMillis());
 
 				} else {
 					Log.i(TAG, "entity == null");
@@ -156,19 +151,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			Log.i(TAG, "NO Sync MIN_SYNC_INTERVRALL_IN_MILLIS = " + Constants.MIN_SYNC_INTERVRALL_IN_MILLIS);
 		}
 
-		Log.i(TAG, "SYNC DONW");
+		Log.i(TAG, "SYNC DONE");
 
 	}
 
 	/**
-	 * This helper function fetches the last known high-water-mark we received
-	 * from the server - or 0 if we've never synced.
-	 * 
-	 * @param account
-	 *            the account we're syncing
-	 * @return the change high-water-mark
+	 * get timestemp of last sync
+	 * @param account 
+	 * @return last sync timestemp in millis
 	 */
-	private long getServerSyncMarker(Account account) {
+	private long getLastServerSyncMarker(Account account) {
 		String markerString = mAccountManager.getUserData(account, SYNC_MARKER_KEY);
 		if (!TextUtils.isEmpty(markerString)) {
 			return Long.parseLong(markerString);
@@ -177,14 +169,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	/**
-	 * Save off the high-water-mark we receive back from the server.
+	 * Saves last sync timestampt
 	 * 
 	 * @param account
-	 *            The account we're syncing
 	 * @param marker
-	 *            The high-water-mark we want to save.
+	 *            timestamp in millisec
 	 */
-	private void setServerSyncMarker(Account account, long marker) {
+	private void setLastServerSyncMarker(Account account, long marker) {
 		mAccountManager.setUserData(account, SYNC_MARKER_KEY, Long.toString(marker));
 	}
 

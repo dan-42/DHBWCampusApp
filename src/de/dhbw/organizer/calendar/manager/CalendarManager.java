@@ -22,11 +22,14 @@
 /**
  * @author friedrda
  */
-package de.dhbw.organizer.calendar.calendarmanager;
+package de.dhbw.organizer.calendar.manager;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +61,7 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
+import android.util.Base64;
 import android.util.Log;
 import biweekly.component.VEvent;
 import biweekly.property.Classification;
@@ -78,11 +82,17 @@ import de.dhbw.organizer.calendar.objects.RecurringVEvent;
 import de.dhbw.organizer.calendar.objects.SpinnerItem;
 
 /**
- * @author schoko This class has only static functions to help handle all the
- *         calndar stuff
+ * This class has only static functions to help handle all the calendar stuff
+ * 
+ * @author friedrda
+ * 
  */
 public class CalendarManager {
 	private static final String TAG = "CalendarManager";
+
+	private static final String EVENTS_DB_TIME_STEMP_COLUMN = Events.SYNC_DATA1;
+
+	private static final String EVENTS_DB_HASH_COLUMN = Events.SYNC_DATA2;
 
 	private static final String XML_SCHEMA_VERSION = "1.0";
 
@@ -92,14 +102,28 @@ public class CalendarManager {
 
 	private static final String DATA_EXTERN_CALENDAR_LIST = "xml/calendar_calendars.xml";
 
-	// private static final
-
 	private Context mContext = null;
 
-	public CalendarManager(Context context) {
+	private CalendarManager(Context context) {
 		mContext = context;
 	}
 
+	/**
+	 * Returns a new Instance of the CalendarManager with the given Context
+	 * 
+	 * @param context
+	 * @return CalendarManager instance
+	 */
+	public static CalendarManager get(Context context) {
+		return new CalendarManager(context);
+	}
+
+	/**
+	 * TEST TEST TEST
+	 * 
+	 * @return
+	 * @throws ParserConfigurationException
+	 */
 	public List<SpinnerItem> getSelectableCalendars2() throws ParserConfigurationException {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -110,6 +134,14 @@ public class CalendarManager {
 		return null;
 	}
 
+	/**
+	 * access XML-Files and extract the possible calendras (DisplayName und
+	 * iCal-Url) if an extern XML exists and is valid
+	 * "asstes/xsd/calendar_calendarlist.xsd" this file will be taken, if not
+	 * the local XML ("assets/xml/calendar_calendars.xml") is taken
+	 * 
+	 * @return returns a List of SpinnerItems
+	 */
 	public List<SpinnerItem> getSelectableCalendars() {
 		Log.d(TAG, "getSelectableCalendars()");
 		AssetManager assetManager = mContext.getAssets();
@@ -166,18 +198,18 @@ public class CalendarManager {
 	}
 
 	/**
-	 * check if a calenda already exists
+	 * check if a calendar already exists
 	 * 
 	 * @param context
 	 * @param account
 	 * @return
 	 */
-	public static boolean calendarExists(Context context, Account account) {
+	public boolean calendarExists(Account account) {
 
 		Cursor cur = null;
 		boolean calendarExists = false;
 
-		ContentResolver cr = context.getContentResolver();
+		ContentResolver cr = mContext.getContentResolver();
 
 		String[] projection = new String[] { Calendars.CALENDAR_DISPLAY_NAME };
 		String selection = "((" + Calendars.ACCOUNT_NAME + " = ?)  AND (" + Calendars.ACCOUNT_TYPE + " = ?) )";
@@ -207,13 +239,13 @@ public class CalendarManager {
 	 * @param account
 	 * @return id
 	 */
-	public static long getCalendarId(Context context, Account account) {
+	public long getCalendarId(Account account) {
 
 		Cursor cur = null;
 
 		long calendarId = -1;
 
-		ContentResolver cr = context.getContentResolver();
+		ContentResolver cr = mContext.getContentResolver();
 
 		String[] projection = new String[] { Calendars._ID };
 		String selection = "((" + Calendars.ACCOUNT_NAME + " = ?)  AND (" + Calendars.ACCOUNT_TYPE + " = ?) )";
@@ -239,14 +271,14 @@ public class CalendarManager {
 	 * @param context
 	 * @return calendar id
 	 */
-	public static long createCalendar(Context context, Account account) {
+	public long createCalendar(Account account) {
 		Log.d(TAG, "Calendar With by Account Name");
 
-		ContentResolver cr = context.getContentResolver();
+		ContentResolver cr = mContext.getContentResolver();
 
 		Uri creationUri = asSyncAdapter(Calendars.CONTENT_URI, account.name, account.type);
 
-		int color = getCalendarColor(context);
+		int color = getNextCalendarColor();
 		ContentValues values = new ContentValues();
 
 		values.put(Calendars.ACCOUNT_NAME, account.name);
@@ -268,16 +300,307 @@ public class CalendarManager {
 	}
 
 	/**
+	 * Deletes all Events from the EventsDB and the Calendar from the CalendarDB
+	 * identified by the _ID and ACCOUNT_TYPE
+	 * 
+	 * @param context
+	 * @param account
+	 * @return true if delete was successful
+	 */
+	public boolean deleteCalendar(Account account, long calendarId) {
+
+		deleteAllEvents(account, calendarId);
+
+		ContentResolver cr = mContext.getContentResolver();
+		String selection = "((" + Calendars._ID + " = ?) AND  (" + Calendars.ACCOUNT_TYPE + " = ?))";
+		String[] selectionArgs = new String[] { Long.toString(calendarId), account.type };
+
+		long ret = cr.delete(Calendars.CONTENT_URI, selection, selectionArgs);
+
+		if (ret == 1) {
+			return true;
+		} else if (ret == 0) {
+			return false;
+		} else {
+			Log.w(TAG, "WARNING deleteCalendar() deleted " + ret + " rows, should be only one!");
+			return true;
+		}
+
+	}
+
+	/**
+	 * Deletes all Events from a given CalendarID
+	 * 
+	 * @param account
+	 * @param calendarId
+	 * @return returns true if deletion was scussessful
+	 */
+	public boolean deleteAllEvents(Account account, long calendarId) {
+		Log.d(TAG, "delte all Events from CalendarId = " + calendarId);
+
+		ContentResolver cr = mContext.getContentResolver();
+		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+		String where = "( ( " + Events.CALENDAR_ID + " = ? ))";
+		String[] selectionArgs = new String[] { Long.toString(calendarId) };
+
+		int del = cr.delete(uri, where, selectionArgs);
+
+		Log.d(TAG, "deleted " + del + " Events");
+
+		if (del > 0) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	/**
+	 * Inserts a List of VEvents into the Database, but splits and seperates
+	 * recurring Events into Single events
+	 * 
+	 * @param account
+	 * @param calendarId
+	 * @param eventList
+	 */
+	public void insertEvents(Account account, long calendarId, ArrayList<VEvent> eventList) {
+
+		ArrayList<VEvent> atomarEventList = seperateAllEvents(eventList);
+		Log.d(TAG, "insertEvents() " + atomarEventList.size() + " events to add in total");
+
+		// TODO BATCH insert
+		for (VEvent e : atomarEventList) {
+			insertEvent(account, calendarId, e);
+		}
+	}
+
+	/**
+	 * only updates the Events from the list to the Database, based upon the
+	 * hashCode
+	 * 
+	 * @param account
+	 * @param calendarId
+	 * @param eventList
+	 */
+	public void updateEvents(Account account, long calendarId, ArrayList<VEvent> eventList) {
+
+		ArrayList<VEvent> atomarEventList = seperateAllEvents(eventList);
+		ArrayList<String> hashList = getHashOfEventsInDb(account, calendarId);
+
+		ArrayList<VEvent> eventsToInsert = new ArrayList<VEvent>();
+
+		for (VEvent e : atomarEventList) {
+			String hash = calcEventHash(e);
+
+			// this event is already in the DB
+			// so remove it from the hash list
+			if (hashList.contains(hash)) {
+				hashList.remove(hash);
+			}
+			// event is not in the DB, so add it
+			else {
+				eventsToInsert.add(e);
+			}
+		}
+
+		// remaining event in the hashList can be removed from the DB
+		Log.i(TAG, "Upodate()  delete " + hashList.size() + " events");
+		for (String s : hashList) {
+
+			deleteEventByHash(account, calendarId, s);
+		}
+
+		// eventsTo insert need to be added to the DB
+		Log.i(TAG, "Upodate()  insert " + eventsToInsert.size() + " events");
+		for (VEvent e : eventsToInsert) {
+			insertEvent(account, calendarId, e);
+		}
+
+	}
+
+	/**
+	 * Deletes an event from the db identified by calendar-ID and the events
+	 * Hash-String
+	 * 
+	 * @param account
+	 * @param calendarId
+	 * @param hash
+	 * @return
+	 */
+	private boolean deleteEventByHash(Account account, long calendarId, String hash) {
+
+		ContentResolver cr = mContext.getContentResolver();
+		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+		String where = "( ( " + Events.CALENDAR_ID + " = ? ) AND ( " + EVENTS_DB_HASH_COLUMN + " = ? ))";
+		String[] selectionArgs = new String[] { Long.toString(calendarId), hash };
+
+		int del = cr.delete(uri, where, selectionArgs);
+
+		if (del > 0) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	/**
+	 * seperates an event list into single events, but first
+	 * 
+	 * @param eventList
+	 * @return
+	 */
+	private ArrayList<VEvent> seperateAllEvents(ArrayList<VEvent> eventList) {
+
+		ArrayList<RecurringVEvent> recurringEvents = new ArrayList<RecurringVEvent>();
+		ArrayList<VEvent> tempEventList = new ArrayList<VEvent>();
+
+		ArrayList<VEvent> atomarEventList = new ArrayList<VEvent>();
+
+		/**
+		 * split events into recurring events and regular events
+		 */
+		for (VEvent e : eventList) {
+
+			// no RRULE or nor RECURRENCE-ID
+			// we keep those seperate, to avoid unneeded processing
+			// regular events can be inserted without any problems
+			if (e.getRecurrenceRule() == null && e.getRecurrenceId() == null) {
+				atomarEventList.add(e);
+			}
+
+			else {
+
+				if (e.getRecurrenceRule() != null) {
+					// this event is a recurring one,
+					// it has an RRULE so we need to seperate these
+					recurringEvents.add(new RecurringVEvent(e));
+
+				} else if (e.getRecurrenceId() != null) {
+					// this event is an exception of an recurring event
+					// e.g.Event is evey monday at 9:00 but this time its at
+					// 13:00
+					// so we need to find the fitting recurring Event and add id
+					// for later processing
+
+					boolean isInserted = false;
+					for (RecurringVEvent re : recurringEvents) {
+						if (re.e.getUid().getValue().equals(e.getUid().getValue())) {
+							re.addException(e);
+							isInserted = true;
+							break;
+						}
+					}
+					if (isInserted == false) {
+						// if the exception was bevor the recurring event, we
+						// check later again
+						tempEventList.add(e);
+					}
+				}
+			}
+		}
+
+		// add last exceptions to recurring event,
+		for (VEvent e : tempEventList) {
+			boolean isInserted = false;
+			for (RecurringVEvent re : recurringEvents) {
+				if (re.e.getUid().getValue().equals(e.getUid().getValue())) {
+					re.addException(e);
+					isInserted = true;
+					break;
+				}
+			}
+			if (isInserted == false) {
+				Log.e(TAG, "ERRO cannot find fitting Recurring event: evenUID = " + e.getUid().getValue());
+			}
+		}
+
+		// Seperate recurring events
+		// check and replece single event with exception, if it fits
+		// add them to teh DB
+		Log.d(TAG, "insert recurring Events ");
+		for (RecurringVEvent re : recurringEvents) {
+			atomarEventList.addAll(seperateEvents(re));
+
+		}
+
+		return atomarEventList;
+
+	}
+
+	private ArrayList<String> getHashOfEventsInDb(Account account, long calendarID) {
+
+		Cursor cur = null;
+		ArrayList<String> listOfEventHashes = new ArrayList<String>();
+
+		ContentResolver cr = mContext.getContentResolver();
+
+		String[] projection = new String[] { EVENTS_DB_HASH_COLUMN };
+		String selection = "((" + Events.CALENDAR_ID + " = ?))";
+		String[] selectionArgs = new String[] { Long.toString(calendarID) };
+
+		cur = cr.query(Events.CONTENT_URI, projection, selection, selectionArgs, null);
+
+		if (cur.getCount() > 0 && cur.moveToFirst()) {
+			do {
+				listOfEventHashes.add(cur.getString(0));
+			} while (cur.moveToNext());
+
+		} else {
+			Log.d(TAG, "FATAL ERROR");
+		}
+
+		cur.close();
+		return listOfEventHashes;
+	}
+
+	/**
+	 * calcs hashvalue of the concatinated values of Summary Description
+	 * Location DateStart DateEnd
+	 * 
+	 * @param e
+	 * @return sha1 hash as String
+	 */
+	private String calcEventHash(VEvent e) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(e.getSummary().getValue());
+		if (e.getDescription() != null)
+			sb.append(e.getDescription().getValue());
+		if (e.getLocation() != null)
+			sb.append(e.getLocation().getValue());
+		sb.append(e.getDateStart().getValue().toString());
+		sb.append(e.getDateEnd().getValue().toString());
+
+		byte[] eventByteString = sb.toString().getBytes(Charset.defaultCharset());
+
+		MessageDigest md = null;
+
+		try {
+			md = MessageDigest.getInstance("SHA1");
+
+			byte[] sha1 = Base64.encode(md.digest(eventByteString), Base64.DEFAULT);
+
+			return new String(sha1);
+		} catch (NoSuchAlgorithmException e1) {
+
+			e1.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * find next free predefined calendar color if all are taken, take first
 	 * pedefined as default
 	 * 
 	 * @param context
 	 * @return
 	 */
-	private static int getCalendarColor(Context context) {
+	private int getNextCalendarColor() {
 
 		for (int i = 0; i < Constants.CALENDAR_COLORS.length; i++) {
-			if (!isColorUsed(context, Constants.CALENDAR_COLORS[i])) {
+			if (!isColorUsed(Constants.CALENDAR_COLORS[i])) {
 				return Constants.CALENDAR_COLORS[i];
 			}
 		}
@@ -292,9 +615,9 @@ public class CalendarManager {
 	 * @param color
 	 * @return
 	 */
-	private static boolean isColorUsed(Context context, int color) {
+	private boolean isColorUsed(int color) {
 		boolean isColorUsed = false;
-		ContentResolver cr = context.getContentResolver();
+		ContentResolver cr = mContext.getContentResolver();
 
 		String[] projection = new String[] { Calendars.CALENDAR_DISPLAY_NAME };
 
@@ -314,131 +637,53 @@ public class CalendarManager {
 		return isColorUsed;
 	}
 
-	private static Uri asSyncAdapter(Uri uri, String account, String accountType) {
+	private Uri asSyncAdapter(Uri uri, String account, String accountType) {
 		return uri.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
 				.appendQueryParameter(Calendars.ACCOUNT_NAME, account).appendQueryParameter(Calendars.ACCOUNT_TYPE, accountType).build();
 	}
 
 	/**
-	 * check if a calenda already exists
+	 * Inserts a single Event into the Databses
 	 * 
-	 * @param context
 	 * @param account
+	 * @param calendarId
+	 * @param e
 	 * @return
 	 */
-	public static long deleteCalendar(Context context) {
+	private long insertEvent(Account account, long calendarId, VEvent e) {
 
-		ContentResolver cr = context.getContentResolver();
-
-		String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) )";
-		String[] selectionArgs = new String[] { "stuv", CalendarContract.ACCOUNT_TYPE_LOCAL };
-
-		long ret = cr.delete(Calendars.CONTENT_URI, selection, selectionArgs);
-		return ret;
-
-	}
-
-	public static void deleteAllEvents(Context context, Account account, long calendarId) {
-		Log.d(TAG, "delte all Events from CalendarId = " + calendarId);
-
-		ContentResolver cr = context.getContentResolver();
+		ContentResolver cr = mContext.getContentResolver();
+		ContentValues values = new ContentValues();
 		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-		String where = "( ( " + Events.CALENDAR_ID + " = ? ))";
-		String[] selectionArgs = new String[] { Long.toString(calendarId) };
 
-		int del = cr.delete(uri, where, selectionArgs);
+		String hash = calcEventHash(e);
 
-		Log.d(TAG, "deleted " + del + " Events");
+		values.put(Events.CALENDAR_ID, calendarId);
+		values.put(Events.TITLE, e.getSummary().getValue());
+		values.put(Events.DTSTART, e.getDateStart().getValue().getTime());
+		values.put(Events.DTEND, e.getDateEnd().getValue().getTime());
+		values.put(Events._SYNC_ID, e.getUid().getValue());
+		values.put(EVENTS_DB_TIME_STEMP_COLUMN, Long.toString(e.getDateTimeStamp().getValue().getTime()));
+		values.put(EVENTS_DB_HASH_COLUMN, hash);
 
-	}
+		if (e.getDescription() != null)
+			values.put(Events.DESCRIPTION, e.getDescription().getValue());
 
-	public static void insertEvents(Context context, Account account, long calendarId, ArrayList<VEvent> eventList) {
+		if (e.getLocation() != null)
+			values.put(Events.EVENT_LOCATION, e.getLocation().getValue());
 
-		Log.d(TAG, "insertEvents() " + eventList.size() + " events to add in total");
+		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
 
-		// NO RRULE, NO RECURRING_ID
-		ArrayList<VEvent> recularEvents = new ArrayList<VEvent>();
+		Uri ret = cr.insert(uri, values);
 
-		ArrayList<RecurringVEvent> recurringEvents = new ArrayList<RecurringVEvent>();
-		ArrayList<VEvent> tempEventList = new ArrayList<VEvent>();
-
-		/**
-		 * split events into recurring events and regular events
-		 */
-		for (VEvent e : eventList) {
-
-			// no RRULE or nor RECURRENCE-ID
-			if (e.getRecurrenceRule() == null && e.getRecurrenceId() == null) {
-				recularEvents.add(e);
-			}
-
-			else {
-
-				if (e.getRecurrenceRule() != null) {
-					// Log.d(TAG, "Recurring: ");
-					// Log.d(TAG, "\t event: " + e.getSummary().getValue() +
-					// "  " + e.getDateStart().getValue().toString());
-					// Log.d(TAG, "\t e.getRRule() = " + buildRrule(e));
-
-					recurringEvents.add(new RecurringVEvent(e));
-
-				} else if (e.getRecurrenceId() != null) {
-
-					// Log.d(TAG, "Exception: ");
-					// Log.d(TAG, "\t event: " + e.getSummary().getValue() +
-					// "  " + e.getDateStart().getValue().toString());
-					// Log.d(TAG, "\t e.getRecurrenceId() = " +
-					// e.getRecurrenceId().getValue().toString());
-
-					boolean isInserted = false;
-					for (RecurringVEvent re : recurringEvents) {
-						if (re.e.getUid().getValue().equals(e.getUid().getValue())) {
-							re.addException(e);
-							isInserted = true;
-							break;
-						}
-					}
-					if (isInserted == false) {
-						// not fitting? keep it for later
-
-						tempEventList.add(e);
-					}
-				}
-			}
+		if (ret == null) {
+			Log.e(TAG, " INERT ERROR return URI is null");
+			return 0;
+		} else {
+			Log.d(TAG, " INSERT event with hash " + hash);
 		}
 
-		// check if some are need sorting in
-
-		for (VEvent e : tempEventList) {
-			boolean isInserted = false;
-			for (RecurringVEvent re : recurringEvents) {
-				if (re.e.getUid().getValue().equals(e.getUid().getValue())) {
-					re.addException(e);
-					isInserted = true;
-					break;
-				}
-			}
-			if (isInserted == false) {
-				Log.e(TAG, "ERRO cannot find fitting Recurring event: evenUID = " + e.getUid().getValue());
-			}
-		}
-
-		Log.d(TAG, "insert recurring Events ");
-		for (RecurringVEvent re : recurringEvents) {
-			// Log.d(TAG, "INSERT RECURING " + re.e.getSummary().getValue());
-			ArrayList<VEvent> atomarEventList = seperateEvents(re);
-
-			for (VEvent e : atomarEventList) {
-				long id = insertEvent(context, account, calendarId, e);
-				re.setId(id);
-			}
-		}
-
-		Log.d(TAG, "insert recular Events ");
-		// insertEventsAsBatch(context, account, calendarId, recularEvents);
-		for (VEvent e : recularEvents) {
-			insertEvent(context, account, calendarId, e);
-		}
+		return ContentUris.parseId(ret);
 
 	}
 
@@ -636,15 +881,33 @@ public class CalendarManager {
 
 	}
 
+	/**
+	 * seperates an Recurring event into a list of single events, and also
+	 * includes the exceptions in the RecuringVEvent
+	 * 
+	 * @param rve
+	 * @return
+	 */
 	private static ArrayList<VEvent> seperateEvents(RecurringVEvent rve) {
 
 		ArrayList<VEvent> cleanEventList = new ArrayList<VEvent>();
 
 		if (rve != null && rve.e != null && rve.e.getRecurrenceRule() != null) {
 
+			
+			//we have two lists, the list of atomar events, but with no exceptions
+			ArrayList<VEvent> atomarEvents = splitRecurringEvent(rve.e);
+			//and a list of Events which are the exception
 			ArrayList<VEvent> exceptions = rve.getExceptions();
-			ArrayList<VEvent> atomarEvents = seperateRecurringEvent(rve.e);
+			
 
+			
+			/**
+			 * we need to find the event, for which the exception is
+			 * an exception as an RECURRING-ID which represenst the DateTime or only Date
+			 * on which the event should have been.
+			 * the MS-Exchange exports only a Date not a Date Time, so we check only if Year, Month and Day fist
+			 */
 			Calendar cal = Calendar.getInstance();
 			for (VEvent atom : atomarEvents) {
 
@@ -652,7 +915,6 @@ public class CalendarManager {
 				int atomYear = cal.get(Calendar.YEAR);
 				int atomMonth = cal.get(Calendar.MONTH);
 				int atomDay = cal.get(Calendar.DAY_OF_MONTH);
-				// int atomDstOff = cal.get(Calendar.DST_OFFSET);
 
 				boolean inserted = false;
 
@@ -676,13 +938,9 @@ public class CalendarManager {
 						// found atomar Event of reccuring, for which this
 						// exception fits
 						if (atomYear == exYear && atomMonth == exMonth && atomDay == exDay) {
-							// ex.removeProperties(RecurrenceId.class);
+							//add the exception to the list, not the "normal" recurring event
 							cleanEventList.add(ex);
-							inserted = true;
-							// if (!atomarEvents.remove(atom)) {
-							// Log.e(TAG,
-							// "can't remove VEvent from atomarEvents List");
-							// }
+							inserted = true;							
 							break;
 						}
 
@@ -690,6 +948,8 @@ public class CalendarManager {
 						Log.e(TAG, "Missmatching UID in seperateEvents o0 WTF?");
 					}
 				}// inner for
+				
+				//if there is no exception for tis event, we use this event
 				if (!inserted) {
 					cleanEventList.add(atom);
 				}
@@ -708,14 +968,14 @@ public class CalendarManager {
 	}
 
 	/**
-	 * seperates a single recurring Event with an RRULE and EXDATE into a List
-	 * of SingleEvents
+	 * splits an recurring Event with an RRULE and EXDATE into a List of
+	 * SingleEvents
 	 * 
 	 * @author friedrda
 	 * @param recurringEvent
 	 * @return List of events
 	 */
-	private static ArrayList<VEvent> seperateRecurringEvent(VEvent recurringEvent) {
+	private static ArrayList<VEvent> splitRecurringEvent(VEvent recurringEvent) {
 
 		ArrayList<VEvent> atomarEvents = new ArrayList<VEvent>();
 
@@ -828,40 +1088,6 @@ public class CalendarManager {
 		sb.append(timeFormat.format(until));
 
 		return sb.toString();
-	}
-
-	public static long insertEvent(Context context, Account account, long calendarId, VEvent e) {
-
-		ContentResolver cr = context.getContentResolver();
-		ContentValues values = new ContentValues();
-		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
-
-		values.put(Events.CALENDAR_ID, calendarId);
-		values.put(Events.TITLE, e.getSummary().getValue());
-		values.put(Events.DTSTART, e.getDateStart().getValue().getTime());
-		values.put(Events.DTEND, e.getDateEnd().getValue().getTime());
-		values.put(Events._SYNC_ID, e.getUid().getValue());
-		values.put(Events.SYNC_DATA1, Long.toString(e.getDateTimeStamp().getValue().getTime()));
-
-		if (e.getDescription() != null)
-			values.put(Events.DESCRIPTION, e.getDescription().getValue());
-
-		if (e.getLocation() != null)
-			values.put(Events.EVENT_LOCATION, e.getLocation().getValue());
-
-		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
-
-		Uri ret = cr.insert(uri, values);
-
-		if (ret == null) {
-			Log.e(TAG, " INERT ERROR return URI is null");
-			return 0;
-		} else {
-			// Log.d(TAG, " INERTed to " + ret.toString());
-		}
-
-		return ContentUris.parseId(ret);
-
 	}
 
 	static class CalendarXmlParser {

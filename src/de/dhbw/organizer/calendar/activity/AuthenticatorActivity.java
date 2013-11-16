@@ -46,7 +46,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
-import de.dhbw.organizer.calendar.calendarmanager.CalendarManager;
+import de.dhbw.organizer.calendar.manager.CalendarManager;
 import de.dhbw.organizer.calendar.objects.SpinnerItem;
 
 /**
@@ -84,7 +84,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		mMessage = (TextView) findViewById(R.id.message);
 		mMessage.setText(R.string.select_ical_activity_newaccount_text);
 
-		CalendarManager cm = new CalendarManager(this);
+		CalendarManager cm = CalendarManager.get(this);
 
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
 
