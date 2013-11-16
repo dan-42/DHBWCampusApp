@@ -25,6 +25,7 @@
 
 package de.dhbw.organizer.calendar.activity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -88,7 +89,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
 
-		itemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
+		try {
+			itemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
+		} catch (IOException e) {
+			itemList = new ArrayList<SpinnerItem>();
+			itemList.add(new SpinnerItem("XML-PARSE ERROR", " "));
+			e.printStackTrace();
+		}
 
 		// sort
 		Collections.sort(itemList);

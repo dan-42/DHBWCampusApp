@@ -24,6 +24,8 @@
  */
 package de.dhbw.organizer.calendar.manager;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -39,12 +41,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.stream.StreamSource;
+import mf.javax.xml.transform.Source;
+import mf.javax.xml.transform.stream.StreamSource;
+import mf.javax.xml.validation.Schema;
+import mf.javax.xml.validation.SchemaFactory;
+import mf.javax.xml.validation.Validator;
+import mf.org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 
-import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -73,7 +77,6 @@ import biweekly.util.Duration;
 import biweekly.util.Recurrence;
 import biweekly.util.Recurrence.DayOfWeek;
 
-//A compatibility layer for joda-time
 import com.google.ical.compat.javautil.DateIterator;
 import com.google.ical.compat.javautil.DateIteratorFactory;
 
@@ -82,7 +85,7 @@ import de.dhbw.organizer.calendar.objects.RecurringVEvent;
 import de.dhbw.organizer.calendar.objects.SpinnerItem;
 
 /**
- * This class has only static functions to help handle all the calendar stuff
+ * This class has only functions to help handle all the calendar stuff
  * 
  * @author friedrda
  * 
@@ -100,7 +103,7 @@ public class CalendarManager {
 
 	private static final String ASSET_DEFAULT_CALENDAR_LIST = "xml/calendar_calendars.xml";
 
-	private static final String DATA_EXTERN_CALENDAR_LIST = "xml/calendar_calendars.xml";
+	private static final String DATA_EXTERN_CALENDAR_LIST = "calendar_calendars.xml";
 
 	private Context mContext = null;
 
@@ -119,19 +122,41 @@ public class CalendarManager {
 	}
 
 	/**
-	 * TEST TEST TEST
+	 * validates a xml file with and xmlSchema Thanks to: James Oravec
+	 * http://stackoverflow.com/questions/801144/android-schema-validation
 	 * 
-	 * @return
-	 * @throws ParserConfigurationException
+	 * @param xmlFilePath
+	 * @param xmlSchemaFilePath
+	 * @return true if valid, false otherwise
 	 */
-	public List<SpinnerItem> getSelectableCalendars2() throws ParserConfigurationException {
+	private static boolean validate(InputStream xmlInputStream, InputStream xmlSchemaInputStream) {
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
+		// Try the validation, we assume that if there are any issues with the
+		// validation
+		// process that the input is invalid.
+		try {
+			SchemaFactory factory = new XMLSchemaFactory();
+			Source schemaFile = new StreamSource(xmlSchemaInputStream);
+			Source xmlSource = new StreamSource(xmlInputStream);
+			Schema schema = factory.newSchema(schemaFile);
+			Validator validator = schema.newValidator();
+			validator.validate(xmlSource);
+		} catch (SAXException e) {
+			return false;
+		} catch (IOException e) {
+			return false;
+		} catch (Exception e) {
+			// Catches everything beyond: SAXException, and IOException.
+			e.printStackTrace();
+			return false;
+		} catch (Error e) {
+			// Needed this for debugging when I was having issues with my 1st
+			// set of code.
+			e.printStackTrace();
+			return false;
+		}
 
-		Document doc = db.newDocument();
-
-		return null;
+		return true;
 	}
 
 	/**
@@ -141,37 +166,84 @@ public class CalendarManager {
 	 * the local XML ("assets/xml/calendar_calendars.xml") is taken
 	 * 
 	 * @return returns a List of SpinnerItems
+	 * @throws IOException
 	 */
-	public List<SpinnerItem> getSelectableCalendars() {
+	public List<SpinnerItem> getSelectableCalendars() throws IOException {
 		Log.d(TAG, "getSelectableCalendars()");
+		boolean takeLocalXml = false;
+
 		AssetManager assetManager = mContext.getAssets();
 		InputStream isCalendarsDefaultXml = null;
+		FileInputStream isExternalCalList = null;
 		InputStream isCalendarsXSD = null;
+		XmlPullParserFactory parserfactory = null;
+		XmlPullParser parser = null;
 
 		ArrayList<SpinnerItem> selectableCalendars = null;
 
+		// open XML-Schema and default XML-File
 		try {
-			// get Validator for validating XML Schema
-			isCalendarsXSD = assetManager.open(ASSET_XML_SCHEMA_CALENDAR_LIST);
-			StreamSource ssCalendarXsd = new StreamSource(isCalendarsXSD);
-
-			/*
-			 * SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			 * SchemaFactory factory =
-			 * SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			 * Schema schema = factory.newSchema(ssCalendarXsd); Validator
-			 * validator = schema.newValidator();
-			 * 
-			 * StreamSource ssXMLDefault = new
-			 * StreamSource(assetManager.open(ASSET_DEFAULT_CALENDAR_LIST));
-			 * 
-			 * validator.validate(ssXMLDefault);
-			 */
 			isCalendarsDefaultXml = assetManager.open(ASSET_DEFAULT_CALENDAR_LIST);
+			isCalendarsXSD = assetManager.open(ASSET_XML_SCHEMA_CALENDAR_LIST);
 
-			XmlPullParserFactory parserfactory = XmlPullParserFactory.newInstance();
-			XmlPullParser parser = parserfactory.newPullParser();
-			parser.setInput(new InputStreamReader(isCalendarsDefaultXml));
+			parserfactory = XmlPullParserFactory.newInstance();
+			parser = parserfactory.newPullParser();
+		} catch (IOException e1) {
+			Log.e(TAG, "cant open calendar default xml and Xml-Schema");
+			throw new IOException();
+
+		} catch (XmlPullParserException e) {
+			Log.e(TAG, "cant greate XMLParser " + e.getMessage());
+			throw new IOException();
+		}
+
+		// check if external file exitsts, and is valid
+		try {
+			isExternalCalList = mContext.openFileInput(DATA_EXTERN_CALENDAR_LIST);
+			if (validate(isExternalCalList, isCalendarsXSD)) {
+				// after validation, we need to reset the InputStreams
+				isExternalCalList.close();
+				isExternalCalList = mContext.openFileInput(DATA_EXTERN_CALENDAR_LIST);
+				Log.i(TAG, "XML External is Valid");
+				parser.setInput(new InputStreamReader(isExternalCalList));
+
+			} else {
+				Log.i(TAG, "XML External is not Valid");
+				Log.e(TAG, "failed to parse external calendar xml, take locale one");
+				takeLocalXml = true;
+
+			}
+
+		} catch (FileNotFoundException e) {
+			Log.i(TAG, "no external File found, so take locale calendar list");
+			takeLocalXml = true;
+
+		} catch (XmlPullParserException e) {
+			Log.e(TAG, "failed to set input in parser");
+			throw new IOException();
+		} finally {
+			isCalendarsXSD.close();
+		}
+
+		if (takeLocalXml == true) {
+			isCalendarsXSD = assetManager.open(ASSET_XML_SCHEMA_CALENDAR_LIST);
+			if (validate(isCalendarsDefaultXml, isCalendarsXSD)) {
+				isCalendarsDefaultXml.close();
+				isCalendarsDefaultXml = assetManager.open(ASSET_DEFAULT_CALENDAR_LIST);
+				Log.i(TAG, "XML Default is Valid");
+				try {
+					parser.setInput(new InputStreamReader(isCalendarsDefaultXml));
+				} catch (XmlPullParserException e) {
+					Log.e(TAG, "failed to set input in parser");
+					throw new IOException();
+				}
+			} else {
+				throw new IOException();
+			}
+		}
+		isCalendarsXSD.close();
+
+		try {
 
 			String xmlNameSpace = parser.getNamespace();
 			parser.next();
@@ -179,6 +251,11 @@ public class CalendarManager {
 			String xmlLastUpdate = parser.getAttributeValue(xmlNameSpace, "LastUpdate");
 
 			Log.i(TAG, "XMLversion = " + xmlVersion + "  xmlLastUpdate = " + xmlLastUpdate + " Namsespace = " + xmlNameSpace);
+
+			if (!xmlVersion.equals(XML_SCHEMA_VERSION)) {
+				Log.e(TAG, "XML VERSION don't match, error!");
+				throw new IOException();
+			}
 
 			CalendarXmlParser calParser = new CalendarXmlParser(xmlNameSpace);
 
@@ -192,6 +269,12 @@ public class CalendarManager {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			Log.e(TAG, "IllegalArgumentException " + e.getMessage());
+		} finally {
+			// close inputstreams
+			isCalendarsDefaultXml.close();
+			if (isExternalCalList != null)
+				isExternalCalList.close();
+
 		}
 
 		return selectableCalendars;
@@ -894,19 +977,18 @@ public class CalendarManager {
 
 		if (rve != null && rve.e != null && rve.e.getRecurrenceRule() != null) {
 
-			
-			//we have two lists, the list of atomar events, but with no exceptions
+			// we have two lists, the list of atomar events, but with no
+			// exceptions
 			ArrayList<VEvent> atomarEvents = splitRecurringEvent(rve.e);
-			//and a list of Events which are the exception
+			// and a list of Events which are the exception
 			ArrayList<VEvent> exceptions = rve.getExceptions();
-			
 
-			
 			/**
-			 * we need to find the event, for which the exception is
-			 * an exception as an RECURRING-ID which represenst the DateTime or only Date
-			 * on which the event should have been.
-			 * the MS-Exchange exports only a Date not a Date Time, so we check only if Year, Month and Day fist
+			 * we need to find the event, for which the exception is an
+			 * exception as an RECURRING-ID which represenst the DateTime or
+			 * only Date on which the event should have been. the MS-Exchange
+			 * exports only a Date not a Date Time, so we check only if Year,
+			 * Month and Day fist
 			 */
 			Calendar cal = Calendar.getInstance();
 			for (VEvent atom : atomarEvents) {
@@ -938,9 +1020,10 @@ public class CalendarManager {
 						// found atomar Event of reccuring, for which this
 						// exception fits
 						if (atomYear == exYear && atomMonth == exMonth && atomDay == exDay) {
-							//add the exception to the list, not the "normal" recurring event
+							// add the exception to the list, not the "normal"
+							// recurring event
 							cleanEventList.add(ex);
-							inserted = true;							
+							inserted = true;
 							break;
 						}
 
@@ -948,8 +1031,8 @@ public class CalendarManager {
 						Log.e(TAG, "Missmatching UID in seperateEvents o0 WTF?");
 					}
 				}// inner for
-				
-				//if there is no exception for tis event, we use this event
+
+				// if there is no exception for tis event, we use this event
 				if (!inserted) {
 					cleanEventList.add(atom);
 				}
