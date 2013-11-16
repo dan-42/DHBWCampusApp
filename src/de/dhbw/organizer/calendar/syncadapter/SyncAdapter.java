@@ -98,6 +98,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 			String calendarHttpUrl = mAccountManager.getUserData(account, Constants.KEY_ACCOUNT_CAL_URL);
 
+			
+			//todo check if URL is null
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(calendarHttpUrl);
 

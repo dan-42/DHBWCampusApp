@@ -574,6 +574,10 @@ public class CalendarManager {
 	 * @return
 	 */
 	private boolean deleteEventByHash(Account account, long calendarId, String hash) {
+		
+		if(hash == null ){
+			return false;
+		}
 
 		ContentResolver cr = mContext.getContentResolver();
 		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
@@ -1155,7 +1159,11 @@ public class CalendarManager {
 
 			Priority prio = recurringEvent.getPriority();
 
-			int sequence = recurringEvent.getSequence().getValue();
+			int sequence = 0;
+			if(recurringEvent.getSequence() != null){
+				sequence = recurringEvent.getSequence().getValue();
+			}
+			
 			Transparency transp = recurringEvent.getTransparency();
 
 			List<String> categories = new ArrayList<String>();
@@ -1163,7 +1171,13 @@ public class CalendarManager {
 			if (recurringEvent.getCategories() != null && !recurringEvent.getCategories().isEmpty())
 				categories = recurringEvent.getCategories().get(0).getValues();
 
-			TimeZone tz = TimeZone.getTimeZone(recurringEvent.getDateStart().getTimezoneId());
+			
+			TimeZone tz = TimeZone.getDefault();
+			if(recurringEvent.getDateStart().getTimezoneId() != null){
+				tz = TimeZone.getTimeZone(recurringEvent.getDateStart().getTimezoneId());	
+			}
+			
+			
 
 			try {
 				Calendar cal = Calendar.getInstance();
