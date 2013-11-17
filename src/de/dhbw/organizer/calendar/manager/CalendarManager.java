@@ -116,6 +116,13 @@ public class CalendarManager {
 	private static final String ASSET_DEFAULT_CALENDAR_LIST = "xml/calendar_calendars.xml";
 
 	private static final String DATA_EXTERN_CALENDAR_LIST = "calendar_calendars.xml";
+	
+	
+	/**
+	 * TIME OFFSET from to day, this is used, when a Recurring event has no COUNT or UNTIL
+	 * so we don't try to add ad infinti amount of events
+	 */
+	private static final int  EVENT_MAX_UNTIL_OFFSET_IN_YEAR = 5;
 
 	private Context mContext = null;
 
@@ -830,7 +837,7 @@ public class CalendarManager {
 			Log.e(TAG, " INERT ERROR return URI is null");
 			return 0;
 		} else {
-			Log.d(TAG, " INSERT event with hash " + hash);
+			//Log.d(TAG, " INSERT event with hash " + hash);
 		}
 
 		return ContentUris.parseId(ret);
@@ -891,15 +898,34 @@ public class CalendarManager {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("FREQ=").append(r.getFrequency().toString());
-			if (r.hasTimeUntilDate())
+			if (r.getUntil()!= null)
 				sb.append(";UNTIL=").append(parseIcalDateToString(r.getUntil())).append('Z');
-			else
+			else if(r.getCount() != null)
 				sb.append(";COUNT=").append(r.getCount());
+			else{
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(System.currentTimeMillis());
+				
+				int year = cal.get(Calendar.YEAR);
+				int month = cal.get(Calendar.MONTH);
+				int day = cal.get(Calendar.DAY_OF_MONTH);
+				
+				cal.set(year + EVENT_MAX_UNTIL_OFFSET_IN_YEAR, month, day);
+				Date  untilDate = cal.getTime();
+				
+				String until = parseIcalDateToString(untilDate);
+				Log.i(TAG, "buildRrule() no UNTIL or COUNT, so set UNTIL to " + untilDate.toString() + "   ICAL:" + until);
+				sb.append(";UNTIL=").append(until).append('Z');
+			}
+				
 
 			if (r.getWorkweekStarts() != null)
 				sb.append(";WKST=").append(r.getWorkweekStarts().getAbbr());
 
-			sb.append(";INTERVAL=").append(r.getInterval());
+			if(r.getInterval() != null)
+				sb.append(";INTERVAL=").append(r.getInterval());
+			else 
+				sb.append(";INTERVAL=").append(1);
 
 			// BYSECOND
 			if (!r.getBySecond().isEmpty()) {
@@ -1184,7 +1210,7 @@ public class CalendarManager {
 				cal.setTime(startDate);
 
 				int startDstOffset = cal.get(Calendar.DST_OFFSET);
-				DateIterator dif = DateIteratorFactory.createDateIterator(rdata, startDate, tz, true);
+				DateIterator dif = DateIteratorFactory.createDateIterator(rdata, startDate, tz, false);
 
 				// Log.d(TAG, "EVENT: " + recurringEvent.getSummary().getValue()
 				// + " Recurrs on: ");
@@ -1240,12 +1266,13 @@ public class CalendarManager {
 	private static String parseIcalDateToString(Date until) {
 
 		StringBuilder sb = new StringBuilder();
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HHmmSS");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HHmm");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
 		sb.append(dateFormat.format(until));
 		sb.append("T");
 		sb.append(timeFormat.format(until));
+		sb.append("00");
 
 		return sb.toString();
 	}
