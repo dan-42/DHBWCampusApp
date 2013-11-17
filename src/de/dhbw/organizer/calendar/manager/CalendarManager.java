@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -55,7 +54,6 @@ import mf.org.apache.xerces.jaxp.validation.XMLSchemaFactory;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -116,13 +114,12 @@ public class CalendarManager {
 	private static final String ASSET_DEFAULT_CALENDAR_LIST = "xml/calendar_calendars.xml";
 
 	private static final String DATA_EXTERN_CALENDAR_LIST = "calendar_calendars.xml";
-	
-	
+
 	/**
-	 * TIME OFFSET from to day, this is used, when a Recurring event has no COUNT or UNTIL
-	 * so we don't try to add ad infinti amount of events
+	 * TIME OFFSET from to day, this is used, when a Recurring event has no
+	 * COUNT or UNTIL so we don't try to add ad infinti amount of events
 	 */
-	private static final int  EVENT_MAX_UNTIL_OFFSET_IN_YEAR = 5;
+	private static final int EVENT_MAX_UNTIL_OFFSET_IN_YEAR = 5;
 
 	private Context mContext = null;
 
@@ -221,7 +218,7 @@ public class CalendarManager {
 		try {
 
 			isExternalCalList = mContext.openFileInput(DATA_EXTERN_CALENDAR_LIST);
-			
+
 			if (validate(isExternalCalList, isCalendarsXSD)) {
 				// after validation, we need to reset the InputStreams
 				isExternalCalList.close();
@@ -302,7 +299,8 @@ public class CalendarManager {
 		return selectableCalendars;
 	}
 
-	private void loadExternalXml() {
+	public boolean loadExternalXml() {
+		boolean success = false;
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(Constants.EXTERNAL_CALENDAR_LIST_URL);
 
@@ -321,7 +319,6 @@ public class CalendarManager {
 
 			if (httpStatus == 200 && entity != null) {
 
-				byte[] buffer = new byte[512];
 				InputStream instream = AndroidHttpClient.getUngzippedContent(entity);
 
 				FileOutputStream fos = mContext.openFileOutput(DATA_EXTERN_CALENDAR_LIST, Context.MODE_PRIVATE);
@@ -333,17 +330,20 @@ public class CalendarManager {
 					writer.write(s);
 				}
 				reader.close();
-				writer.close();			
-				
+				writer.close();
+
 				fos.flush();
 				fos.close();
 				instream.close();
+				success = true;
 
 			}
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			return success;
 		}
 
 	}
@@ -351,7 +351,7 @@ public class CalendarManager {
 	/**
 	 * check if a calendar already exists
 	 * 
-	 * @param context
+	 * @param mContext
 	 * @param account
 	 * @return
 	 */
@@ -388,7 +388,7 @@ public class CalendarManager {
 	/**
 	 * returns the CalendarID depending on the account.name and acount.type
 	 * 
-	 * @param context
+	 * @param mContext
 	 * @param account
 	 * @return id
 	 */
@@ -421,7 +421,7 @@ public class CalendarManager {
 	 * creates a new Calendar with the given account
 	 * 
 	 * @param account
-	 * @param context
+	 * @param mContext
 	 * @return calendar id
 	 */
 	public long createCalendar(Account account) {
@@ -456,7 +456,7 @@ public class CalendarManager {
 	 * Deletes all Events from the EventsDB and the Calendar from the CalendarDB
 	 * identified by the _ID and ACCOUNT_TYPE
 	 * 
-	 * @param context
+	 * @param mContext
 	 * @param account
 	 * @return true if delete was successful
 	 */
@@ -581,8 +581,8 @@ public class CalendarManager {
 	 * @return
 	 */
 	private boolean deleteEventByHash(Account account, long calendarId, String hash) {
-		
-		if(hash == null ){
+
+		if (hash == null) {
 			return false;
 		}
 
@@ -751,7 +751,7 @@ public class CalendarManager {
 	 * find next free predefined calendar color if all are taken, take first
 	 * pedefined as default
 	 * 
-	 * @param context
+	 * @param mContext
 	 * @return
 	 */
 	private int getNextCalendarColor() {
@@ -767,7 +767,7 @@ public class CalendarManager {
 	/**
 	 * Check if a given color is already used as calendar-color
 	 * 
-	 * @param context
+	 * @param mContext
 	 * @param account
 	 * @param color
 	 * @return
@@ -837,7 +837,7 @@ public class CalendarManager {
 			Log.e(TAG, " INERT ERROR return URI is null");
 			return 0;
 		} else {
-			//Log.d(TAG, " INSERT event with hash " + hash);
+			// Log.d(TAG, " INSERT event with hash " + hash);
 		}
 
 		return ContentUris.parseId(ret);
@@ -898,33 +898,32 @@ public class CalendarManager {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append("FREQ=").append(r.getFrequency().toString());
-			if (r.getUntil()!= null)
+			if (r.getUntil() != null)
 				sb.append(";UNTIL=").append(parseIcalDateToString(r.getUntil())).append('Z');
-			else if(r.getCount() != null)
+			else if (r.getCount() != null)
 				sb.append(";COUNT=").append(r.getCount());
-			else{
+			else {
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(System.currentTimeMillis());
-				
+
 				int year = cal.get(Calendar.YEAR);
 				int month = cal.get(Calendar.MONTH);
 				int day = cal.get(Calendar.DAY_OF_MONTH);
-				
+
 				cal.set(year + EVENT_MAX_UNTIL_OFFSET_IN_YEAR, month, day);
-				Date  untilDate = cal.getTime();
-				
+				Date untilDate = cal.getTime();
+
 				String until = parseIcalDateToString(untilDate);
 				Log.i(TAG, "buildRrule() no UNTIL or COUNT, so set UNTIL to " + untilDate.toString() + "   ICAL:" + until);
 				sb.append(";UNTIL=").append(until).append('Z');
 			}
-				
 
 			if (r.getWorkweekStarts() != null)
 				sb.append(";WKST=").append(r.getWorkweekStarts().getAbbr());
 
-			if(r.getInterval() != null)
+			if (r.getInterval() != null)
 				sb.append(";INTERVAL=").append(r.getInterval());
-			else 
+			else
 				sb.append(";INTERVAL=").append(1);
 
 			// BYSECOND
@@ -1186,10 +1185,10 @@ public class CalendarManager {
 			Priority prio = recurringEvent.getPriority();
 
 			int sequence = 0;
-			if(recurringEvent.getSequence() != null){
+			if (recurringEvent.getSequence() != null) {
 				sequence = recurringEvent.getSequence().getValue();
 			}
-			
+
 			Transparency transp = recurringEvent.getTransparency();
 
 			List<String> categories = new ArrayList<String>();
@@ -1197,13 +1196,10 @@ public class CalendarManager {
 			if (recurringEvent.getCategories() != null && !recurringEvent.getCategories().isEmpty())
 				categories = recurringEvent.getCategories().get(0).getValues();
 
-			
 			TimeZone tz = TimeZone.getDefault();
-			if(recurringEvent.getDateStart().getTimezoneId() != null){
-				tz = TimeZone.getTimeZone(recurringEvent.getDateStart().getTimezoneId());	
+			if (recurringEvent.getDateStart().getTimezoneId() != null) {
+				tz = TimeZone.getTimeZone(recurringEvent.getDateStart().getTimezoneId());
 			}
-			
-			
 
 			try {
 				Calendar cal = Calendar.getInstance();
