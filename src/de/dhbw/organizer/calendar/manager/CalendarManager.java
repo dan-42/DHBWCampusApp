@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import mf.javax.xml.transform.Source;
@@ -63,7 +64,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.accounts.Account;
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -79,6 +79,8 @@ import android.util.Base64;
 import android.util.Log;
 import biweekly.component.VEvent;
 import biweekly.property.Classification;
+import biweekly.property.DateEnd;
+import biweekly.property.DateStart;
 import biweekly.property.ExceptionDates;
 import biweekly.property.Priority;
 import biweekly.property.Status;
@@ -89,6 +91,9 @@ import biweekly.util.Recurrence.DayOfWeek;
 
 import com.google.ical.compat.javautil.DateIterator;
 import com.google.ical.compat.javautil.DateIteratorFactory;
+import com.google.ical.iter.RecurrenceIterator;
+import com.google.ical.iter.RecurrenceIteratorFactory;
+import com.google.ical.values.RDateList;
 
 import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.objects.RecurringVEvent;
@@ -125,6 +130,7 @@ public class CalendarManager {
 
 	private CalendarManager(Context context) {
 		mContext = context;
+		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Berlin"));
 	}
 
 	/**
@@ -135,6 +141,7 @@ public class CalendarManager {
 	 */
 	public static CalendarManager get(Context context) {
 		return new CalendarManager(context);
+
 	}
 
 	/**
@@ -340,12 +347,11 @@ public class CalendarManager {
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			return success;
-		}
 
+		}
+		return success;
 	}
 
 	/**
@@ -523,7 +529,7 @@ public class CalendarManager {
 
 		// TODO BATCH insert
 		for (VEvent e : atomarEventList) {
-			insertEvent(account, calendarId, e);
+			insertEvent(account, calendarId, e, TimeZone.getDefault());
 		}
 	}
 
@@ -566,7 +572,7 @@ public class CalendarManager {
 		// eventsTo insert need to be added to the DB
 		Log.i(TAG, "Upodate()  insert " + eventsToInsert.size() + " events");
 		for (VEvent e : eventsToInsert) {
-			insertEvent(account, calendarId, e);
+			insertEvent(account, calendarId, e, TimeZone.getDefault());
 		}
 
 	}
@@ -807,7 +813,7 @@ public class CalendarManager {
 	 * @param e
 	 * @return
 	 */
-	private long insertEvent(Account account, long calendarId, VEvent e) {
+	private long insertEvent(Account account, long calendarId, VEvent e, TimeZone tz) {
 
 		ContentResolver cr = mContext.getContentResolver();
 		ContentValues values = new ContentValues();
@@ -829,7 +835,7 @@ public class CalendarManager {
 		if (e.getLocation() != null)
 			values.put(Events.EVENT_LOCATION, e.getLocation().getValue());
 
-		values.put(Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
+		values.put(Events.EVENT_TIMEZONE, tz.getID());
 
 		Uri ret = cr.insert(uri, values);
 
@@ -844,37 +850,41 @@ public class CalendarManager {
 
 	}
 
+	private static List<Date> extractExceptionDates(VEvent e) {
+		List<Date> dateList = new ArrayList<Date>();
+
+		List<ExceptionDates> exceptionDates = e.getExceptionDates();
+		if (exceptionDates != null) {
+			for (ExceptionDates ed : exceptionDates) {
+				dateList.addAll(ed.getValues());
+			}
+		}
+		return dateList;
+	}
+
 	/**
-	 * @param exceptionDates
+	 * @param VEvent
+	 *            event
+	 * @param TimeZone
+	 *            tz
 	 * @return
 	 */
-	private static String buildExdate(List<ExceptionDates> exceptionDates) {
+	private static String buildExdate(VEvent event, TimeZone tz) {
+
+		List<ExceptionDates> exceptionDates = event.getExceptionDates();
 		if (exceptionDates != null) {
 
 			StringBuilder sb = new StringBuilder();
-			ArrayList<Date> dates = new ArrayList<Date>();
-
-			TimeZone tz = TimeZone.getDefault();
-
-			for (ExceptionDates ed : exceptionDates) {
-				dates.addAll(ed.getValues());
-				tz = TimeZone.getTimeZone(ed.getTimezoneId());
-
-			}
+			List<Date> dates = extractExceptionDates(event);
 
 			if (tz != null) {
 				sb.append("TZID=").append(tz.getID()).append(':');
 			}
 
-			Calendar cal = Calendar.getInstance(tz);
-			//TimeZone.setDefault(tz);
 			for (Iterator<Date> iterator = dates.iterator(); iterator.hasNext();) {
 				Date date = (Date) iterator.next();
-					
-				cal.setTime(date);
-				cal.setTimeZone(tz);
-				
-				sb.append(parseIcalDateToString(cal.getTime()));
+
+				sb.append(parseIcalDateToString(date, tz));
 
 				if (iterator.hasNext()) {
 					sb.append(",");
@@ -900,7 +910,7 @@ public class CalendarManager {
 
 			sb.append("FREQ=").append(r.getFrequency().toString());
 			if (r.getUntil() != null)
-				sb.append(";UNTIL=").append(parseIcalDateToString(r.getUntil())).append('Z');
+				sb.append(";UNTIL=").append(parseIcalDateToString(r.getUntil(), null));
 			else if (r.getCount() != null)
 				sb.append(";COUNT=").append(r.getCount());
 			else {
@@ -914,9 +924,9 @@ public class CalendarManager {
 				cal.set(year + EVENT_MAX_UNTIL_OFFSET_IN_YEAR, month, day);
 				Date untilDate = cal.getTime();
 
-				String until = parseIcalDateToString(untilDate);
+				String until = parseIcalDateToString(untilDate, null);
 				Log.i(TAG, "buildRrule() no UNTIL or COUNT, so set UNTIL to " + untilDate.toString() + "   ICAL:" + until);
-				sb.append(";UNTIL=").append(until).append('Z');
+				sb.append(";UNTIL=").append(until);
 			}
 
 			if (r.getWorkweekStarts() != null)
@@ -1152,6 +1162,8 @@ public class CalendarManager {
 	 * @return List of events
 	 */
 	private static ArrayList<VEvent> splitRecurringEvent(VEvent recurringEvent) {
+		TimeZone tz = TimeZone.getDefault();
+		TimeZone.setDefault(tz);
 
 		ArrayList<VEvent> atomarEvents = new ArrayList<VEvent>();
 		boolean hasRec = false;
@@ -1187,19 +1199,23 @@ public class CalendarManager {
 
 			List<String> categories = new ArrayList<String>();
 
-			if (recurringEvent.getCategories() != null && !recurringEvent.getCategories().isEmpty())
+			if (recurringEvent.getCategories() != null && !recurringEvent.getCategories().isEmpty()) {
 				categories = recurringEvent.getCategories().get(0).getValues();
+			}
 
 			// handle DATE stuff
 			Date startDate = recurringEvent.getDateStart().getValue();
 			String timeZoneIdFromStartDate = recurringEvent.getDateStart().getTimezoneId();
-			
 
 			Log.d(TAG, "--------------------------------------");
 			Log.d(TAG, "RECURRING EVENT");
 			Log.d(TAG, "\tSTARTDATE: toString()\t" + startDate.toString());
-			Log.d(TAG, "\tSTARTDATE: timeZone \t" + timeZoneIdFromStartDate);
-			Log.d(TAG, "\tSTARTDATE: timeZoneConv \t" + TimeZone.getTimeZone("timeZoneIdFromStartDate").getID());
+			// Log.d(TAG, "\tSTARTDATE: timeZone \t" + timeZoneIdFromStartDate);
+			// Log.d(TAG, "\tSTARTDATE: timeZoneConv \t" +
+			// TimeZone.getTimeZone("timeZoneIdFromStartDate").getID());
+
+			SimpleDateFormat sdf = new SimpleDateFormat("EEE dd.MM.yyyy G   HH:mm:ss z");
+			sdf.setTimeZone(TimeZone.getDefault());
 
 			Date endDate = recurringEvent.getDateEnd().getValue();
 
@@ -1212,36 +1228,22 @@ public class CalendarManager {
 			// get EXDATE
 			if (recurringEvent.getExceptionDates() != null && recurringEvent.getExceptionDates().size() > 0) {
 				hasRec = true;
+				String exdate = buildExdate(recurringEvent, null);
+				rdata.append("\nEXDATE:").append(exdate);
 
-				String exdate = buildExdate(recurringEvent.getExceptionDates());
-
-				Log.d(TAG, "RDATA ");
-				Log.d(TAG, "\t RRULE: \t" + rdata.toString());
-				Log.d(TAG, "\t EXDATE:\t" + exdate);
-
-				rdata.append("\nEXDATE;").append(exdate);
-				//rdata.append("\nEXDATE;").append("TZID=GMT:20131120T090000");
 			}
 
-			
 			Log.d(TAG, "RDATA: ");
 			Log.d(TAG, "\t --------------");
 			Log.d(TAG, rdata.toString());
 			Log.d(TAG, "\t --------------");
-			
 
-			TimeZone tz = TimeZone.getTimeZone(timeZoneIdFromStartDate);
 			try {
 				Calendar cal = Calendar.getInstance();
-
-
-				cal.setTimeZone(tz);
 				cal.setTime(startDate);
-
-				Date da = cal.getTime();
-
 				int startDstOffset = cal.get(Calendar.DST_OFFSET);
-				DateIterator dif = DateIteratorFactory.createDateIterator(rdata.toString(), da, tz, true);
+
+				DateIterator dif = DateIteratorFactory.createDateIterator(rdata.toString(), startDate, null, true);
 
 				/*
 				 * if (hasRec) { Log.d(TAG, "timeZoneId " +
@@ -1253,11 +1255,13 @@ public class CalendarManager {
 
 				// + " Recurrs on: ");
 
+				List<Date> exceptionDates = extractExceptionDates(recurringEvent);
+
 				while (dif.hasNext()) {
 					Date d = dif.next();
 
 					cal.setTime(d);
-					//cal.setTimeZone(tz);
+					cal.setTimeZone(tz);
 					int dstOffset = cal.get(Calendar.DST_OFFSET);
 					// create VEvent with this date
 					VEvent e = new VEvent();
@@ -1274,20 +1278,50 @@ public class CalendarManager {
 					e.setTransparency(transp);
 					e.addCategories(categories);
 
-					if (startDstOffset != dstOffset) {
-						// Log.i(TAG, "startDstOffset = " + startDstOffset +
-						// "\t dstOffset = " + dstOffset);
-					}
-					e.setDateStart(new Date(d.getTime() + startDstOffset - dstOffset));
+					long offset = startDstOffset - dstOffset;
 
-					Date end = new Date(d.getTime() + duration.toMillis() + startDstOffset - dstOffset);
+					/**
+					 * the google rfc lib propably can't handle EXDATE when the
+					 * start date is in summer time but the EXDATE is in winter
+					 * time so we check manualy, pretty ugly i know :(
+					 */
+					boolean skip = false;
+					if (startDstOffset != dstOffset) {
+						Log.i(TAG, "startDstOffset = " + startDstOffset + "\t dstOffset = " + dstOffset);
+						Log.d(TAG, "dif = \t\t" + d.getTime());
+
+						for (Date date : exceptionDates) {
+							long check = d.getTime() - date.getTime() + offset;
+							if (check == 0) {
+								skip = true;
+							}
+						}
+
+					}
+					if (skip) {
+						continue;
+					}
+
+					// offset = 0;
+
+					// set StartDate
+					DateStart ds = new DateStart(new Date(d.getTime() + offset));
+					ds.setTimezoneId(tz.getID());
+					e.setDateStart(ds);
+
+					// calc and set EndDate
+					Date end = new Date(d.getTime() + duration.toMillis() + offset);
+					DateEnd de = new DateEnd(end);
+					de.setTimezoneId(tz.getID());
+					e.setDateEnd(de);
+
+					// Date end = new Date(d.getTime() + duration.toMillis());
 					// Log.d(TAG, "Date FROM " + d.toString() + "  to: " +
 					// end.toString());
 
-					e.setDateEnd(end);
-
 					if (hasRec == true) {
-						Log.d(TAG, "has EXDATE: " + title + "  -- " + e.getDateStart().getValue().toString());
+						sdf.setTimeZone(TimeZone.getTimeZone(e.getDateStart().getTimezoneId()));
+						Log.d(TAG, "has EXDATE: " + title + "  -- " + sdf.format(e.getDateStart().getValue()));
 					}
 
 					atomarEvents.add(e);
@@ -1304,21 +1338,42 @@ public class CalendarManager {
 
 	}
 
-	@SuppressLint("SimpleDateFormat")
-	private static String parseIcalDateToString(Date until) {
+	private static String parseIcalDateToString(Date date, TimeZone tz) {
 
 		StringBuilder sb = new StringBuilder();
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HHmm");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HHmm", Locale.getDefault());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
 
-		sb.append(dateFormat.format(until));
+		if (tz != null) {
+			timeFormat.setTimeZone(tz);
+			dateFormat.setTimeZone(tz);
+		} else {
+			timeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		}
+
+		sb.append(dateFormat.format(date));
 		sb.append("T");
-		sb.append(timeFormat.format(until));
+		sb.append(timeFormat.format(date));
 		sb.append("00");
+
+		if (tz == null)
+			sb.append('Z');
 
 		return sb.toString();
 	}
+
+	/**
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * @author friedrda
+	 * 
+	 */
 
 	static class CalendarXmlParser {
 
