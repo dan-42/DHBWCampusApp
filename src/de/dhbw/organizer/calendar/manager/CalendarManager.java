@@ -410,7 +410,7 @@ public class CalendarManager {
 			calendarId = cur.getLong(0);
 
 		} else {
-			Log.d(TAG, "FATAL ERROR");
+			Log.e(TAG, "getCalendarId() FATAL ERROR cur.getCount()=" + cur.getCount());
 		}
 
 		cur.close();
@@ -854,26 +854,27 @@ public class CalendarManager {
 			StringBuilder sb = new StringBuilder();
 			ArrayList<Date> dates = new ArrayList<Date>();
 
-			String tz = null;
+			TimeZone tz = TimeZone.getDefault();
 
 			for (ExceptionDates ed : exceptionDates) {
 				dates.addAll(ed.getValues());
-				// tz = TimeZone.getTimeZone(ed.getTimezoneId()).getID();
-				tz = TimeZone.getDefault().getID();
+				tz = TimeZone.getTimeZone(ed.getTimezoneId());
+
 			}
 
 			if (tz != null) {
-				sb.append("TZID=").append(tz).append(':');
+				sb.append("TZID=").append(tz.getID()).append(':');
 			}
 
+			Calendar cal = Calendar.getInstance(tz);
+			//TimeZone.setDefault(tz);
 			for (Iterator<Date> iterator = dates.iterator(); iterator.hasNext();) {
 				Date date = (Date) iterator.next();
-
-				if (tz != null) {
-					sb.append(parseIcalDateToString(date));
-				} else {
-					sb.append(parseIcalDateToString(date));
-				}
+					
+				cal.setTime(date);
+				cal.setTimeZone(tz);
+				
+				sb.append(parseIcalDateToString(cal.getTime()));
 
 				if (iterator.hasNext()) {
 					sb.append(",");
@@ -1153,14 +1154,12 @@ public class CalendarManager {
 	private static ArrayList<VEvent> splitRecurringEvent(VEvent recurringEvent) {
 
 		ArrayList<VEvent> atomarEvents = new ArrayList<VEvent>();
+		boolean hasRec = false;
 
+		// avoid nullPointer by checking if needed attributes are set
 		if (recurringEvent != null && recurringEvent.getRecurrenceRule() != null && recurringEvent.getRecurrenceId() == null) {
 
-			Date startDate = recurringEvent.getDateStart().getValue();
-			Date endDate = recurringEvent.getDateEnd().getValue();
-
-			Duration duration = Duration.diff(startDate, endDate);
-
+			// collect data from event, to but into new atomar events
 			String title = recurringEvent.getSummary().getValue();
 			String description = "";
 			if (recurringEvent.getDescription() != null) {
@@ -1169,11 +1168,6 @@ public class CalendarManager {
 			String location = "";
 			if (recurringEvent.getLocation() != null) {
 				location = recurringEvent.getLocation().getValue();
-			}
-			String rdata = "RRULE:" + buildRrule(recurringEvent);
-
-			if (recurringEvent.getExceptionDates() != null && recurringEvent.getExceptionDates().size() > 0) {
-				rdata = rdata + "\nEXDATE;" + buildExdate(recurringEvent.getExceptionDates());
 			}
 
 			String uid = recurringEvent.getUid().getValue();
@@ -1196,26 +1190,74 @@ public class CalendarManager {
 			if (recurringEvent.getCategories() != null && !recurringEvent.getCategories().isEmpty())
 				categories = recurringEvent.getCategories().get(0).getValues();
 
-			TimeZone tz = TimeZone.getDefault();
-			if (recurringEvent.getDateStart().getTimezoneId() != null) {
-				tz = TimeZone.getTimeZone(recurringEvent.getDateStart().getTimezoneId());
+			// handle DATE stuff
+			Date startDate = recurringEvent.getDateStart().getValue();
+			String timeZoneIdFromStartDate = recurringEvent.getDateStart().getTimezoneId();
+			
+
+			Log.d(TAG, "--------------------------------------");
+			Log.d(TAG, "RECURRING EVENT");
+			Log.d(TAG, "\tSTARTDATE: toString()\t" + startDate.toString());
+			Log.d(TAG, "\tSTARTDATE: timeZone \t" + timeZoneIdFromStartDate);
+			Log.d(TAG, "\tSTARTDATE: timeZoneConv \t" + TimeZone.getTimeZone("timeZoneIdFromStartDate").getID());
+
+			Date endDate = recurringEvent.getDateEnd().getValue();
+
+			Duration duration = Duration.diff(startDate, endDate);
+
+			// get RRULE
+			StringBuilder rdata = new StringBuilder();
+			rdata.append("RRULE:").append(buildRrule(recurringEvent));
+
+			// get EXDATE
+			if (recurringEvent.getExceptionDates() != null && recurringEvent.getExceptionDates().size() > 0) {
+				hasRec = true;
+
+				String exdate = buildExdate(recurringEvent.getExceptionDates());
+
+				Log.d(TAG, "RDATA ");
+				Log.d(TAG, "\t RRULE: \t" + rdata.toString());
+				Log.d(TAG, "\t EXDATE:\t" + exdate);
+
+				rdata.append("\nEXDATE;").append(exdate);
+				//rdata.append("\nEXDATE;").append("TZID=GMT:20131120T090000");
 			}
 
+			
+			Log.d(TAG, "RDATA: ");
+			Log.d(TAG, "\t --------------");
+			Log.d(TAG, rdata.toString());
+			Log.d(TAG, "\t --------------");
+			
+
+			TimeZone tz = TimeZone.getTimeZone(timeZoneIdFromStartDate);
 			try {
 				Calendar cal = Calendar.getInstance();
+
+
+				cal.setTimeZone(tz);
 				cal.setTime(startDate);
 
-				int startDstOffset = cal.get(Calendar.DST_OFFSET);
-				DateIterator dif = DateIteratorFactory.createDateIterator(rdata, startDate, tz, false);
+				Date da = cal.getTime();
 
-				// Log.d(TAG, "EVENT: " + recurringEvent.getSummary().getValue()
+				int startDstOffset = cal.get(Calendar.DST_OFFSET);
+				DateIterator dif = DateIteratorFactory.createDateIterator(rdata.toString(), da, tz, true);
+
+				/*
+				 * if (hasRec) { Log.d(TAG, "timeZoneId " +
+				 * timeZoneIdFromStartDate); Log.d(TAG, "timeZoneId in tz" +
+				 * tz.getDisplayName()); Log.d(TAG, "RDATA : " + rdata);
+				 * Log.d(TAG, "RDATA TZ: " + tz.toString()); Log.d(TAG,
+				 * "RDATA startDate: " + startDate.toString()); }
+				 */
+
 				// + " Recurrs on: ");
 
 				while (dif.hasNext()) {
 					Date d = dif.next();
 
 					cal.setTime(d);
-
+					//cal.setTimeZone(tz);
 					int dstOffset = cal.get(Calendar.DST_OFFSET);
 					// create VEvent with this date
 					VEvent e = new VEvent();
@@ -1244,6 +1286,10 @@ public class CalendarManager {
 
 					e.setDateEnd(end);
 
+					if (hasRec == true) {
+						Log.d(TAG, "has EXDATE: " + title + "  -- " + e.getDateStart().getValue().toString());
+					}
+
 					atomarEvents.add(e);
 
 				}
@@ -1264,6 +1310,7 @@ public class CalendarManager {
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HHmm");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 		sb.append(dateFormat.format(until));
 		sb.append("T");
