@@ -23,7 +23,7 @@
  * @author friedrda
  */
 
-package de.dhbw.organizer.calendar.activity;
+package de.dhbw.organizer.calendar.backend.activity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,9 +50,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
-import de.dhbw.organizer.calendar.manager.CalendarManager;
-import de.dhbw.organizer.calendar.manager.NetworkManager;
-import de.dhbw.organizer.calendar.objects.SpinnerItem;
+import de.dhbw.organizer.calendar.backend.manager.CalendarManager;
+import de.dhbw.organizer.calendar.backend.manager.NetworkManager;
+import de.dhbw.organizer.calendar.backend.objects.SpinnerItem;
 
 /**
  * Activity which displays login screen to the user.

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.dhbw.organizer.calendar.objects;
+package de.dhbw.organizer.calendar.backend.objects;
 
 import java.util.ArrayList;
 

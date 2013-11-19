@@ -22,7 +22,7 @@
 /**
  * @author friedrda
  */
-package de.dhbw.organizer.calendar.manager;
+package de.dhbw.organizer.calendar.backend.manager;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -91,13 +91,10 @@ import biweekly.util.Recurrence.DayOfWeek;
 
 import com.google.ical.compat.javautil.DateIterator;
 import com.google.ical.compat.javautil.DateIteratorFactory;
-import com.google.ical.iter.RecurrenceIterator;
-import com.google.ical.iter.RecurrenceIteratorFactory;
-import com.google.ical.values.RDateList;
 
 import de.dhbw.organizer.calendar.Constants;
-import de.dhbw.organizer.calendar.objects.RecurringVEvent;
-import de.dhbw.organizer.calendar.objects.SpinnerItem;
+import de.dhbw.organizer.calendar.backend.objects.RecurringVEvent;
+import de.dhbw.organizer.calendar.backend.objects.SpinnerItem;
 
 /**
  * This class has only functions to help handle all the calendar stuff

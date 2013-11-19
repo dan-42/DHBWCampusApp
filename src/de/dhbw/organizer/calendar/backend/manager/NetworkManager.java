@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package de.dhbw.organizer.calendar.manager;
+package de.dhbw.organizer.calendar.backend.manager;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

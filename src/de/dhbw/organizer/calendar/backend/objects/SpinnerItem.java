@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.dhbw.organizer.calendar.objects;
+package de.dhbw.organizer.calendar.backend.objects;
 
 import android.annotation.SuppressLint;
 

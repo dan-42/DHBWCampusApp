@@ -50,7 +50,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" android:icon="@drawable/ic_calendar_main">
         <service
-            android:name="de.dhbw.organizer.calendar.authenticator.AuthenticationService"
+            android:name="de.dhbw.organizer.calendar.backend.authenticator.AuthenticationService"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -61,7 +61,7 @@
                 android:resource="@xml/authenticator" />
         </service>
         <service
-            android:name="de.dhbw.organizer.calendar.syncadapter.SyncService"
+            android:name="de.dhbw.organizer.calendar.backend.syncadapter.SyncService"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
@@ -73,7 +73,7 @@
         </service>
 
         <activity
-            android:name="de.dhbw.organizer.calendar.activity.AuthenticatorActivity"
+            android:name="de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivity"
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:label="@string/account_label"

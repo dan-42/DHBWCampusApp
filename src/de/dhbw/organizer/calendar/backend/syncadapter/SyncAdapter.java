@@ -23,7 +23,7 @@
  * @author friedrda
  * 
  */
-package de.dhbw.organizer.calendar.syncadapter;
+package de.dhbw.organizer.calendar.backend.syncadapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,7 +50,7 @@ import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import de.dhbw.organizer.calendar.Constants;
-import de.dhbw.organizer.calendar.manager.CalendarManager;
+import de.dhbw.organizer.calendar.backend.manager.CalendarManager;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 

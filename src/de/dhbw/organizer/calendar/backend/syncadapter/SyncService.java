@@ -19,45 +19,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * @author friedrda
  */
-
-package de.dhbw.organizer.calendar.authenticator;
+package de.dhbw.organizer.calendar.backend.syncadapter;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 /**
- * Service to handle Account authentication. It instantiates the authenticator
- * and returns its IBinder.
+ * Service to handle Account sync. This is invoked with an intent with action
+ * ACTION_AUTHENTICATOR_INTENT. It instantiates the syncadapter and returns its
+ * IBinder.
  */
-public class AuthenticationService extends Service {
+public class SyncService extends Service {
 
-	private static final String TAG = "iCal AuthenticationService";
+    private static final Object sSyncAdapterLock = new Object();
 
-	private Authenticator mAuthenticator;
+    private static SyncAdapter sSyncAdapter = null;
 
-	@Override
-	public void onCreate() {
-		if (mAuthenticator == null) {
-			Log.i(TAG, "iCal SyncAdapter Authentication Service started.");
-			mAuthenticator = new Authenticator(this);
-		}
-	}
+    @Override
+    public void onCreate() {
+        synchronized (sSyncAdapterLock) {
+            if (sSyncAdapter == null) {
+                sSyncAdapter = new SyncAdapter(getApplicationContext(), true);
+                
+            }
+        }
+    }
 
-	@Override
-	public void onDestroy() {
-		Log.i(TAG, "iCal SyncAdapter Authentication Service stopped.");
-		mAuthenticator = null;
-	}
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		Log.i(TAG,"getBinder()...  returning the AccountAuthenticator binder for intent "+ intent);
-		return mAuthenticator.getIBinder();
-	}
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    	
+    };
+    
+    
+    
+    @Override
+    public IBinder onBind(Intent intent) {
+        return sSyncAdapter.getSyncAdapterBinder();
+    }
 }
