@@ -27,7 +27,7 @@ package de.dhbw.organizer.calendar;
 import android.graphics.Color;
 
 public class Constants {
-
+// terst kommentar
 	 /**
      * Account type string.
      */
