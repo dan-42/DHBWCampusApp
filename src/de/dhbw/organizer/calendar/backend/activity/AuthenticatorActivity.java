@@ -89,10 +89,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		super.onCreate(icicle);
 
 		mAccountManager = AccountManager.get(this);
+		
 
-		requestWindowFeature(Window.FEATURE_LEFT_ICON);
+		//requestWindowFeature(Window.FEATURE_LEFT_ICON);
 		setContentView(R.layout.calendar_account_select_calendar_activity);
-		getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_calendar_main);
+		//getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_calendar_main);
 
 		mMessage = (TextView) findViewById(R.id.message);
 		mMessage.setText(R.string.select_ical_activity_newaccount_text);
@@ -102,7 +103,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
 		mOkButton = (Button) findViewById(R.id.ok_button);
 
-		mUpdateListButton = (Button) findViewById(R.id.update_list_button);
+		mUpdateListButton = (Button) findViewById(R.id.calendar_account_select_ical_update_button);
 
 		try {
 			mItemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
@@ -122,27 +123,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
 	}
 
-	/*
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Dialog onCreateDialog(int id, Bundle args) {
-
-		mDialog = new ProgressDialog(this);
-
-		mDialog.setMessage(getText(R.string.ui_activity_authenticating));
-		mDialog.setIndeterminate(true);
-		mDialog.setCancelable(true);
-
-		mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			public void onCancel(DialogInterface dialog) {
-				Log.i(TAG, "user cancelling add calendar");
-				dialog.dismiss();
-			}
-		});
-
-		return mDialog;
-	}
 
 	/**
 	 * Handles onClick event on the Submit button. Sends username/password to
