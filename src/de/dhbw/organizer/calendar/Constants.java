@@ -30,7 +30,7 @@ public class Constants {
 // terst kommentar
 	//zweiter komentar
 	 /**
-     * Account type string.
+     * Account type string.  DANIEL
      */
     public static final String ACCOUNT_TYPE = "de.dhbw.organizer.icalsync";
 
