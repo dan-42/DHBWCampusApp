@@ -27,7 +27,7 @@ package de.dhbw.organizer.calendar;
 import android.graphics.Color;
 
 public class Constants {
-	 /**
+	/**
      * Account type string. Simon 234
      */
     public static final String ACCOUNT_TYPE = "de.dhbw.organizer.icalsync";
