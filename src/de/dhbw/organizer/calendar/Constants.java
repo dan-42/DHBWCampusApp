@@ -28,7 +28,7 @@ import android.graphics.Color;
 
 public class Constants {
 	 /**
-     * Account type string.
+     * Account type string. Simon
      */
     public static final String ACCOUNT_TYPE = "de.dhbw.organizer.icalsync";
 
