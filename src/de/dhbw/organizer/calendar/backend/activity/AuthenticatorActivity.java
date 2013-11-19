@@ -233,7 +233,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		}
 
 		/**
-		 * this method runnns on the UI-Thread, so now we can update the Spinner
+		 * this method runs on the UI-Thread, so now we can update the Spinner
 		 * view
 		 * 
 		 * @param result

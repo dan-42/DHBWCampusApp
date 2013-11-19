@@ -82,7 +82,7 @@
 
         <!--  -->
         <activity
-            android:name="de.dhbw.organizer.startpage.HomeScreen"
+            android:name="de.dhbw.organizer.startpage.Startpage"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
