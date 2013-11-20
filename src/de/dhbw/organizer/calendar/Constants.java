@@ -42,12 +42,7 @@ public class Constants {
      */
     public static final String KEY_ACCOUNT_CAL_URL = "de.dhbw.organizer.callendar.url";
     
-    /**
-     * the token which will be replaced in the calendar url
-     */
-    public static final String CALENDAR_REEPLACE_TOKEN = "{{CALENDAR}}";
-    
-    
+      
     /**
      * this String is added in front of every Calendar 
      */

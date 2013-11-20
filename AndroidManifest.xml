@@ -72,13 +72,13 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <activity
+         <activity
             android:name="de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivity"
             android:configChanges="orientation"
-            android:excludeFromRecents="true"
+            android:excludeFromRecents="false"
             android:label="@string/account_label"
-            android:theme="@android:style/Theme.Dialog" >
-        </activity>
+            android:theme="@style/AppTheme" >  
+        </activity>  
 
         <!--  -->
         <activity
@@ -99,5 +99,4 @@
         <!--  -->
 
     </application>
-
 </manifest>
