@@ -46,6 +46,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import de.dhbw.organizer.R;
@@ -71,7 +72,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
 	private Button mOkButton;
 	private Button mCancelButton;
-	private Button mUpdateListButton;
+	private ImageButton mUpdateListButton;
 
 	private ProgressDialog mDialog;
 
@@ -103,7 +104,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
 		mOkButton = (Button) findViewById(R.id.ok_button);
 
-		mUpdateListButton = (Button) findViewById(R.id.calendar_account_select_ical_update_button);
+		mUpdateListButton = (ImageButton) findViewById(R.id.calendar_account_select_ical_update_button);
 
 		try {
 			mItemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
