@@ -27,8 +27,8 @@ package de.dhbw.organizer.calendar;
 import android.graphics.Color;
 
 public class Constants {
-	 /**
-     * Account type string. Simon 234
+	/**
+     * Account type string.
      */
     public static final String ACCOUNT_TYPE = "de.dhbw.organizer.icalsync";
 
@@ -38,17 +38,11 @@ public class Constants {
     public static final String AUTHTOKEN_TYPE = "de.dhbw.organizer.icalsync";
     
     /**
-     * token to rertive Calendar URL from AccountManager
+     * token to retrieve Calendar URL from AccountManager
      */
     public static final String KEY_ACCOUNT_CAL_URL = "de.dhbw.organizer.callendar.url";
     
-    /**
-     * the token which will be replaced in the calendar url
-     */
-    public static final String CALENDAR_REEPLACE_TOKEN = "{{CALENDAR}}";
-    
-    
-    
+      
     /**
      * this String is added in front of every Calendar 
      */
@@ -65,17 +59,17 @@ public class Constants {
     														Color.parseColor("#A80000")}; //darker
 
     /**
-     * min time intervall between two syncs in millis 
+     * min time interval between two syncs in millis 
      */
 	public static final long MIN_SYNC_INTERVRALL_IN_MILLIS = 10 * 1000;
 
 	/**
-	 * sync intervall in seconds e.g. 60 * 60 * 12 for 12h
+	 * sync interval in seconds e.g. 60 * 60 * 12 for 12h
 	 */
 	public static final long SYNC_INTERVALL_IN_SEC = 60 * 60 * 12;
 	
 	/**
-	 * URL wehere the XML is to optain the up to date calendar list
+	 * URL where the XML is to obtain the up to date calendar list
 	 */
 	public static final String EXTERNAL_CALENDAR_LIST_URL = "http://hemera.bf-it.eu/dh/calendar_calendars.xml";
 }

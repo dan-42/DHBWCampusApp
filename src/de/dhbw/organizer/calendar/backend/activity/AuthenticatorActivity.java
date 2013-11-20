@@ -32,21 +32,15 @@ import java.util.Collections;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import de.dhbw.organizer.R;
@@ -70,12 +64,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
 	private Spinner mIcalSpinner;
 
-	private Button mOkButton;
-	private Button mCancelButton;
-	private ImageButton mUpdateListButton;
-
-	private ProgressDialog mDialog;
-
 	ArrayList<SpinnerItem> mItemList = null;
 
 	private ArrayAdapter<SpinnerItem> mAdapter;
@@ -90,11 +78,11 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		super.onCreate(icicle);
 
 		mAccountManager = AccountManager.get(this);
-		
 
-		//requestWindowFeature(Window.FEATURE_LEFT_ICON);
+		// requestWindowFeature(Window.FEATURE_LEFT_ICON);
 		setContentView(R.layout.calendar_account_select_calendar_activity);
-		//getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_calendar_main);
+		// getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
+		// R.drawable.ic_calendar_main);
 
 		mMessage = (TextView) findViewById(R.id.message);
 		mMessage.setText(R.string.select_ical_activity_newaccount_text);
@@ -102,9 +90,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		CalendarManager cm = CalendarManager.get(this);
 
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
-		mOkButton = (Button) findViewById(R.id.ok_button);
-
-		mUpdateListButton = (ImageButton) findViewById(R.id.calendar_account_select_ical_update_button);
 
 		try {
 			mItemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
@@ -123,7 +108,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		mIcalSpinner.setAdapter(mAdapter);
 
 	}
-
 
 	/**
 	 * Handles onClick event on the Submit button. Sends username/password to
@@ -214,25 +198,24 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 		}
 
 		/**
-		 * this method runnns on the UI-Thread, so now we can update the Spinner
+		 * this method runs on the UI-Thread, so now we can update the Spinner
 		 * view
 		 * 
 		 * @param result
 		 */
 		@Override
 		protected void onPostExecute(Boolean result) {
-			
+
 			super.onPostExecute(result);
 			Log.d(TAG, "onPostExecute() update spinneritems");
 			mAdapter.clear();
 			mAdapter.addAll(mItemList);
 			mAdapter.notifyDataSetChanged();
-			//mIcalSpinner.invalidate();
+			// mIcalSpinner.invalidate();
 
-			//mDialog.dismiss();
-			//mDialog.show();
+			// mDialog.dismiss();
+			// mDialog.show();
 		}
-		
 
 	}
 }

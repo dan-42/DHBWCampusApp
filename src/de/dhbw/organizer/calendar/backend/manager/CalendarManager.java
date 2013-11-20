@@ -1202,7 +1202,7 @@ public class CalendarManager {
 
 			// handle DATE stuff
 			Date startDate = recurringEvent.getDateStart().getValue();
-			String timeZoneIdFromStartDate = recurringEvent.getDateStart().getTimezoneId();
+			//String timeZoneIdFromStartDate = recurringEvent.getDateStart().getTimezoneId();
 
 			Log.d(TAG, "--------------------------------------");
 			Log.d(TAG, "RECURRING EVENT");
@@ -1211,7 +1211,7 @@ public class CalendarManager {
 			// Log.d(TAG, "\tSTARTDATE: timeZoneConv \t" +
 			// TimeZone.getTimeZone("timeZoneIdFromStartDate").getID());
 
-			SimpleDateFormat sdf = new SimpleDateFormat("EEE dd.MM.yyyy G   HH:mm:ss z");
+			SimpleDateFormat sdf = new SimpleDateFormat("EEE dd.MM.yyyy G   HH:mm:ss z", Locale.getDefault());
 			sdf.setTimeZone(TimeZone.getDefault());
 
 			Date endDate = recurringEvent.getDateEnd().getValue();
