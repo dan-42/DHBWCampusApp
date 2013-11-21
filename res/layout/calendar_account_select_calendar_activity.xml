@@ -69,12 +69,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <Spinner
-                    android:id="@+id/ical_calendar_spinner"
-                    android:layout_width="fill_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
+
+                    <Spinner
+                        android:id="@+id/ical_calendar_spinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar1"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/calendar_account_select_ical_update_button"
@@ -84,13 +98,12 @@
                     android:onClick="updateCalendarList"                  
                     android:src="@android:drawable/ic_popup_sync" />
 
-                
-
             </LinearLayout>
            <TextView
                     android:id="@+id/calendar_account_select_ical_information_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
                     android:layout_weight="0.1"
                     android:text="INFORMATION"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
