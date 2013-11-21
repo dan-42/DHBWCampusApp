@@ -31,6 +31,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -47,45 +48,68 @@ import android.widget.Toast;
 
 public class Vorlesungsplan extends Activity {
 
-	ListView lv1;
-	private String[] drawerListViewItems;
-	private ListView drawerListView;
-	private DrawerLayout drawerLayout;
-	private ActionBarDrawerToggle actionBarDrawerToggle;
+	private ListView mEventList;
+	private String[] mDrawerListViewItems;
+	private ListView mDrawerListView;
+	private DrawerLayout mDrawerLayout;
+	private ActionBarDrawerToggle mActionBarDrawerToggle;
+	private ArrayList<String> mCalendarList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		readCalendar(this);
-		getCalendarList();
+
+		/*
+		 * Methode zum speichern des letzten ausgewählten Kalenders erstellen
+		 */
+		// readCalendar(this, "bla");
+
+		mCalendarList = getCalendarList();
 
 		// get list items from strings.xml
-		drawerListViewItems = getResources().getStringArray(R.array.items);
+		mDrawerListViewItems = getResources().getStringArray(R.array.items);
 
 		// get ListView defined in activity_main.xml
-		drawerListView = (ListView) findViewById(R.id.left_drawer);
+		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
+
+		Log.d("Kalendar: ", mCalendarList.get(0));
 
 		// Set the adapter for the list view
-		drawerListView.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.calendar_drawer_listview_item, drawerListViewItems));
+		mDrawerListView.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.calendar_drawer_listview_item, mCalendarList));
 
-		drawerListView.setOnItemClickListener(new DrawerItemClickListener());
+		// Welcher Onclick listener ist der richtige?!
+		mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 		// 2.1 create ActionBarDrawerToggle
-		actionBarDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-		drawerLayout, /* DrawerLayout object */
+		mActionBarDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+		mDrawerLayout, /* DrawerLayout object */
 		R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
 		R.string.drawer_open, /* "open drawer" description */
 		R.string.drawer_close /* "close drawer" description */
 		);
 
 		// 2.2 Set actionBarDrawerToggle as the DrawerListener
-		drawerLayout.setDrawerListener(actionBarDrawerToggle);
+		mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
+		if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
+			// zurück auf den Homescreen einbauen!
+
+			return true;
+		}
+		// Handle your other action bar items...
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -96,12 +120,19 @@ public class Vorlesungsplan extends Activity {
 		return true;
 	}
 
-	public static final String[] EVENT_PROJECTION = new String[] { Events._ID,
-			Events.TITLE, Events.EVENT_LOCATION };
+	// The desired event columns
+	public static final String[] EVENT_PROJECTION = new String[] { Events._ID, // 0
+			Events.TITLE, // 1
+			Events.EVENT_LOCATION // 2
+	};
 
+	// The desired calendar columns
 	public static final String[] CALENDAR_PROJECTION = new String[] {
-			Calendars._ID, Calendars.ACCOUNT_NAME, Calendars.ACCOUNT_TYPE,
-			Calendars.NAME };
+			Calendars._ID, // 0
+			Calendars.ACCOUNT_NAME, // 1
+			Calendars.ACCOUNT_TYPE, // 2
+			Calendars.NAME // 3
+	};
 
 	// The desired columns to be bound
 	String[] columns = new String[] { Instances._ID, // 0
@@ -109,13 +140,21 @@ public class Vorlesungsplan extends Activity {
 			Instances.EVENT_LOCATION // 2
 	};
 
-	int[] to = new int[] { R.id.code, R.id.name, R.id.continent
-
+	int[] to = new int[] { R.id.code, // 0
+			R.id.name, // 1
+			R.id.continent // 2
 	};
 
-	private void readCalendar(Context context) {
+	/**
+	 * 
+	 * @param context
+	 *            The actual context
+	 * @param CalendarName
+	 *            The calendar name which should be read
+	 */
+	private void readCalendar(Context context, String CalendarName) {
 
-		lv1 = (ListView) findViewById(R.id.listView1);
+		mEventList = (ListView) findViewById(R.id.listView1);
 		Uri uri = CalendarContract.Events.CONTENT_URI;
 
 		Cursor cur = null;
@@ -126,7 +165,7 @@ public class Vorlesungsplan extends Activity {
 				new String[] { "" + 11 }, null);
 
 		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?",
-				new String[] { "kal-tif11a" }, null);
+				new String[] { CalendarName }, null);
 
 		/*
 		 * while (cur2.moveToNext()) { String eventID = null; String Title =
@@ -136,14 +175,20 @@ public class Vorlesungsplan extends Activity {
 		SimpleCursorAdapter dataAdapter = new SimpleCursorAdapter(this,
 				R.layout.calendar_activity_listview, cur, columns, to, 0);
 
-		lv1.setAdapter(dataAdapter);
+		mEventList.setAdapter(dataAdapter);
 
 	}
 
+	/**
+	 * 
+	 * @return ArrayList with calendar names with account type
+	 *         Calendars.ACCOUNT_TYPE
+	 */
 	private ArrayList<String> getCalendarList() {
 		// lv1 = (ListView) findViewById(R.id.listView1);
 		String[] calendarList2 = new String[1];
 		ArrayList<String> calendarList = new ArrayList<String>();
+
 		Uri uri = Calendars.CONTENT_URI;
 
 		Cursor cur = null;
@@ -156,31 +201,32 @@ public class Vorlesungsplan extends Activity {
 		int i = 0;
 		while (cur.moveToNext()) {
 			String eventID = null;
-			String Title = null;
+			String calendarName = null;
 			String Title2 = null;
 			String Title3 = null;
-			calendarList.add(Title);
-			i++;
 
 			eventID = cur.getString(0);
-			Title = cur.getString(1);
+			calendarName = cur.getString(1);
 			Title2 = cur.getString(2);
 			Title3 = cur.getString(3);
 
+			calendarList.add(calendarName);
+			i++;
+
 			Log.d("CALENDAR_ID", eventID);
-			Log.d("CALENDAR_NAME", Title);
+			Log.d("CALENDAR_NAME", calendarName);
 
 		}
 
 		return calendarList;
 
-		// SimpleCursorAdapter dataAdapter = new SimpleCursorAdapter(this,
-		// R.layout.activity_listview, cur, columns, to, 0);
-
-		// lv1.setAdapter(dataAdapter);
-
 	}
 
+	/**
+	 * 
+	 * @author Seimon
+	 * 
+	 */
 	private class DrawerItemClickListener implements
 			ListView.OnItemClickListener {
 		@Override
@@ -188,11 +234,23 @@ public class Vorlesungsplan extends Activity {
 				long id) {
 			Toast.makeText(Vorlesungsplan.this, ((TextView) view).getText(),
 					Toast.LENGTH_LONG).show();
-			drawerLayout.closeDrawer(drawerListView);
+			mDrawerLayout.closeDrawer(mDrawerListView);
 			Log.d((((TextView) view).getText()).toString(),
 					(((TextView) view).getText()).toString());
 
+			selectItem(view);
+
 		}
+	}
+
+	/**
+	 * 
+	 * @param view
+	 *            the name of the selected item
+	 */
+	public void selectItem(View view) {
+
+		readCalendar(this, (((TextView) view).getText()).toString());
 	}
 
 }
