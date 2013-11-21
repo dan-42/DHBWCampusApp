@@ -38,11 +38,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -66,21 +69,35 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	private static final String DEFAULT_PASSWORD = "DEADBEAF";
 
+	private static final int PROGRESS = 0x1;
+
 	private AccountManager mAccountManager;
 
 	private TextView mInfoMessage;
+
+	private ImageButton mUpdateListButton;
 
 	private Spinner mIcalSpinner;
 
 	private TabHost mTabHost = null;
 
-	ArrayList<SpinnerItem> mItemList = null;
+	private ArrayList<SpinnerItem> mItemList = null;
 
 	private ArrayAdapter<SpinnerItem> mAdapter;
+
+	private ProgressBar mProgress;
+
+	// allow only one update
+	private boolean mListUpdated = false;
+
+	private Handler mHandler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		CalendarManager cm = CalendarManager.get(this);
+		mAccountManager = AccountManager.get(this);
 
 		mAccountAuthenticatorResponse = getIntent().getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
 
@@ -88,59 +105,55 @@ public class AuthenticatorActivityTabed extends Activity {
 			mAccountAuthenticatorResponse.onRequestContinued();
 		}
 
-		setContentView(R.layout.activity_calendar_account_tabed);
+		setContentView(R.layout.calendar_backend_add_account_tabed);
 		mTabHost = (TabHost) findViewById(R.id.tabhost);
 		mTabHost.setup();
 
 		/**
 		 * Spinner TAB
 		 */
-		TabHost.TabSpec spec = mTabHost.newTabSpec("tab_spinner");
-		spec.setContent(R.id.calenda_account_spinner_tab);
-		spec.setIndicator("Spinner");
-		mTabHost.addTab(spec);
+		TabHost.TabSpec specSpinner = mTabHost.newTabSpec("tab_spinner");
+		specSpinner.setContent(R.id.calenda_account_spinner_tab);
+		specSpinner.setIndicator("Spinner");
+		mTabHost.addTab(specSpinner);
 
 		/**
 		 * text input TAB
 		 */
-		spec = mTabHost.newTabSpec("tab_manual");
-		spec.setContent(R.id.calendar_account_manual_tab);
-		spec.setIndicator("Manual");
-		mTabHost.addTab(spec);
+		TabHost.TabSpec specManual = mTabHost.newTabSpec("tab_manual");
+		specManual.setContent(R.id.calendar_account_manual_tab);
+		specManual.setIndicator("Manual");
+		mTabHost.addTab(specManual);
 
 		/**
 		 * set current TAB
 		 */
 		mTabHost.setCurrentTab(0);
 
-		mInfoMessage = (TextView) findViewById(R.id.message);
-		mInfoMessage.setText(R.string.select_ical_activity_newaccount_text);
+		mUpdateListButton = (ImageButton) findViewById(R.id.calendar_account_select_ical_update_button);
 
-		CalendarManager cm = CalendarManager.get(this);
+		mProgress = (ProgressBar) findViewById(R.id.calendar_list_update_progressbar);
 
-		if (findViewById(R.id.ical_calendar_spinner) instanceof Spinner) {
+		mInfoMessage = (TextView) findViewById(R.id.calendar_backend_account_information_message);
+		
 
-			mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
+		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
 
-			try {
-				mItemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
-			} catch (IOException e) {
-				mItemList = new ArrayList<SpinnerItem>();
-				mItemList.add(new SpinnerItem("XML-PARSE ERROR", " "));
-				e.printStackTrace();
-			}
-
-			// sort
-			Collections.sort(mItemList);
-
-			mAdapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_item, mItemList);
-
-			mAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-			mIcalSpinner.setAdapter(mAdapter);
-
-		} else {
-			Log.e(TAG, "ERROR" + findViewById(R.id.ical_calendar_spinner).toString());
+		try {
+			mItemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
+		} catch (IOException e) {
+			mItemList = new ArrayList<SpinnerItem>();
+			mItemList.add(new SpinnerItem("XML-PARSE ERROR", " "));
+			e.printStackTrace();
 		}
+
+		// sort
+		Collections.sort(mItemList);
+
+		mAdapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_item, mItemList);
+
+		mAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+		mIcalSpinner.setAdapter(mAdapter);
 
 	}
 
@@ -191,10 +204,15 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	public void updateCalendarList(View view) {
 
-		Log.d(TAG, "updateCalendarList()");
+		if (mListUpdated == false) {
 
-		UpdateXmlTask uxt = new UpdateXmlTask();
-		uxt.execute(this);
+			Log.d(TAG, "updateCalendarList()");
+
+			UpdateXmlTask uxt = new UpdateXmlTask();
+			uxt.execute(this);
+		} else {
+			mInfoMessage.setText(R.string.calendar_backend_update_already_done);
+		}
 
 	}
 
@@ -237,33 +255,61 @@ public class AuthenticatorActivityTabed extends Activity {
 
 		private Context mmContext = null;
 
+		private void setProgress(int i) {
+			mProgress.setProgress(i);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			mIcalSpinner.setEnabled(false);
+			mIcalSpinner.setClickable(false);
+			mUpdateListButton.setEnabled(false);
+			mUpdateListButton.setClickable(false);
+			mInfoMessage.setText(R.string.calendar_backend_update_updating);
+		};
+
+		@Override
+		protected void onProgressUpdate(Integer[] value) {
+			Log.d(TAG, "onProgressUpdate");
+			mProgress.setProgress(value[0]);
+
+		};
+
 		@Override
 		protected Boolean doInBackground(Context... contexts) {
 			mmContext = contexts[0];
+			publishProgress(20);
 
 			CalendarManager cm = CalendarManager.get(mmContext);
 			NetworkManager nm = NetworkManager.getInstance(mmContext);
 			ArrayList<SpinnerItem> itemList = null;
 			boolean success = false;
 
+			publishProgress(10);
 			if (nm.isOnline()) {
+				publishProgress(15);
 				if (cm.loadExternalXml()) {
+					publishProgress(30);
 					try {
 						itemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
+						publishProgress(40);
 					} catch (IOException e) {
 						itemList = new ArrayList<SpinnerItem>();
 						itemList.add(new SpinnerItem("XML-PARSE ERROR", " "));
 						e.printStackTrace();
 					}
-
+					publishProgress(50);
 					// sort
 					Collections.sort(itemList);
-
+					publishProgress(60);
 					mItemList = itemList;
-
+					publishProgress(70);
 					success = true;
 				}
 			}
+			publishProgress(100);
+
+			
 
 			return success;
 
@@ -277,16 +323,31 @@ public class AuthenticatorActivityTabed extends Activity {
 		 */
 		@Override
 		protected void onPostExecute(Boolean result) {
-
 			super.onPostExecute(result);
 			Log.d(TAG, "onPostExecute() update spinneritems");
+			
 			mAdapter.clear();
 			mAdapter.addAll(mItemList);
 			mAdapter.notifyDataSetChanged();
-			// mIcalSpinner.invalidate();
+			
+			mIcalSpinner.setEnabled(true);
+			mIcalSpinner.setClickable(true);
 
-			// mDialog.dismiss();
-			// mDialog.show();
+			if(result){
+				mInfoMessage.setText(R.string.calendar_backend_update_successful);
+				mListUpdated = true;
+			}
+			else {
+				mInfoMessage.setText(R.string.calendar_backend_update_xml_error);
+				mUpdateListButton.setEnabled(true);
+				mUpdateListButton.setClickable(true);
+			}
+			
+			
+			
+
+			
+			
 		}
 
 	}

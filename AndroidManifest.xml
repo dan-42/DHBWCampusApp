@@ -49,6 +49,29 @@
         android:icon="@drawable/ic_calendar_main"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <!--
+         /**
+         *	MAIN VIEW
+         *  @author : riedings
+         *
+         */
+        -->
+        <activity
+            android:name="de.dhbw.organizer.startpage.Startpage"
+            android:label="@string/app_name" >
+        </activity>
+
+        <!--
+        /**
+         *	CALENDAR Modul,
+         *  @author : friedrda riedings
+         *  syncronyses subscribed ical files, 
+         *  imports them into the Calendar and also shows the in a list view
+         *
+         */
+        -->
+        <!-- CALENDAR BACKEND -->
         <service
             android:name="de.dhbw.organizer.calendar.backend.authenticator.AuthenticationService"
             android:exported="true" >
@@ -73,31 +96,15 @@
         </service>
 
         <activity
-            android:name="de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivity"
-            android:theme="@style/AppTheme" >
-        </activity>
-
-        <!--  -->
-        <activity
-            android:name="de.dhbw.organizer.startpage.Startpage"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="de.dhbw.organizer.calendar.frontend.Vorlesungsplan"
-            android:label="@string/app_name" >
-        </activity>
-
-        <!--  -->
-        <activity
             android:name="de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed"
             android:configChanges="orientation"
             android:excludeFromRecents="false"
-            android:label="@string/account_label" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/calendar_backend_account_label" >
+        </activity>
+        <!-- CALENDAR FRONTEND -->
+        <activity
+            android:name="de.dhbw.organizer.calendar.frontend.Vorlesungsplan"
+            android:label="@string/app_name" >
         </activity>
     </application>
 
