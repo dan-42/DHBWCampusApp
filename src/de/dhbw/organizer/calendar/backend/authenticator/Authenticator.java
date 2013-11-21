@@ -56,6 +56,7 @@ class Authenticator extends AbstractAccountAuthenticator {
 
 		final Intent intent = new Intent(mContext, AuthenticatorActivityTabed.class);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+		
 
 		final Bundle bundle = new Bundle();
 		bundle.putParcelable(AccountManager.KEY_INTENT, intent);

@@ -114,7 +114,10 @@ public class AuthenticatorActivityTabed extends Activity {
 		 */
 		TabHost.TabSpec specSpinner = mTabHost.newTabSpec("tab_spinner");
 		specSpinner.setContent(R.id.calenda_account_spinner_tab);
-		specSpinner.setIndicator("Spinner");
+		
+		
+		
+		specSpinner.setIndicator(getResources().getString(R.string.calendar_backend_account_tab_title_by_list));
 		mTabHost.addTab(specSpinner);
 
 		/**
@@ -122,7 +125,7 @@ public class AuthenticatorActivityTabed extends Activity {
 		 */
 		TabHost.TabSpec specManual = mTabHost.newTabSpec("tab_manual");
 		specManual.setContent(R.id.calendar_account_manual_tab);
-		specManual.setIndicator("Manual");
+		specManual.setIndicator(getResources().getString(R.string.calendar_backend_account_tab_title_by_hand));
 		mTabHost.addTab(specManual);
 
 		/**
