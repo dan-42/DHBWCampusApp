@@ -32,18 +32,12 @@
     <string name="ui_activity_authenticating">ui_activity_authenticating</string>
     <string name="select_ical_activity_newaccount_text">select a calendar:</string>
     <string name="calendar_account_select_ical_ok_button">OK</string>
-    <string name="calendar_account_select_ical_cancel_button">Cancel</string>    
+    <string name="calendar_account_select_ical_cancel_button">Cancel</string>
     <string name="calendar_account_select_ical_update_button">Update calendar list</string>
     <string name="calendar_account_select_ical_new_calendar">create new Calendar</string>
-    
-    
-    
-    
     <string name="select_ical_activity_error">select_ical_activity_error</string>
-    
-    
-    
-        <string-array name="items">
+
+    <string-array name="items">
         <item>Mercury</item>
         <item>Venus</item>
         <item>Earth</item>
@@ -53,11 +47,15 @@
         <item>Uranus</item>
         <item>Neptune</item>
     </string-array>
-    
-    
+
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="title_activity_calendar_account_tabed">CalendarAccountTabed</string>
+    <string name="title_activity_calendar_account_tab1">title_activity_calendar_account_tab1</string>
+    <string name="title_activity_calendar_account_tab2">title_activity_calendar_account_tab2</string>
+    
+    
 
 </resources>

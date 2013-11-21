@@ -28,12 +28,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"    
+    android:layout_height="fill_parent"
     android:orientation="vertical" >
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-    </LinearLayout>
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -53,17 +49,16 @@
                 android:id="@+id/add_calendar_title "
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="13dip"
+                android:paddingTop="5dip"
                 android:text="@string/calendar_account_select_ical_new_calendar"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:paddingBottom="13dip"            
-            	android:paddingTop="5dip"
-                 />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
                 android:id="@+id/message"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"                                
-                android:text="@string/select_ical_activity_newaccount_text"/>
+                android:layout_height="wrap_content"
+                android:text="@string/select_ical_activity_newaccount_text" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -87,33 +82,32 @@
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
-
                 </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/calendar_account_select_ical_update_button"
                     android:layout_width="42dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"  
-                    android:onClick="updateCalendarList"                  
+                    android:layout_marginTop="15dp"
+                    android:onClick="updateCalendarList"
                     android:src="@android:drawable/ic_popup_sync" />
-
             </LinearLayout>
-           <TextView
-                    android:id="@+id/calendar_account_select_ical_information_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:layout_weight="0.1"
-                    android:text="INFORMATION"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
+            <TextView
+                android:id="@+id/calendar_account_select_ical_information_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_weight="0.1"
+                android:text="INFORMATION"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
+
     </ScrollView>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"             
+        android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <Button
@@ -121,8 +115,8 @@
             android:layout_width="0.0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
-            android:padding="0.0dip"
             android:onClick="addCalendar"
+            android:padding="0.0dip"
             android:text="@string/calendar_account_select_ical_ok_button" />
 
         <Button
@@ -130,8 +124,8 @@
             android:layout_width="0.0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
-            android:padding="0.0dip"
             android:onClick="cancel"
+            android:padding="0.0dip"
             android:text="@string/calendar_account_select_ical_cancel_button" />
              />
     </LinearLayout>
