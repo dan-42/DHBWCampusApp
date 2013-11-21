@@ -34,7 +34,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivity;
+import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
 
 class Authenticator extends AbstractAccountAuthenticator {
 
@@ -54,7 +54,7 @@ class Authenticator extends AbstractAccountAuthenticator {
 			Bundle options) {
 		Log.v(TAG, "addAccount()");
 
-		final Intent intent = new Intent(mContext, AuthenticatorActivity.class);
+		final Intent intent = new Intent(mContext, AuthenticatorActivityTabed.class);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 
 		final Bundle bundle = new Bundle();
