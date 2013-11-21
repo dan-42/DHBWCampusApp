@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TabHost
+        android:id="@+id/tabhost"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:paddingTop="62px" >
+
+            <!-- TAB Spinner START -->
+
+            <LinearLayout
+                android:id="@+id/calenda_account_spinner_tab"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+
+                <ScrollView
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dip"
+                    android:layout_weight="1" >
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="13dip"
+                        android:paddingLeft="20dip"
+                        android:paddingRight="20dip"
+                        android:paddingTop="5dip" >
+
+                        <TextView
+                            android:id="@+id/add_calendar_title "
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="13dip"
+                            android:paddingTop="5dip"
+                            android:text="@string/calendar_backend_account_select_ical_new_calendar"
+                            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                        <TextView
+                            android:id="@+id/message"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/calendar_backend_account_select_ical_activity_newaccount_text" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical" >
+
+                                <Spinner
+                                    android:id="@+id/ical_calendar_spinner"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_weight="1" />
+
+                                <ProgressBar
+                                    android:id="@+id/calendar_list_update_progressbar"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+
+                            <ImageButton
+                                android:id="@+id/calendar_account_select_ical_update_button"
+                                android:layout_width="42dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:onClick="updateCalendarList"
+                                android:src="@android:drawable/ic_popup_sync" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/calendar_backend_account_information_message"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_weight="0.1"
+                            android:text="" 
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                    </LinearLayout>
+                </ScrollView>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/ok_button"
+                        android:layout_width="0.0dip"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1.0"
+                        android:onClick="addCalendar"
+                        android:padding="0.0dip"
+                        android:text="@string/calendar_backend_account_select_ical_ok_button" />
+
+                    <Button
+                        android:id="@+id/cancel_button"
+                        android:layout_width="0.0dip"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1.0"
+                        android:onClick="cancel"
+                        android:padding="0.0dip"
+                        android:text="@string/calendar_backend_account_select_ical_cancel_button" />
+             />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- TAB Spinner END -->
+
+
+            <!-- TAB Manual START -->
+
+            <DigitalClock
+                android:id="@+id/calendar_account_manual_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="DigitalClock" />
+
+            <!-- TAB Spinner END -->
+
+        </FrameLayout>
+    </TabHost>
+
+</LinearLayout>
