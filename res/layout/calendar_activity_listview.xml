@@ -33,7 +33,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
  
     <TextView
-        android:id="@+id/continent"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView3"
@@ -42,7 +42,7 @@
         android:text="TextView" />
  
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView3"
@@ -50,11 +50,21 @@
         android:text="TextView" />
  
     <TextView
-        android:id="@+id/code"
+        android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView2"
         android:layout_alignLeft="@+id/name"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/name"
+        android:layout_alignBottom="@+id/name"
+        android:layout_marginLeft="23dp"
+        android:layout_toRightOf="@+id/name"
         android:text="TextView" />
  
 </RelativeLayout>

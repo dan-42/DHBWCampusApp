@@ -180,9 +180,9 @@ public class CalendarManager {
 	}
 
 	/**
-	 * access XML-Files and extract the possible calendras (DisplayName und
-	 * iCal-Url) if an extern XML exists and is valid
-	 * "asstes/xsd/calendar_calendarlist.xsd" this file will be taken, if not
+	 * access XML-Files and extract the possible calendars (DisplayName and
+	 * iCal-Url) if an external XML exists and is valid
+	 * "assets/xsd/calendar_calendarlist.xsd" this file will be taken, if not
 	 * the local XML ("assets/xml/calendar_calendars.xml") is taken
 	 * 
 	 * @return returns a List of SpinnerItems
@@ -218,7 +218,7 @@ public class CalendarManager {
 			throw new IOException();
 		}
 
-		// check if external file exitsts, and is valid
+		// check if external file exists, and is valid
 		try {
 
 			isExternalCalList = mContext.openFileInput(DATA_EXTERN_CALENDAR_LIST);
@@ -303,6 +303,10 @@ public class CalendarManager {
 		return selectableCalendars;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean loadExternalXml() {
 		boolean success = false;
 		HttpClient httpClient = new DefaultHttpClient();

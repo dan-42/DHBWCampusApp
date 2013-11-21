@@ -1,7 +1,7 @@
 package de.dhbw.organizer.startpage;
 
 import de.dhbw.organizer.R;
-import de.dhbw.organizer.calendar.frontend.Vorlesungsplan;
+import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;

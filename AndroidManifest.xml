@@ -107,7 +107,7 @@
         </activity>
         <!-- CALENDAR FRONTEND -->
         <activity
-            android:name="de.dhbw.organizer.calendar.frontend.Vorlesungsplan"
+            android:name="de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan"
             android:label="@string/app_name" >
         </activity>
     </application>
