@@ -78,7 +78,7 @@ public class CalendarManager {
 		ContentResolver cr = context.getContentResolver();
 
 		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?",
-				new String[] { CalendarName }, null);
+				new String[] { CalendarName }, Events.DTSTART);
 
 		while(cur.moveToNext()){
 			String eventID = null;
@@ -116,6 +116,8 @@ public class CalendarManager {
 		SimpleCursorAdapter dataAdapter = new SimpleCursorAdapter(context,
 				R.layout.calendar_activity_listview, cur, columns, to, 0);
 
+		
+		//dataAdapter.
 		//SimpleCursorAdapter a = new SimpleCursorAdapter(context, layout, c, from, to)
 		
 		return dataAdapter;

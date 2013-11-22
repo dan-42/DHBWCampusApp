@@ -35,6 +35,7 @@ public class Vorlesungsplan extends Activity {
 	private ActionBarDrawerToggle mActionBarDrawerToggle;
 	private ArrayList<String> mCalendarList;
 	private CalendarManager mCalendarManager;
+	private TextView mTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +158,9 @@ public class Vorlesungsplan extends Activity {
 		SimpleCursorAdapter dataAdapter = mCalendarManager.getCalendarEvents(this,calendarName);
 
 		mEventList.setAdapter(dataAdapter);
+		
+		mTextView.findViewById(R.id.time);
+		
 		
 		
 		//SimpleCursorAdapter dataAdapter2 = mCalendarManager.getCalendarEvents(this,calendarName);
