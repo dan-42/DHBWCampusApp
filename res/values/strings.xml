@@ -33,17 +33,26 @@
     <!-- CALENDAR BACKEND -->
     <string name="calendar_backend_account_action_settings">Settings</string>
     <string name="calendar_backend_account_label">DHBW Organizer</string>
+    <string name="calendar_backend_account_tab_title_by_list">by List</string>
+    <string name="calendar_backend_account_tab_title_by_hand">by Hand</string>
     <string name="calendar_backend_account_ui_activity_authenticating">ui_activity_authenticating</string>
     <string name="calendar_backend_account_select_ical_activity_newaccount_text">select a calendar:</string>
     <string name="calendar_backend_account_select_ical_ok_button">OK</string>
     <string name="calendar_backend_account_select_ical_cancel_button">Cancel</string>
     <string name="calendar_backend_account_select_ical_update_button">Update calendar list</string>
-    <string name="calendar_backend_account_select_ical_new_calendar">create new Calendar</string>
-    <string name="calendar_backend_select_ical_activity_error">select_ical_activity_error</string>
+    <string name="calendar_backend_account_select_ical_new_calendar">add new Calendar</string>
+    
     <string name="calendar_backend_update_already_done">calendar list is already up to date</string>
     <string name="calendar_backend_update_updating">calendar list is updating...</string>
     <string name="calendar_backend_update_xml_error">error, can&#8217;t update caledar list</string>
-    <string name="calendar_backend_update_successful">update was successful</string>
+    <string name="calendar_backend_update_successful">update was successful</string>    
+    <string name="calendar_backend_account_add_calendar_manual">add calendar by hand</string>
+    <string name="calendar_backend_account_display_name">Display Name</string>
+    <string name="calendar_backend_account_ical_url">iCal Adress</string>
+    
+    
+    
+    
 
     <!-- CALENDAR FRONTEND -->
     <string name="drawer_open">Open navigation drawer</string>
