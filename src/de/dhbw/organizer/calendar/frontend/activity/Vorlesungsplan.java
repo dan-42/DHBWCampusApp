@@ -1,7 +1,11 @@
 package de.dhbw.organizer.calendar.frontend.activity;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
+import de.dhbw.organizer.calendar.frontend.adapter.CalendarEvent;
+import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
 import de.dhbw.organizer.calendar.frontend.manager.CalendarManager;
 import de.dhbw.organizer.R;
 import android.app.Activity;
@@ -46,7 +50,7 @@ public class Vorlesungsplan extends Activity {
 		/*
 		 * Methode zum speichern des letzten ausgewählten Kalenders erstellen
 		 */
-		mCalendarManager = new CalendarManager();
+ 		mCalendarManager = new CalendarManager();
 		
 		setDrawerContent();
 		
@@ -152,14 +156,59 @@ public class Vorlesungsplan extends Activity {
 	 */
 	private void setListContent(Context context, String calendarName) {
 	
+		// find the Listview
 		mEventList = (ListView) findViewById(R.id.listView1);
 
-		// oben in die Declarations schreiben
-		SimpleCursorAdapter dataAdapter = mCalendarManager.getCalendarEvents(this,calendarName);
-
-		mEventList.setAdapter(dataAdapter);
+		// get the Events as an Adapter
+		EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);
 		
-		mTextView.findViewById(R.id.time);
+		// set Adapter to display List
+		mEventList.setAdapter(mEvents);
+		
+		// get actual number
+		// eine funktion
+		
+		
+		// go to acutal Date
+		Log.d("Index of Actual Event", String.valueOf(mCalendarManager.mIndexOfActualEvent));
+		mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
+		
+		//mEventList.setSelectionFromTop(5, 0);
+		
+		
+		
+		
+		
+		// oben in die Declarations schreiben
+		
+		//SimpleCursorAdapter dataAdapter = mCalendarManager.getCalendarEvents(this,calendarName);
+
+		//mEventList.setAdapter(dataAdapter);
+		
+		//String a = (String) dataAdapter.getItem(0);
+		
+		// get list of events retruns ArrayList<CalendarEvents> listOfEvents
+		// 
+		
+		
+		// get EventAdapter()
+		
+		
+		// get number of actual Event
+		
+		/*
+        List<CalendarEvent> listOfEvents = new ArrayList<CalendarEvent>();
+        listOfEvents.add(new CalendarEvent("Test", "9981728", "test@test.com"));
+        listOfEvents.add(new CalendarEvent("Test1", "1234455", "test1@test.com"));
+        listOfEvents.add(new CalendarEvent("Test2", "00000", "test2@test.com"));
+
+        EventAdapter adapter = new EventAdapter(this, listOfEvents);
+        */
+        
+        //mEventList.setAdapter(adapter);
+		//mTextView.findViewById(R.id.@1380523500000);
+		
+		//mTextView.setText("hallo");
 		
 		
 		
