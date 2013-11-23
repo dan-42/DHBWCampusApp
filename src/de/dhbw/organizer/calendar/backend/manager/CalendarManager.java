@@ -26,6 +26,8 @@ package de.dhbw.organizer.calendar.backend.manager;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.Closeable;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -325,13 +327,21 @@ public class CalendarManager {
 
 			HttpEntity entity = httpResponse.getEntity();
 
+			// http download worked
 			if (httpStatus == 200 && entity != null) {
-
 				InputStream instream = AndroidHttpClient.getUngzippedContent(entity);
+				AssetManager assetManager = mContext.getAssets();
+				InputStream isXmlSchema = assetManager.open(ASSET_XML_SCHEMA_CALENDAR_LIST);
 
-				FileOutputStream fos = mContext.openFileOutput(DATA_EXTERN_CALENDAR_LIST, Context.MODE_PRIVATE);
+				// save data to cache
+
+				File outputDir = mContext.getCacheDir(); // context being the
+															// Activity pointer
+				File caheFile = File.createTempFile("prefix", "ical", outputDir);
+
+				// write to internal storage
+				FileOutputStream fos = new FileOutputStream(caheFile);
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
-
 				BufferedReader reader = new BufferedReader(new InputStreamReader(instream));
 				String s = "";
 				while ((s = reader.readLine()) != null) {
@@ -343,8 +353,38 @@ public class CalendarManager {
 				fos.flush();
 				fos.close();
 				instream.close();
-				success = true;
 
+				InputStream isExternalXml = new FileInputStream(caheFile);
+
+				// validate data
+				if (validate(isExternalXml, isXmlSchema)) {
+					isExternalXml.close();
+					isExternalXml = new FileInputStream(caheFile);
+
+					// write to internal storage
+					fos = mContext.openFileOutput(DATA_EXTERN_CALENDAR_LIST, Context.MODE_PRIVATE);
+					writer = new BufferedWriter(new OutputStreamWriter(fos));
+
+					reader = new BufferedReader(new InputStreamReader(isExternalXml));
+					s = "";
+					while ((s = reader.readLine()) != null) {
+						writer.write(s);
+					}
+					reader.close();
+					writer.close();
+
+					fos.flush();
+					fos.close();
+
+					success = true;
+				} else {
+					Log.e(TAG, "Downloaded List ist not Valid");
+				}
+
+				instream.close();
+				isXmlSchema.close();
+			} else {
+				Log.e(TAG, "coud not Downloaded List HTTP-STATUS: " + httpStatus);
 			}
 
 		} catch (IOException e) {
@@ -1206,7 +1246,8 @@ public class CalendarManager {
 
 			// handle DATE stuff
 			Date startDate = recurringEvent.getDateStart().getValue();
-			//String timeZoneIdFromStartDate = recurringEvent.getDateStart().getTimezoneId();
+			// String timeZoneIdFromStartDate =
+			// recurringEvent.getDateStart().getTimezoneId();
 
 			Log.d(TAG, "--------------------------------------");
 			Log.d(TAG, "RECURRING EVENT");

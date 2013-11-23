@@ -331,14 +331,14 @@ public class AuthenticatorActivityTabed extends Activity {
 			super.onPostExecute(result);
 			Log.d(TAG, "onPostExecute() update spinneritems");
 
-			mAdapter.clear();
-			mAdapter.addAll(mItemList);
-			mAdapter.notifyDataSetChanged();
-
 			mIcalSpinner.setEnabled(true);
 			mIcalSpinner.setClickable(true);
 
 			if (result) {
+				mAdapter.clear();
+				mAdapter.addAll(mItemList);
+				mAdapter.notifyDataSetChanged();
+
 				mInfoMessage.setText(R.string.calendar_backend_update_successful);
 				mListUpdated = true;
 			} else {
