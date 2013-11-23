@@ -9,23 +9,25 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <TabWidget
+        <!-- TAB names "HEAD" -->
+        <TabWidget           
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/calendar_backend_tab_head_height" />
 
-        <FrameLayout
+        
+        <FrameLayout           
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:paddingTop="62px" >
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/calendar_backend_tab_head_height"     >
 
             <!-- TAB Spinner START -->
 
             <LinearLayout
                 android:id="@+id/calenda_account_spinner_tab"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <ScrollView

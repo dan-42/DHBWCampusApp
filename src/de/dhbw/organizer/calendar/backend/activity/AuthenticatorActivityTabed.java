@@ -32,22 +32,27 @@ import java.util.Collections;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CalendarContract;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
@@ -114,9 +119,7 @@ public class AuthenticatorActivityTabed extends Activity {
 		 */
 		TabHost.TabSpec specSpinner = mTabHost.newTabSpec("tab_spinner");
 		specSpinner.setContent(R.id.calenda_account_spinner_tab);
-		
-		
-		
+
 		specSpinner.setIndicator(getResources().getString(R.string.calendar_backend_account_tab_title_by_list));
 		mTabHost.addTab(specSpinner);
 
@@ -138,9 +141,19 @@ public class AuthenticatorActivityTabed extends Activity {
 		mProgress = (ProgressBar) findViewById(R.id.calendar_list_update_progressbar);
 
 		mInfoMessage = (TextView) findViewById(R.id.calendar_backend_account_information_message);
-		
 
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
+
+		Display display = getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
+
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+	
+		
+		
+		mTabHost.getTabWidget().getChildAt(0).setLayoutParams(new LinearLayout.LayoutParams((width / 2) - 2, 50));
+		mTabHost.getTabWidget().getChildAt(1).setLayoutParams(new LinearLayout.LayoutParams((width / 2) - 2, 50));
 
 		try {
 			mItemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
@@ -312,8 +325,6 @@ public class AuthenticatorActivityTabed extends Activity {
 			}
 			publishProgress(100);
 
-			
-
 			return success;
 
 		}
@@ -328,29 +339,23 @@ public class AuthenticatorActivityTabed extends Activity {
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			Log.d(TAG, "onPostExecute() update spinneritems");
-			
+
 			mAdapter.clear();
 			mAdapter.addAll(mItemList);
 			mAdapter.notifyDataSetChanged();
-			
+
 			mIcalSpinner.setEnabled(true);
 			mIcalSpinner.setClickable(true);
 
-			if(result){
+			if (result) {
 				mInfoMessage.setText(R.string.calendar_backend_update_successful);
 				mListUpdated = true;
-			}
-			else {
+			} else {
 				mInfoMessage.setText(R.string.calendar_backend_update_xml_error);
 				mUpdateListButton.setEnabled(true);
 				mUpdateListButton.setClickable(true);
 			}
-			
-			
-			
 
-			
-			
 		}
 
 	}
