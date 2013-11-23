@@ -36,18 +36,14 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
@@ -137,18 +133,6 @@ public class AuthenticatorActivityTabed extends Activity {
 		mInfoMessage = (TextView) findViewById(R.id.calendar_backend_account_information_message);
 
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
-
-		Display display = getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-
-		display.getSize(size);
-
-		int width = size.x;
-
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-		mTabHost.getTabWidget().getChildAt(0).setLayoutParams(new LinearLayout.LayoutParams((width / 2) - 2, 50));
-		mTabHost.getTabWidget().getChildAt(1).setLayoutParams(new LinearLayout.LayoutParams((width / 2) - 2, 50));
 
 		try {
 			mItemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
