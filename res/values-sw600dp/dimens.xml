@@ -4,8 +4,5 @@
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw600dp devices (e.g. 7" tablets) here.
     -->
-    
-    <!-- CALENDAR BACKEND  tab height -->
-    <dimen name="calendar_backend_tab_head_height">80dp</dimen>
-
+   
 </resources>

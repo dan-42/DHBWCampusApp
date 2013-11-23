@@ -32,15 +32,14 @@ import java.util.Collections;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
-import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.Display;
@@ -52,7 +51,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
@@ -74,8 +72,6 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	private static final String DEFAULT_PASSWORD = "DEADBEAF";
 
-	private static final int PROGRESS = 0x1;
-
 	private AccountManager mAccountManager;
 
 	private TextView mInfoMessage;
@@ -94,8 +90,6 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	// allow only one update
 	private boolean mListUpdated = false;
-
-	private Handler mHandler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -145,13 +139,14 @@ public class AuthenticatorActivityTabed extends Activity {
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
 
 		Display display = getWindowManager().getDefaultDisplay();
-		int width = display.getWidth();
+		Point size = new Point();
+
+		display.getSize(size);
+
+		int width = size.x;
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-	
-		
-		
 		mTabHost.getTabWidget().getChildAt(0).setLayoutParams(new LinearLayout.LayoutParams((width / 2) - 2, 50));
 		mTabHost.getTabWidget().getChildAt(1).setLayoutParams(new LinearLayout.LayoutParams((width / 2) - 2, 50));
 
@@ -270,10 +265,6 @@ public class AuthenticatorActivityTabed extends Activity {
 	private class UpdateXmlTask extends AsyncTask<Context, Integer, Boolean> {
 
 		private Context mmContext = null;
-
-		private void setProgress(int i) {
-			mProgress.setProgress(i);
-		}
 
 		@Override
 		protected void onPreExecute() {
