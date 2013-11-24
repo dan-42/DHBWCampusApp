@@ -8,9 +8,10 @@ import java.util.List;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
 import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
-
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -95,7 +96,9 @@ public class EventAdapter extends BaseAdapter {
 	}
 
 	private void startActivity2(View v){
-		v.getContext().startActivity(getOpenFacebookIntent(v.getContext(),(((ImageView) v).getTag()).toString()));
+		Context context = v.getContext();
+		String path = (((ImageView) v).getTag()).toString();		
+		openFacebookWithPath(context, path);
 		
 	}
 	
@@ -103,6 +106,34 @@ public class EventAdapter extends BaseAdapter {
 		// Create and show your dialog
 		// Depending on the Dialogs button clicks delete it or do nothing
 	}
+	
+	/**
+	 * opens the Facebook App or the WebBrowser when no FB App is available
+	 * thx to Mayank Saini 
+	 * http://stackoverflow.com/questions/10299777/open-a-facebook-page-from-android-app
+	 * 
+	 * @param Context, current Context 
+	 * @param String path, musst be like "events/43219384371892" or "pages/4237894923"
+	 */
+	private  void openFacebookWithPath(Context context, String path) {
+		final String TAG = "openFacebookWithPath() ";
+		
+        final String urlFb = "fb://event/" + path;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(urlFb));
+
+        // If Facebook application is installed, use that else launch a browser
+        final PackageManager packageManager = context.getPackageManager();
+        
+        List<ResolveInfo> list =  packageManager.queryIntentActivities(intent,PackageManager.MATCH_DEFAULT_ONLY);
+        if (list.size() == 0) {
+            final String urlBrowser = "https://www.facebook.com/events/" + path;
+            Log.i(TAG, " urlBrowser " + urlBrowser);
+            intent.setData(Uri.parse(urlBrowser));
+        }
+
+        context.startActivity(intent);
+    }
 	
 	public static Intent getOpenFacebookIntent(Context context, String eventUrl) {
 
