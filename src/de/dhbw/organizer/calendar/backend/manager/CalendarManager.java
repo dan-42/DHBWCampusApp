@@ -179,7 +179,7 @@ public class CalendarManager {
 
 				// save data to cache
 				File cacheFile = FileHelper.createCacheFile(mContext, "tempExternal", "ical");
-				cacheFile = FileHelper.writeImputStreamToFile(instream, cacheFile);
+				cacheFile = FileHelper.writeInputStreamToFile(instream, cacheFile);
 
 				InputStream isExternalXml = new FileInputStream(cacheFile);
 

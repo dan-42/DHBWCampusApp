@@ -1,5 +1,6 @@
 package de.dhbw.organizer.calendar.frontend.activity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
 import de.dhbw.organizer.calendar.frontend.adapter.CalendarEvent;
 import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
 import de.dhbw.organizer.calendar.frontend.manager.CalendarManager;
+import de.dhbw.organizer.calendar.helper.FileHelper;
 import de.dhbw.organizer.R;
 import android.app.Activity;
 import android.content.Context;
@@ -54,6 +56,21 @@ public class Vorlesungsplan extends Activity {
 		mCalendarManager = new CalendarManager();
 
 		setDrawerContent();
+		
+		// 
+		FileHelper fileHelper = new FileHelper();
+		
+		try {
+			String Calendarname = fileHelper.readFileAsString(this,"lastCalendarOpened");
+			setListContent(this, Calendarname);
+		} catch (Exception e) {
+			// create File
+			fileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
+			// Toast: Bitte füge einen neuen Kalender hinzu
+		}
+		
+		
+		
 
 	}
 
@@ -69,6 +86,8 @@ public class Vorlesungsplan extends Activity {
 		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
 
 		if (mCalendarList.isEmpty()) {
+			
+			// Hier ein Toast der sagt bitte neuen Kalender erstellen, dann von links nach rechts wischen um Kalender auszuwählen
 			Log.d("Kalendar: ","mCalendarList is empty");
 		} else {
 			Log.d("Kalendar: ", mCalendarList.get(0));
@@ -155,7 +174,9 @@ public class Vorlesungsplan extends Activity {
 	 *            The calendar name which should be read
 	 */
 	private void setListContent(Context context, String calendarName) {
-
+		// Exeption: Kalender nicht vorhanden behandeln!
+		
+		
 		// find the Listview
 		mEventList = (ListView) findViewById(R.id.listView1);
 
@@ -250,6 +271,16 @@ public class Vorlesungsplan extends Activity {
 			Log.d((((TextView) view).getText()).toString(), (((TextView) view).getText()).toString());
 
 			selectItem(view);
+			
+			
+			String calendarName = (((TextView) view).getText()).toString();
+			// schreibe in die Datei
+			FileHelper fileHelper = new FileHelper();
+			try {
+				fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", calendarName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 		}
 	}

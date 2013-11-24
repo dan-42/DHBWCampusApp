@@ -50,7 +50,7 @@ public class FileHelper {
 	 * 
 	 * @param context
 	 * @param filename
-	 * @param fileending
+	 * @param fileending The file ending e.g. .txt or .ical
 	 * @return cache file or null
 	 */
 	public static File createCacheFile(Context context, String filename, String fileending) {
@@ -75,7 +75,7 @@ public class FileHelper {
 	 *            File
 	 * @return File f or null if any error
 	 */
-	public static File writeImputStreamToFile(InputStream is, File f) {
+	public static File writeInputStreamToFile(InputStream is, File f) {
 
 		// write to internal storage
 		FileOutputStream fos = null;
@@ -190,6 +190,6 @@ public class FileHelper {
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(context.getFilesDir() + File.separator + fileName)));
 		bufferedWriter.write(data);
 		bufferedWriter.close();
-	}
+	}	
 
 }
