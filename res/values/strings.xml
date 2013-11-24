@@ -48,6 +48,7 @@
     <string name="calendar_backend_input_error_displayname_invalid">only letters, numbers and whitespaces</string>
     <string name="calendar_backend_input_error_icalurl_to_short">to short, min 11</string>
     <string name="calendar_backend_input_error_icalurl_invalid">ICal Url is invalid</string>
+    <string name="calendar_backend_input_error_calendar_already_exists">Calendar already exists!</string>    
     <string name="calendar_backend_update_already_done">calendar list is already up to date</string>
     <string name="calendar_backend_update_updating">calendar list is updating...</string>
     <string name="calendar_backend_update_xml_error">error, can&#8217;t update caledar list</string>

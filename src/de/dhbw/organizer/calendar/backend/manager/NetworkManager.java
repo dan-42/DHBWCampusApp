@@ -22,6 +22,7 @@
 package de.dhbw.organizer.calendar.backend.manager;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,10 +31,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import de.dhbw.organizer.calendar.Constants;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
 /**
@@ -54,16 +55,15 @@ public class NetworkManager {
 	static Context mContext;
 
 	NetworkInfo wifiInfo, mobileInfo;
-	
 
 	public static NetworkManager getInstance(Context ctx) {
 		mContext = ctx;
 		return instance;
 	}
-	
 
 	/**
 	 * tests if device got any internet connection
+	 * 
 	 * @return true if availabe, false otherwise
 	 */
 	public boolean isOnline() {
@@ -76,7 +76,7 @@ public class NetworkManager {
 			return connected;
 
 		} catch (Exception e) {
-			
+
 			Log.e(TAG, "isOnline() ERROR " + e.toString());
 		}
 		return connected;
@@ -120,6 +120,50 @@ public class NetworkManager {
 			}
 		} else
 			return 0;
+
+	}
+
+	/**
+	 * Downloads a File from the given URl via HTTP GET and gzipped and returns
+	 * an open InputStream to read from
+	 * 
+	 * @param url
+	 * @return InputStream
+	 */
+	public InputStream downloadHttpFile(String url) {
+
+		if (isOnline()) {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(url);
+
+			if (!httpGet.containsHeader("Accept-Encoding")) {
+				httpGet.addHeader("Accept-Encoding", "gzip");
+			}
+
+			HttpResponse httpResponse = null;
+
+			try {
+				httpResponse = httpClient.execute(httpGet);
+
+				int httpStatus = httpResponse.getStatusLine().getStatusCode();
+				Log.i(TAG, "downloadHttpFile()  url = " + url + " HTTP:  " + httpStatus);
+
+				HttpEntity entity = httpResponse.getEntity();
+
+				return AndroidHttpClient.getUngzippedContent(entity);
+
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				Log.e(TAG, "downloadHttpFile() ERROR: " + e.getMessage());
+				return null;
+			} catch (IOException e) {
+				Log.e(TAG, "downloadHttpFile()  ERROR: " + e.getMessage());
+				e.printStackTrace();
+				return null;
+			}
+		} else
+			return null;
 
 	}
 

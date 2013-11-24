@@ -109,7 +109,7 @@ public class AuthenticatorActivityTabed extends Activity {
 	private String mCalendarICalUrl = null;
 
 	private HttpConnectionTester mHttpConnectionTester = null;
-	
+
 	private ProgressDialog mProgressDialog = null;
 
 	@Override
@@ -175,15 +175,13 @@ public class AuthenticatorActivityTabed extends Activity {
 		Collections.sort(mItemList);
 
 		mItemList.add(0, new SpinnerItem(getString(R.string.calendar_backend_input_select_calendar), ""));
-		
+
 		mAdapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_item, mItemList);
-	
 
 		mAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		mIcalSpinner.setAdapter(mAdapter);
-		
+
 		mProgressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
-		
 
 	}
 
@@ -202,19 +200,17 @@ public class AuthenticatorActivityTabed extends Activity {
 	public void addCalendarFromSpinner(View View) {
 
 		SpinnerItem selected = (SpinnerItem) mIcalSpinner.getSelectedItem();
-		if(mIcalSpinner.getSelectedItemPosition() == 0 || selected.equals(getString(R.string.calendar_backend_input_select_calendar))){
+		if (mIcalSpinner.getSelectedItemPosition() == 0 || selected.equals(getString(R.string.calendar_backend_input_select_calendar))) {
 			mInfoMessage.setText(R.string.calendar_backend_input_error_no_calendar_selected);
 			return;
 		}
-			
-			
-		
+
 		// no validation needed, since we assume the XML is valid and so are
 		// just testing for httpconnection!
 		mCalendarICalUrl = selected.getmIcalUrl();
 		mCalendarDisplayName = selected.getmDisplayName();
 		mFormIsValid = true;
-		
+
 		mProgressDialog.show();
 
 		// test in background if file is accessable
@@ -269,7 +265,7 @@ public class AuthenticatorActivityTabed extends Activity {
 			mICalUrlEditText.setError(getString(R.string.calendar_backend_input_error_icalurl_invalid));
 			mFormIsValid = false;
 		} else if (mFormIsValid) {
-			
+
 			mProgressDialog.show();
 
 			// test in background if file is accessable
@@ -335,7 +331,8 @@ public class AuthenticatorActivityTabed extends Activity {
 	 * "OK", we checked input and connection to iCalUrl now checking httpStatus
 	 * and adding calendar
 	 */
-	private void addCalendar() {		
+	private void addCalendar() {
+		CalendarManager cm = CalendarManager.get(this);
 		if (mFormIsValid) {
 			/**
 			 * HttpStatus is -1 if nothing is done 0 if no connection HTTPCode
@@ -345,24 +342,28 @@ public class AuthenticatorActivityTabed extends Activity {
 
 				final Account account = new Account(mCalendarDisplayName, Constants.ACCOUNT_TYPE);
 
-				mAccountManager.addAccountExplicitly(account, DEFAULT_PASSWORD, null);
-				mAccountManager.setUserData(account, Constants.KEY_ACCOUNT_CAL_URL, mCalendarICalUrl);
+				if (!cm.calendarExists(account)) {
 
-				ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1);
-				ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true);
-				ContentResolver.addPeriodicSync(account, CalendarContract.AUTHORITY, new Bundle(), Constants.SYNC_INTERVALL_IN_SEC);
+					mAccountManager.addAccountExplicitly(account, DEFAULT_PASSWORD, null);
+					mAccountManager.setUserData(account, Constants.KEY_ACCOUNT_CAL_URL, mCalendarICalUrl);
 
-				final Intent intent = new Intent();
+					ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1);
+					ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true);
+					ContentResolver.addPeriodicSync(account, CalendarContract.AUTHORITY, new Bundle(), Constants.SYNC_INTERVALL_IN_SEC);
 
-				intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mCalendarDisplayName);
-				intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
-				setAccountAuthenticatorResult(intent.getExtras());
-				setResult(RESULT_OK, intent);
+					final Intent intent = new Intent();
 
-				CalendarManager cm = CalendarManager.get(this);
-				cm.createCalendar(account);
+					intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mCalendarDisplayName);
+					intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
+					setAccountAuthenticatorResult(intent.getExtras());
+					setResult(RESULT_OK, intent);
 
-				finish();
+					cm.createCalendar(account);
+					finish();
+
+				} else {
+					mInfoMessage.setText(R.string.calendar_backend_input_error_calendar_already_exists);
+				}
 
 			} else {
 				Log.e(TAG, "addCalendar ERROR cannot add Calendar");
