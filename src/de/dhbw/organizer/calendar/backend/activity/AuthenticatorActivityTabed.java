@@ -41,7 +41,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -185,13 +184,6 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.calendar_account_tabed, menu);
-		return true;
-	}
-
 	/**
 	 * Handles onClick event on the Submit fro adding a Calendar by List
 	 * 
@@ -234,9 +226,6 @@ public class AuthenticatorActivityTabed extends Activity {
 		CalendarManager cm = CalendarManager.get(this);
 		final Account account = new Account(mCalendarDisplayName, Constants.ACCOUNT_TYPE);
 
-		
-		
-
 		/**
 		 * Validate Display name
 		 */
@@ -249,11 +238,10 @@ public class AuthenticatorActivityTabed extends Activity {
 		} else if (!mCalendarDisplayName.matches(REG_EX_DISPLAY_NAME_PATTERN)) {
 			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_displayname_invalid));
 			mFormIsValid = false;
-		}else if (cm.calendarExists(account)) {
+		} else if (cm.calendarExists(account)) {
 			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_calendar_already_exists));
 			mFormIsValid = false;
-		}
-		else {
+		} else {
 			mDisplayNameEditText.setError(null);
 			mFormIsValid = true;
 		}

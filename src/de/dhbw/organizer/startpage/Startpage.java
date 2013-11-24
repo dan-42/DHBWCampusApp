@@ -13,8 +13,7 @@ import android.widget.Button;
  * @author riedings
  * 
  */
-public class Startpage extends Activity implements
-		android.view.View.OnClickListener {
+public class Startpage extends Activity implements android.view.View.OnClickListener {
 
 	Button b1;
 
