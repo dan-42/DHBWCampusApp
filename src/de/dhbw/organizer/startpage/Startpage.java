@@ -41,5 +41,13 @@ public class Startpage extends Activity implements android.view.View.OnClickList
 		startActivityForResult(myIntent, 0);
 
 	}
+	
+	public void startMensaActivity(View v){
+		
+		Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage("de.dhbw.mensa");		
+		startActivity(LaunchIntent);
+		
+		
+	}
 
 }
