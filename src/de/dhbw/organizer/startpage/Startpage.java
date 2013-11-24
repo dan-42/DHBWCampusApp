@@ -24,6 +24,12 @@ public class Startpage extends Activity {
 	private static final String TAG = "Startpage";
 
 	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.startpage_activity);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.startpage_menu, menu);
@@ -31,14 +37,11 @@ public class Startpage extends Activity {
 	}
 
 	public void startCalendarActivity(View v) {
-
 		Intent myIntent = new Intent(v.getContext(), Vorlesungsplan.class);
 		startActivityForResult(myIntent, 0);
-
 	}
 
 	public void startMensaActivity(View v) {
-
 		PackageManager pm = getPackageManager();
 		Intent intent = pm.getLaunchIntentForPackage("de.dhbw.mensa");
 
@@ -49,7 +52,6 @@ public class Startpage extends Activity {
 
 			startActivity(intent);
 		}
-
 	}
 
 }
