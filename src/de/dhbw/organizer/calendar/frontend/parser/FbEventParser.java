@@ -45,12 +45,12 @@ public class FbEventParser {
 			
 			if (positionBegin < 0)
 			{
-				// input enthält kein Link zu einem Facebook-Event
+				// input enthï¿½lt kein Link zu einem Facebook-Event
 				return null;							
 			}
 			else
 			{
-				// input enthält Link zu einem Facebook-Event
+				// input enthï¿½lt Link zu einem Facebook-Event
 				String cutted = input.substring(positionBegin + detection.length());
 				
 				
@@ -67,7 +67,7 @@ public class FbEventParser {
 						
 						
 						if(cutted.matches(".\\d.")){
-							 // Verbleibender String ist eine Zahl => womöglich ist der gesamte String die Event-ID
+							 // Verbleibender String ist eine Zahl => womï¿½glich ist der gesamte String die Event-ID
 							
 							positionEnd = cutted.length();
 						}
@@ -80,7 +80,9 @@ public class FbEventParser {
 				}
 				
 				// Ende der Event-ID erkannt
-				return "fb://event/" + cutted.substring(0, positionEnd);				
+				//return "fb://event/" + cutted.substring(0, positionEnd);
+				//return "event/" + cutted.substring(0, positionEnd);
+				return cutted.substring(0, positionEnd);
 			}
 		}
 		catch(Exception ex)
