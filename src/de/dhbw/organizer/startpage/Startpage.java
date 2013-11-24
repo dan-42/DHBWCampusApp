@@ -1,10 +1,16 @@
 package de.dhbw.organizer.startpage;
 
+import java.util.List;
+
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -13,19 +19,9 @@ import android.widget.Button;
  * @author riedings
  * 
  */
-public class Startpage extends Activity implements android.view.View.OnClickListener {
+public class Startpage extends Activity {
 
-	Button b1;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.startpage_activity);
-
-		b1 = (Button) findViewById(R.id.start_button_calendar);
-
-		b1.setOnClickListener(this);
-	}
+	private static final String TAG = "Startpage";
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -34,20 +30,26 @@ public class Startpage extends Activity implements android.view.View.OnClickList
 		return true;
 	}
 
-	@Override
-	public void onClick(View v) {
+	public void startCalendarActivity(View v) {
 
 		Intent myIntent = new Intent(v.getContext(), Vorlesungsplan.class);
 		startActivityForResult(myIntent, 0);
 
 	}
-	
-	public void startMensaActivity(View v){
-		
-		Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage("de.dhbw.mensa");		
-		startActivity(LaunchIntent);
-		
-		
+
+	public void startMensaActivity(View v) {
+
+		PackageManager pm = getPackageManager();
+		Intent intent = pm.getLaunchIntentForPackage("de.dhbw.mensa");
+
+		List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+		if (list.size() == 0) {
+			Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
+		} else {
+
+			startActivity(intent);
+		}
+
 	}
 
 }
