@@ -43,6 +43,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -75,6 +76,10 @@ public class AuthenticatorActivityTabed extends Activity {
 	private ImageButton mUpdateListButton;
 
 	private Spinner mIcalSpinner;
+	
+	private EditText mDisplayNameEditText;
+	
+	private EditText mICalUrlEditText;
 
 	private TabHost mTabHost = null;
 
@@ -133,6 +138,10 @@ public class AuthenticatorActivityTabed extends Activity {
 		mInfoMessage = (TextView) findViewById(R.id.calendar_backend_account_information_message);
 
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
+		
+		mDisplayNameEditText = (EditText) findViewById(R.id.display_name_editText);
+		
+		mICalUrlEditText = (EditText) findViewById(R.id.ical_url_editText);
 
 		try {
 			mItemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
@@ -196,6 +205,18 @@ public class AuthenticatorActivityTabed extends Activity {
 		finish();
 
 	}
+	
+	public void addICalCalendar(View view){
+		
+		String displayName = mDisplayNameEditText.getText().toString();
+		String icalUrl = mICalUrlEditText.getText().toString();
+		
+		mDisplayNameEditText.setError("LOL ");
+		
+		
+		
+	}
+	
 
 	public void updateCalendarList(View view) {
 
