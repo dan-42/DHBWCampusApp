@@ -55,14 +55,14 @@ public class FileHelper {
 	 */
 	public static File createCacheFile(Context context, String filename, String fileending) {
 		File outputDir = context.getCacheDir();
-		File caheFile = null;
+		File cacheFile = null;
 		try {
-			caheFile = File.createTempFile(filename, fileending, outputDir);
+			cacheFile = File.createTempFile(filename, fileending, outputDir);
 		} catch (IOException e) {
 			Log.e(TAG, "createCacheFile() " + e.getMessage());
 		}
 
-		return caheFile;
+		return cacheFile;
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class FileHelper {
 	 *            File
 	 * @return File f or null if any error
 	 */
-	public static File writeImpuStreamToFile(InputStream is, File f) {
+	public static File writeImputStreamToFile(InputStream is, File f) {
 
 		// write to internal storage
 		FileOutputStream fos = null;
