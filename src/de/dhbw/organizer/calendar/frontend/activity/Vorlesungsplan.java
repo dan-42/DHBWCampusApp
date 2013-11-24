@@ -2,10 +2,8 @@ package de.dhbw.organizer.calendar.frontend.activity;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
-import de.dhbw.organizer.calendar.frontend.adapter.CalendarEvent;
 import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
 import de.dhbw.organizer.calendar.frontend.manager.CalendarManager;
 import de.dhbw.organizer.calendar.helper.FileHelper;
@@ -17,7 +15,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,13 +33,11 @@ import android.widget.Toast;
 public class Vorlesungsplan extends Activity {
 
 	private ListView mEventList;
-	private String[] mDrawerListViewItems;
 	private ListView mDrawerListView;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mActionBarDrawerToggle;
 	private ArrayList<String> mCalendarList;
 	private CalendarManager mCalendarManager;
-	private TextView mTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,26 +46,23 @@ public class Vorlesungsplan extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		/*
-		 * Methode zum speichern des letzten ausgewï¿½hlten Kalenders erstellen
+		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
 		 */
 		mCalendarManager = new CalendarManager();
 
 		setDrawerContent();
-		
-		// 
+
 		FileHelper fileHelper = new FileHelper();
-		
+
 		try {
-			String Calendarname = fileHelper.readFileAsString(this,"lastCalendarOpened");
+			String Calendarname = fileHelper.readFileAsString(this,
+					"lastCalendarOpened");
 			setListContent(this, Calendarname);
 		} catch (Exception e) {
 			// create File
 			fileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
 			// Toast: Bitte füge einen neuen Kalender hinzu
 		}
-		
-		
-		
 
 	}
 
@@ -82,53 +74,62 @@ public class Vorlesungsplan extends Activity {
 		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
 
 		if (mCalendarList.isEmpty()) {
-			
-			// Hier ein Toast der sagt bitte neuen Kalender erstellen, dann von links nach rechts wischen um Kalender auszuwählen
-			Log.d("Kalendar: ","mCalendarList is empty");
-			
-			final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
+
+			// Hier ein Toast der sagt bitte neuen Kalender erstellen, dann von
+			// links nach rechts wischen um Kalender auszuwählen
+			Log.d("Kalendar: ", "mCalendarList is empty");
+
+			final Intent intent = new Intent(this,
+					AuthenticatorActivityTabed.class);
 			this.startActivity(intent);
-			
+
 		} else {
 			Log.d("Kalendar: ", mCalendarList.get(0));
-			if(mCalendarList.size() == 1){
+			if (mCalendarList.size() == 1) {
 				FileHelper fileHelper = new FileHelper();
 				try {
-					fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", mCalendarList.get(0));
+					fileHelper.writeFileAsString(Vorlesungsplan.this,
+							"lastCalendarOpened", mCalendarList.get(0));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 
 		// Set the adapter for the list view
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(this, R.layout.calendar_drawer_listview_item, mCalendarList));
+		mDrawerListView.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.calendar_drawer_listview_item, mCalendarList));
 
 		mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		// 2.1 create ActionBarDrawerToggle
+		// create ActionBarDrawerToggle
 		mActionBarDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 		mDrawerLayout, /* DrawerLayout object */
 		R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
 		R.string.drawer_open, /* "open drawer" description */
 		R.string.drawer_close /* "close drawer" description */
 		) {
-			/** Called when a drawer has settled in a completely closed state. */
+			/**
+			 * Called when a drawer has settled in a completely closed state.
+			 * 
+			 * */
 			@Override
 			public void onDrawerClosed(View view) {
 			}
 
-			/** Called when a drawer has settled in a completely open state. */
+			/**
+			 * Called when a drawer has settled in a completely open state.
+			 */
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				setDrawerContent();
 			}
 		};
 
-		// 2.2 Set actionBarDrawerToggle as the DrawerListener
+		// Set actionBarDrawerToggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
 	}
@@ -148,16 +149,15 @@ public class Vorlesungsplan extends Activity {
 		// Handle the New Calendar and the Settings Menu
 		switch (item.getItemId()) {
 		case R.id.item1:
-			Log.d("Menu pressed", "Menu 1 has been pressed");
-			Toast.makeText(this, "Menu gredrï¿½ckt", 1).show();
-			final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
-			this.startActivity(intent);
+			final Intent newCalendar = new Intent(this,
+					AuthenticatorActivityTabed.class);
+			this.startActivity(newCalendar);
 
 			break;
 		case R.id.item2:
-			Log.d("Menu pressed", "Menu 2 has been pressed");
-			
-			this.startActivity(getOpenFacebookIntent(this));
+			final Intent settings = new Intent(this,
+					Settings.class);
+			this.startActivity(settings);
 
 			break;
 		default:
@@ -167,7 +167,7 @@ public class Vorlesungsplan extends Activity {
 		// Pass the event to ActionBarDrawerToggle, if it returns
 		// true, then it has handled the app icon touch event
 		if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
-			// zurï¿½ck auf den Homescreen einbauen!
+			// zurueck auf den Homescreen einbauen!
 
 			return true;
 		}
@@ -184,65 +184,21 @@ public class Vorlesungsplan extends Activity {
 	 */
 	private void setListContent(Context context, String calendarName) {
 		// Exeption: Kalender nicht vorhanden behandeln!
-		
-		
+
 		// find the Listview
 		mEventList = (ListView) findViewById(R.id.listView1);
 
 		// get the Events as an Adapter
-		EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);
+		EventAdapter mEvents = mCalendarManager.getCalendarEvents(this,
+				calendarName);
 
 		// set Adapter to display List
 		mEventList.setAdapter(mEvents);
 
-		// get actual number
-		// eine funktion
-
 		// go to acutal Date
-		Log.d("Index of Actual Event", String.valueOf(mCalendarManager.mIndexOfActualEvent));
+		Log.d("Index of Actual Event",
+				String.valueOf(mCalendarManager.mIndexOfActualEvent));
 		mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
-
-		// mEventList.setSelectionFromTop(5, 0);
-
-		// oben in die Declarations schreiben
-
-		// SimpleCursorAdapter dataAdapter =
-		// mCalendarManager.getCalendarEvents(this,calendarName);
-
-		// mEventList.setAdapter(dataAdapter);
-
-		// String a = (String) dataAdapter.getItem(0);
-
-		// get list of events retruns ArrayList<CalendarEvents> listOfEvents
-		//
-
-		// get EventAdapter()
-
-		// get number of actual Event
-
-		/*
-		 * List<CalendarEvent> listOfEvents = new ArrayList<CalendarEvent>();
-		 * listOfEvents.add(new CalendarEvent("Test", "9981728",
-		 * "test@test.com")); listOfEvents.add(new CalendarEvent("Test1",
-		 * "1234455", "test1@test.com")); listOfEvents.add(new
-		 * CalendarEvent("Test2", "00000", "test2@test.com"));
-		 * 
-		 * EventAdapter adapter = new EventAdapter(this, listOfEvents);
-		 */
-
-		// mEventList.setAdapter(adapter);
-		// mTextView.findViewById(R.id.@1380523500000);
-
-		// mTextView.setText("hallo");
-
-		// SimpleCursorAdapter dataAdapter2 =
-		// mCalendarManager.getCalendarEvents(this,calendarName);
-
-		// while(dataAdapter2.){
-
-		// }
-
-		// mEventList.setSelectionFromTop(5, 0);
 	}
 
 	/**
@@ -254,39 +210,45 @@ public class Vorlesungsplan extends Activity {
 
 		setListContent(this, (((TextView) view).getText()).toString());
 	}
-	
+
 	public static Intent getOpenFacebookIntent(Context context) {
 
-		   try {
-		    context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-		    return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/<id_here>"));
-		   } catch (Exception e) {
-		    return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/<user_name_here>"));
-		   }
+		try {
+			context.getPackageManager()
+					.getPackageInfo("com.facebook.katana", 0);
+			return new Intent(Intent.ACTION_VIEW,
+					Uri.parse("fb://profile/<id_here>"));
+		} catch (Exception e) {
+			return new Intent(Intent.ACTION_VIEW,
+					Uri.parse("https://www.facebook.com/<user_name_here>"));
 		}
-	
-	
+	}
 
 	/**
 	 * 
 	 * @author Seimon
 	 * 
 	 */
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView parent, View view, int position, long id) {
-			Toast.makeText(Vorlesungsplan.this, ((TextView) view).getText(), Toast.LENGTH_LONG).show();
+		public void onItemClick(AdapterView parent, View view, int position,
+				long id) {
+			Toast.makeText(Vorlesungsplan.this, ((TextView) view).getText(),
+					Toast.LENGTH_LONG).show();
 			mDrawerLayout.closeDrawer(mDrawerListView);
-			Log.d((((TextView) view).getText()).toString(), (((TextView) view).getText()).toString());
+			Log.d((((TextView) view).getText()).toString(),
+					(((TextView) view).getText()).toString());
 
 			selectItem(view);
-			
-			
+
 			String calendarName = (((TextView) view).getText()).toString();
+
 			// schreibe in die Datei
 			FileHelper fileHelper = new FileHelper();
 			try {
-				fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", calendarName);
+				fileHelper.writeFileAsString(Vorlesungsplan.this,
+						"lastCalendarOpened", calendarName);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

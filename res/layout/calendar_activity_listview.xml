@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayout1"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:layout_alignParentRight="true"
+    android:clickable="false"
     android:gravity="left|right" >
 
     <LinearLayout
@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_weight="1"
+        android:clickable="false"
         android:gravity="left"
         android:orientation="vertical" >
 
@@ -53,6 +54,6 @@
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginRight="15dp"
         android:clickable="true"
-        android:src="@drawable/abc" />
+        android:src="@drawable/facebook_icon" />
 
 </LinearLayout>

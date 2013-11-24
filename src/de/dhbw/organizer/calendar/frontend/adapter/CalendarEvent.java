@@ -8,7 +8,6 @@ public class CalendarEvent {
 	private String location;
 	private String description;
 
-	// Constructor for the Event list Class
 	public CalendarEvent(String name, long startTime, long endTime,
 			String location, String description) {
 		super();
@@ -19,7 +18,6 @@ public class CalendarEvent {
 		this.description = description;
 	}
 
-	// Getter and setter methods for all the fields.
 	public String getName() {
 		return name;
 	}
@@ -51,7 +49,7 @@ public class CalendarEvent {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}

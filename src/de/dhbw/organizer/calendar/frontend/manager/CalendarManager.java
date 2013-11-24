@@ -28,33 +28,22 @@ public class CalendarManager {
 
 	public int mIndexOfActualEvent;
 	public boolean mIndexAlreadySet;
-	
+
 	// The desired event columns
-	public static final String[] EVENT_PROJECTION = new String[] { 
-		Events._ID,
-		Events.TITLE,
-		Events.DTSTART,
-		Events.DTEND,
-		Events.EVENT_LOCATION,
-		Events.DESCRIPTION
-	};
+	public static final String[] EVENT_PROJECTION = new String[] { Events._ID,
+			Events.TITLE, Events.DTSTART, Events.DTEND, Events.EVENT_LOCATION,
+			Events.DESCRIPTION };
 
 	// The desired calendar columns
 	public static final String[] CALENDAR_PROJECTION = new String[] { Calendars.ACCOUNT_NAME // 0
 	};
 
 	// The desired columns to be bound
-	static String[] columns = new String[] { 
-		Instances._ID,
-		Instances.TITLE,
-		Instances.DTSTART,
-		Instances.DTEND,
-		Instances.EVENT_LOCATION,
-		Instances.DESCRIPTION
-	};
+	static String[] columns = new String[] { Instances._ID, Instances.TITLE,
+			Instances.DTSTART, Instances.DTEND, Instances.EVENT_LOCATION,
+			Instances.DESCRIPTION };
 
-	static int[] to = new int[] { R.id.id,
-		R.id.name, // 0
+	static int[] to = new int[] { R.id.id, R.id.name, // 0
 			R.id.time, // 1
 			R.id.location // 2
 	};
@@ -67,10 +56,9 @@ public class CalendarManager {
 	 *            The calendar name which should be read
 	 * @return
 	 */
-	public EventAdapter getCalendarEvents(Context context,
-			String CalendarName) {
+	public EventAdapter getCalendarEvents(Context context, String CalendarName) {
 		mIndexAlreadySet = false;
-		
+
 		Uri uri = CalendarContract.Events.CONTENT_URI;
 
 		Cursor cur = null;
@@ -80,11 +68,10 @@ public class CalendarManager {
 		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?",
 				new String[] { CalendarName }, Events.DTSTART);
 
-		
-        List<CalendarEvent> listOfEvents = new ArrayList<CalendarEvent>();
-		
-        int i = 0;
-		while(cur.moveToNext()){
+		List<CalendarEvent> listOfEvents = new ArrayList<CalendarEvent>();
+
+		int i = 0;
+		while (cur.moveToNext()) {
 			String eventID = null;
 			String eventName = null;
 			String eventLocation = null;
@@ -99,39 +86,38 @@ public class CalendarManager {
 			eventdtend = cur.getLong(3);
 			eventLocation = cur.getString(4);
 			eventDescription = cur.getString(5);
-		
-			listOfEvents.add(new CalendarEvent(eventName, eventdtstart,eventdtend, eventLocation, eventDescription));
-			
+
+			listOfEvents.add(new CalendarEvent(eventName, eventdtstart,
+					eventdtend, eventLocation, eventDescription));
+
 			// set the index of the element to scroll to the actual element
 			Time now = new Time();
 			now.setToNow();
 
 			long ms = now.toMillis(false);
-			
-			if(eventdtend >= ms & !mIndexAlreadySet ){
+
+			if (eventdtend >= ms & !mIndexAlreadySet) {
 				mIndexOfActualEvent = i;
 				mIndexAlreadySet = true;
 			}
 			i++;
 		}
-		
+
 		// set Adapter for List
 		EventAdapter adapter = new EventAdapter(context, listOfEvents);
-		
+
 		return adapter;
 	}
-	
 
-	
-	
 	/**
 	 * 
 	 * @param context
 	 * @param CalendarName
 	 * @return
 	 */
-	public int getActualEvent(Context context,
-			String CalendarName) {
+	
+	/*
+	public int getActualEvent(Context context, String CalendarName) {
 
 		Uri uri = CalendarContract.Events.CONTENT_URI;
 
@@ -142,19 +128,16 @@ public class CalendarManager {
 		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?",
 				new String[] { CalendarName }, null);
 
-		while(cur.moveToNext()){
+		while (cur.moveToNext()) {
 			// Zeit mit der aktuellen vergleichen und die Position zurückliefern
-			
+
 		}
-		
-		
+
 		SimpleCursorAdapter dataAdapter = new SimpleCursorAdapter(context,
 				R.layout.calendar_activity_listview, cur, columns, to, 0);
 
 		return 1;
-	}
-	
-	
+	}*/
 
 	/**
 	 * 

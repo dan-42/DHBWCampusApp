@@ -6,162 +6,157 @@
     android:background="#FFFFFF"
     android:orientation="vertical"
     android:padding="6dip" >
-    
-    
-        <ScrollView
+
+    <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1" >
 
-
-<LinearLayout 
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_weight="1"
-    android:background="#FFFFFF"
-    android:orientation="vertical"
-    android:padding="6dip" >
-    
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="42.75"
-        android:orientation="horizontal" >
-
-                <Button
-            android:id="@+id/button0"
-            style="@style/Button"
-            android:layout_height="100dp"
-            android:drawableTop="@drawable/main_vorlesungsplan"
-            android:scaleX="1"
-            android:scaleY="1"
-            android:text="Vorlesungsplan"
-            android:textColor="#000000"
-            android:textStyle="normal"
-            android:typeface="sans" />
-        
-        
-        <Button
-            android:id="@+id/button1"
-            style="@style/Button"
-            android:layout_height="100dp"
-            android:drawableTop="@drawable/main_bibliothek"
-            android:scaleX="1"
-            android:scaleY="1"
-            android:text="Bibliothek"
-            android:textColor="#000000"
-            android:textStyle="normal"
-            android:typeface="sans" />
-
-        <Button
-            android:id="@+id/button2"
-            style="@style/Button"
-            android:layout_height="100dp"
-            android:drawableTop="@drawable/main_dualis"
-            android:scaleX="1"
-            android:scaleY="1"
-            android:text="Dualis"
-            android:textColor="#000000"
-            android:textStyle="normal"
-            android:typeface="sans" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/main_grey_line" >
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/button4"
-            style="@style/Button"
-            android:layout_height="100dp"
-            android:drawableTop="@drawable/main_kontakte"
-            android:singleLine="false"
-            android:text="Kontakte"
-            android:textColor="#000000"
-            android:textStyle="normal"
-            android:typeface="sans" />
-
-        <Button
-            android:id="@+id/button5"
-            style="@style/Button"
-            android:layout_height="100dp"
-            android:drawableTop="@drawable/main_moodle"
-            android:text="Moodle"
-            android:textColor="#000000"
-            android:textStyle="normal"
-            android:typeface="sans" />
-
-        <Button
-            android:id="@+id/button6"
-            style="@style/Button"
-            android:layout_height="100dp"
-            android:drawableTop="@drawable/main_news"
-            android:text="News"
-            android:textColor="#000000"
-            android:textStyle="normal"
-            android:typeface="sans" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/main_grey_line" >
-    </LinearLayout>
-
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:orientation="horizontal" >
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:padding="6dip" >
 
-            <Button
-                android:id="@+id/button3"
-                style="@style/Button"
-                android:layout_height="100dp"
-                android:drawableTop="@drawable/main_gebaeudeplan"
-                android:scaleX="1"
-                android:scaleY="1"
-                android:text="Gebäudeplan"
-                android:textColor="#000000"
-                android:textStyle="normal"
-                android:typeface="sans" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="42.75"
+                android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/button7"
-                style="@style/Button"
-                android:layout_height="100dp"
-                android:drawableTop="@drawable/main_schwarzesbrett"
-                android:text="Schwarzes Brett"
-                android:textColor="#000000"
-                android:textStyle="normal"
-                android:typeface="sans" />
+                <!-- style="@style/Button" -->
 
-            <Button
-                android:id="@+id/button8"
-                style="@style/Button"
-                android:layout_height="100dp"
-                android:drawableTop="@drawable/main_speiseplan"
-                android:text="Speiseplan"
-                android:textColor="#000000"
-                android:textStyle="normal"
-                android:typeface="sans" />
+                <Button
+                    android:id="@+id/button0"
+                    style="@style/Button"
+                    android:layout_height="100dp"
+                    android:drawableTop="@drawable/main_vorlesungsplan"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    android:text="Vorlesungsplan"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+
+                <Button
+                    android:id="@+id/button1"
+                    style="@style/Button"
+                    android:layout_height="100dp"
+                    android:drawableTop="@drawable/main_bibliothek"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    android:text="Bibliothek"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+
+                <Button
+                    android:id="@+id/button2"
+                    style="@style/Button"
+                    android:layout_height="100dp"
+                    android:drawableTop="@drawable/main_dualis"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    android:text="Dualis"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/main_grey_line" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/button4"
+                    style="@style/Button"
+                    android:layout_height="100dp"
+                    android:drawableTop="@drawable/main_kontakte"
+                    android:singleLine="false"
+                    android:text="Kontakte"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+
+                <Button
+                    android:id="@+id/button5"
+                    style="@style/Button"
+                    android:layout_height="100dp"
+                    android:drawableTop="@drawable/main_moodle"
+                    android:text="Moodle"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+
+                <Button
+                    android:id="@+id/button6"
+                    style="@style/Button"
+                    android:layout_height="100dp"
+                    android:drawableTop="@drawable/main_news"
+                    android:text="News"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/main_grey_line" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/button3"
+                    style="@style/Button"
+                    android:layout_height="100dp"
+                    android:drawableTop="@drawable/main_gebaeudeplan"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    android:text="Gebäudeplan"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+
+                <Button
+                    android:id="@+id/button7"
+                    style="@style/Button"
+                    android:layout_height="100dp"
+                    android:drawableTop="@drawable/main_schwarzesbrett"
+                    android:text="Schwarzes Brett"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+
+                <Button
+                    android:id="@+id/button8"
+                    style="@style/Button"
+                    android:layout_height="100dp"
+                    android:drawableTop="@drawable/main_speiseplan"
+                    android:text="Speiseplan"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+            </LinearLayout>
         </LinearLayout>
-
+    </ScrollView>
 
 </LinearLayout>
-
-    </ScrollView>
-    
-        </LinearLayout>

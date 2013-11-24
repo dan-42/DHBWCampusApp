@@ -2,18 +2,17 @@
     <style name="AppTheme" parent="@android:style/Theme.DeviceDefault.Light.DarkActionBar">
         
     </style>    
-    
+
     <style name="Button">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">fill_parent</item>
-        <!-- <item name="android:layout_height">100dp</item> -->
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:background">@null</item>
     </style>
-
+    <!-- 
     <style name="Button_SchwarzesBrett">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_width">fill_parent</item>
@@ -44,12 +43,17 @@
         <style name="Button1">
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">150dp</item> <!-- wrap_content -->
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:background">@null</item>
     </style>
-
+ 	-->
+    <style name="margins">
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+    </style>
 </resources>
