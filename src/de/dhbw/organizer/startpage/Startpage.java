@@ -45,12 +45,17 @@ public class Startpage extends Activity {
 		PackageManager pm = getPackageManager();
 		Intent intent = pm.getLaunchIntentForPackage("de.dhbw.mensa");
 
-		List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-		if (list.size() == 0) {
-			Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
-		} else {
+		if (intent != null) {
 
-			startActivity(intent);
+			List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+			if (list.size() > 0) {
+				startActivity(intent);
+			} else {
+				Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
+			}
+
+		} else {
+			Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
 		}
 	}
 
