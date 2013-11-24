@@ -72,7 +72,6 @@ public class CalendarManager {
 	private static final String ASSET_DEFAULT_CALENDAR_LIST = "xml/calendar_calendars.xml";
 
 	private static final String DATA_EXTERN_CALENDAR_LIST = "calendar_calendars.xml";
-	
 
 	private Context mContext = null;
 
@@ -215,7 +214,7 @@ public class CalendarManager {
 	 * @param account
 	 * @return
 	 */
-	public boolean calendarExists(Account account) {		
+	public boolean calendarExists(Account account) {
 
 		Cursor cur = null;
 		boolean calendarExists = false;
@@ -379,10 +378,8 @@ public class CalendarManager {
 		ArrayList<VEvent> atomarEventList = ICalHelper.seperateAllEvents(eventList);
 		Log.d(TAG, "insertEvents() " + atomarEventList.size() + " events to add in total");
 
-		// TODO BATCH insert
-		for (VEvent e : atomarEventList) {
-			insertEvent(account, calendarId, e, TimeZone.getDefault());
-		}
+		insertEvents(account, calendarId, atomarEventList, TimeZone.getDefault());
+
 	}
 
 	/**
@@ -413,20 +410,14 @@ public class CalendarManager {
 				eventsToInsert.add(e);
 			}
 		}
-
 		// remaining event in the hashList can be removed from the DB
 		Log.i(TAG, "Upodate()  delete " + hashList.size() + " events");
 		for (String s : hashList) {
-
 			deleteEventByHash(account, calendarId, s);
 		}
-
 		// eventsTo insert need to be added to the DB
 		Log.i(TAG, "Upodate()  insert " + eventsToInsert.size() + " events");
-		for (VEvent e : eventsToInsert) {
-			insertEvent(account, calendarId, e, TimeZone.getDefault());
-		}
-
+		insertEvents(account, calendarId, eventsToInsert, TimeZone.getDefault());
 	}
 
 	/**
@@ -538,6 +529,38 @@ public class CalendarManager {
 	}
 
 	/**
+	 * Inserts a whole List of VEvents
+	 * 
+	 * @param account
+	 * @param calendarId
+	 * @param list
+	 *            of VEvents
+	 * @param tz
+	 * @return true if successful
+	 */
+	private boolean insertEvents(Account account, long calendarId, ArrayList<VEvent> list, TimeZone tz) {
+
+		ContentResolver cr = mContext.getContentResolver();
+		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+		ContentValues[] cv = new ContentValues[list.size()];
+
+		for (int i = 0; i < list.size(); i++) {
+			cv[i] = perpareValues(calendarId, list.get(i), tz);
+		}
+
+		int ret = cr.bulkInsert(uri, cv);
+
+		if (ret <= 0) {
+			Log.e(TAG, "insertEvents() did't insert anything");
+			return false;
+		} else {
+			Log.i(TAG, "insertEvents() inserted " + ret + " events");
+			return true;
+		}
+
+	}
+
+	/**
 	 * Inserts a single Event into the Databses
 	 * 
 	 * @param account
@@ -548,9 +571,21 @@ public class CalendarManager {
 	private long insertEvent(Account account, long calendarId, VEvent e, TimeZone tz) {
 
 		ContentResolver cr = mContext.getContentResolver();
-		ContentValues values = new ContentValues();
 		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+		ContentValues values = perpareValues(calendarId, e, tz);
+		Uri ret = cr.insert(uri, values);
+		if (ret == null) {
+			Log.e(TAG, " INERT ERROR return URI is null");
+			return 0;
+		} else {
+			// Log.d(TAG, " INSERT event with hash " + hash);
+		}
+		return ContentUris.parseId(ret);
+	}
 
+	private ContentValues perpareValues(long calendarId, VEvent e, TimeZone tz) {
+
+		ContentValues values = new ContentValues();
 		String hash = ICalHelper.calcEventHash(e);
 
 		values.put(Events.CALENDAR_ID, calendarId);
@@ -569,17 +604,7 @@ public class CalendarManager {
 
 		values.put(Events.EVENT_TIMEZONE, tz.getID());
 
-		Uri ret = cr.insert(uri, values);
-
-		if (ret == null) {
-			Log.e(TAG, " INERT ERROR return URI is null");
-			return 0;
-		} else {
-			// Log.d(TAG, " INSERT event with hash " + hash);
-		}
-
-		return ContentUris.parseId(ret);
-
+		return values;
 	}
 
 }
