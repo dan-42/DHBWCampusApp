@@ -22,7 +22,7 @@ public class Startpage extends Activity implements android.view.View.OnClickList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.startpage_activity);
 
-		b1 = (Button) findViewById(R.id.button0);
+		b1 = (Button) findViewById(R.id.start_button_calendar);
 
 		b1.setOnClickListener(this);
 	}
