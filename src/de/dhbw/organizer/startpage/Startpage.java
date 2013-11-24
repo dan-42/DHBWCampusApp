@@ -6,6 +6,7 @@ import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
 import de.dhbw.organizer.calendar.frontend.activity.Settings;
 import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
+import de.dhbw.organizer.gebaudeplan.Gebaudeplan;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -52,6 +53,11 @@ public class Startpage extends Activity {
 		startActivityForResult(myIntent, 0);
 	}
 
+	public void startGebaudeActivity(View v) {
+		Intent myIntent = new Intent(v.getContext(), Gebaudeplan.class);
+		startActivityForResult(myIntent, 0);
+	}
+	
 	public void startMensaActivity(View v) {
 		PackageManager pm = getPackageManager();
 		Intent intent = pm.getLaunchIntentForPackage("de.dhbw.mensa");
