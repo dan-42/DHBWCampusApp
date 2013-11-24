@@ -77,10 +77,6 @@ public class Vorlesungsplan extends Activity {
 	private void setDrawerContent() {
 
 		mCalendarList = mCalendarManager.getCalendarList(this);
-		// mCalendarList = getCalendarList();
-
-		// get list items from strings.xml
-		// mDrawerListViewItems = getResources().getStringArray(R.array.items);
 
 		// get ListView defined in activity_main.xml
 		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
@@ -89,8 +85,21 @@ public class Vorlesungsplan extends Activity {
 			
 			// Hier ein Toast der sagt bitte neuen Kalender erstellen, dann von links nach rechts wischen um Kalender auszuwählen
 			Log.d("Kalendar: ","mCalendarList is empty");
+			
+			final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
+			this.startActivity(intent);
+			
 		} else {
 			Log.d("Kalendar: ", mCalendarList.get(0));
+			if(mCalendarList.size() == 1){
+				FileHelper fileHelper = new FileHelper();
+				try {
+					fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", mCalendarList.get(0));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
 		}
 
 		// Set the adapter for the list view
