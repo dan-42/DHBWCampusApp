@@ -28,7 +28,7 @@
 
     <!-- MAIN VIEW -->
     <string name="app_name">DHBW Organizer</string>
-    
+
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->
     <string name="calendar_backend_account_action_settings">Settings</string>
@@ -41,24 +41,25 @@
     <string name="calendar_backend_account_select_ical_cancel_button">Cancel</string>
     <string name="calendar_backend_account_select_ical_update_button">Update calendar list</string>
     <string name="calendar_backend_account_select_ical_new_calendar">add new Calendar</string>
-    
+    <string name="calendar_backend_input_select_calendar">select calendar</string>
+    <string name="calendar_backend_input_error_no_calendar_selected">ERROR: no calendar selected!</string>
+    <string name="calendar_backend_input_error_displayname_to_short">to short, min 3 letters</string>
+    <string name="calendar_backend_input_error_displayname_to_long">to long, max 16 letters</string>
+    <string name="calendar_backend_input_error_displayname_invalid">only letters, numbers and whitespaces</string>
+    <string name="calendar_backend_input_error_icalurl_to_short">to short, min 11</string>
+    <string name="calendar_backend_input_error_icalurl_invalid">ICal Url is invalid</string>
     <string name="calendar_backend_update_already_done">calendar list is already up to date</string>
     <string name="calendar_backend_update_updating">calendar list is updating...</string>
     <string name="calendar_backend_update_xml_error">error, can&#8217;t update caledar list</string>
-    <string name="calendar_backend_update_successful">update was successful</string>    
+    <string name="calendar_backend_update_successful">update was successful</string>
     <string name="calendar_backend_account_add_calendar_manual">add calendar by hand</string>
     <string name="calendar_backend_account_display_name">Display Name</string>
     <string name="calendar_backend_account_ical_url">iCal Adress</string>
-    
-    
-    
-    
 
     <!-- CALENDAR FRONTEND -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
-    
 
 </resources>

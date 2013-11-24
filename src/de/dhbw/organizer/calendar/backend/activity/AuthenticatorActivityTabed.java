@@ -33,6 +33,7 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -69,6 +70,14 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	private static final String DEFAULT_PASSWORD = "DEADBEAF";
 
+	private static final int ICAL_URL_MIN_LENGTH = 11;
+
+	private static final String REG_EX_DISPLAY_NAME_PATTERN = "^([a-zA-Z0-9.-_ ]{3,16})$";
+
+	private static final int DISPLAY_NAME_MIN_LENGTH = 3;
+
+	private static final int DISPLAY_NAME_MAX_LENGTH = 16;
+
 	private AccountManager mAccountManager;
 
 	private TextView mInfoMessage;
@@ -76,9 +85,9 @@ public class AuthenticatorActivityTabed extends Activity {
 	private ImageButton mUpdateListButton;
 
 	private Spinner mIcalSpinner;
-	
+
 	private EditText mDisplayNameEditText;
-	
+
 	private EditText mICalUrlEditText;
 
 	private TabHost mTabHost = null;
@@ -91,6 +100,17 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	// allow only one update
 	private boolean mListUpdated = false;
+
+	// for validating the Forms
+	private boolean mFormIsValid;
+
+	private String mCalendarDisplayName = null;
+
+	private String mCalendarICalUrl = null;
+
+	private HttpConnectionTester mHttpConnectionTester = null;
+	
+	private ProgressDialog mProgressDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -138,9 +158,9 @@ public class AuthenticatorActivityTabed extends Activity {
 		mInfoMessage = (TextView) findViewById(R.id.calendar_backend_account_information_message);
 
 		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
-		
+
 		mDisplayNameEditText = (EditText) findViewById(R.id.display_name_editText);
-		
+
 		mICalUrlEditText = (EditText) findViewById(R.id.ical_url_editText);
 
 		try {
@@ -154,10 +174,16 @@ public class AuthenticatorActivityTabed extends Activity {
 		// sort
 		Collections.sort(mItemList);
 
+		mItemList.add(0, new SpinnerItem(getString(R.string.calendar_backend_input_select_calendar), ""));
+		
 		mAdapter = new ArrayAdapter<SpinnerItem>(this, android.R.layout.simple_spinner_item, mItemList);
+	
 
 		mAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		mIcalSpinner.setAdapter(mAdapter);
+		
+		mProgressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+		
 
 	}
 
@@ -169,54 +195,91 @@ public class AuthenticatorActivityTabed extends Activity {
 	}
 
 	/**
-	 * Handles onClick event on the Submit button. Sends username/password to
-	 * the server for authentication. The button is configured to call
-	 * handleLogin() in the layout XML.
+	 * Handles onClick event on the Submit fro adding a Calendar by List
 	 * 
 	 * @param view
-	 *            The Submit button for which this method is invoked
 	 */
-	public void addCalendar(View view) {
+	public void addCalendarFromSpinner(View View) {
+
 		SpinnerItem selected = (SpinnerItem) mIcalSpinner.getSelectedItem();
+		if(mIcalSpinner.getSelectedItemPosition() == 0 || selected.equals(getString(R.string.calendar_backend_input_select_calendar))){
+			mInfoMessage.setText(R.string.calendar_backend_input_error_no_calendar_selected);
+			return;
+		}
+			
+			
+		
+		// no validation needed, since we assume the XML is valid and so are
+		// just testing for httpconnection!
+		mCalendarICalUrl = selected.getmIcalUrl();
+		mCalendarDisplayName = selected.getmDisplayName();
+		mFormIsValid = true;
+		
+		mProgressDialog.show();
 
-		String iCalUrl = selected.getmIcalUrl();
-		String displayName = selected.getmDisplayName();
+		// test in background if file is accessable
+		// when done addCalendar is called!
+		mHttpConnectionTester = new HttpConnectionTester(this);
+		mHttpConnectionTester.execute(mCalendarICalUrl);
+	}
 
-		Log.i(TAG, "Selected : " + iCalUrl);
-		Log.i(TAG, "finishLogin()");
+	/**
+	 * Handles onClick event on the Submit button handels the Input from the
+	 * "By HAND"-Form
+	 * 
+	 * @param view
+	 */
+	public void addCalendarFromInputForm(View view) {
 
-		final Account account = new Account(displayName, Constants.ACCOUNT_TYPE);
+		mCalendarDisplayName = mDisplayNameEditText.getText().toString();
+		mCalendarICalUrl = mICalUrlEditText.getText().toString();
 
-		mAccountManager.addAccountExplicitly(account, DEFAULT_PASSWORD, null);
+		mFormIsValid = true;
 
-		mAccountManager.setUserData(account, Constants.KEY_ACCOUNT_CAL_URL, iCalUrl);
+		/**
+		 * Validate Display name
+		 */
+		if (mCalendarDisplayName.length() < DISPLAY_NAME_MIN_LENGTH) {
+			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_displayname_to_short));
+			mFormIsValid = false;
+		} else if (mCalendarDisplayName.length() > DISPLAY_NAME_MAX_LENGTH) {
+			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_displayname_to_long));
+			mFormIsValid = false;
+		} else if (!mCalendarDisplayName.matches(REG_EX_DISPLAY_NAME_PATTERN)) {
+			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_displayname_invalid));
+			mFormIsValid = false;
+		} else {
+			mDisplayNameEditText.setError(null);
+			mFormIsValid = true;
+		}
 
-		ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1);
-		ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true);
-		ContentResolver.addPeriodicSync(account, CalendarContract.AUTHORITY, new Bundle(), Constants.SYNC_INTERVALL_IN_SEC);
+		// stop do nothing if Display is still invalid
+		if (!mFormIsValid) {
+			return;
+		}
 
-		final Intent intent = new Intent();
+		/**
+		 * validate ICal Url
+		 */
+		if (mCalendarICalUrl.length() < ICAL_URL_MIN_LENGTH) {
+			mICalUrlEditText.setError(getString(R.string.calendar_backend_input_error_icalurl_to_short));
+			mFormIsValid = false;
 
-		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, displayName);
+		} else if (!android.util.Patterns.WEB_URL.matcher(mCalendarICalUrl).matches()) {
+			mICalUrlEditText.setError(getString(R.string.calendar_backend_input_error_icalurl_invalid));
+			mFormIsValid = false;
+		} else if (mFormIsValid) {
+			
+			mProgressDialog.show();
 
-		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
-		setAccountAuthenticatorResult(intent.getExtras());
-		setResult(RESULT_OK, intent);
-		finish();
+			// test in background if file is accessable
+			// when done addCalendar is called!
+			mHttpConnectionTester = new HttpConnectionTester(this);
+			mHttpConnectionTester.execute(mCalendarICalUrl);
+
+		}
 
 	}
-	
-	public void addICalCalendar(View view){
-		
-		String displayName = mDisplayNameEditText.getText().toString();
-		String icalUrl = mICalUrlEditText.getText().toString();
-		
-		mDisplayNameEditText.setError("LOL ");
-		
-		
-		
-	}
-	
 
 	public void updateCalendarList(View view) {
 
@@ -267,6 +330,99 @@ public class AuthenticatorActivityTabed extends Activity {
 		super.finish();
 	}
 
+	/**
+	 * this function is called from HttpConnectiontester after user as Clicked
+	 * "OK", we checked input and connection to iCalUrl now checking httpStatus
+	 * and adding calendar
+	 */
+	private void addCalendar() {		
+		if (mFormIsValid) {
+			/**
+			 * HttpStatus is -1 if nothing is done 0 if no connection HTTPCode
+			 * e.g 200 300 400 ...
+			 */
+			if (mHttpConnectionTester != null && mHttpConnectionTester.getHttpStatus() >= 200) {
+
+				final Account account = new Account(mCalendarDisplayName, Constants.ACCOUNT_TYPE);
+
+				mAccountManager.addAccountExplicitly(account, DEFAULT_PASSWORD, null);
+				mAccountManager.setUserData(account, Constants.KEY_ACCOUNT_CAL_URL, mCalendarICalUrl);
+
+				ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1);
+				ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true);
+				ContentResolver.addPeriodicSync(account, CalendarContract.AUTHORITY, new Bundle(), Constants.SYNC_INTERVALL_IN_SEC);
+
+				final Intent intent = new Intent();
+
+				intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mCalendarDisplayName);
+				intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
+				setAccountAuthenticatorResult(intent.getExtras());
+				setResult(RESULT_OK, intent);
+
+				CalendarManager cm = CalendarManager.get(this);
+				cm.createCalendar(account);
+
+				finish();
+
+			} else {
+				Log.e(TAG, "addCalendar ERROR cannot add Calendar");
+			}
+		}
+	}
+
+	/**
+	 * sub class to call an http get in background
+	 * 
+	 * @author friedrda
+	 * 
+	 */
+	private class HttpConnectionTester extends AsyncTask<String, Integer, Integer> {
+
+		private Context mmContext = null;
+		private int mmHttpStatus = -1;
+
+		public HttpConnectionTester(Context context) {
+			mmContext = context;
+
+		}
+
+		public int getHttpStatus() {
+			return mmHttpStatus;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+		 */
+		@Override
+		protected Integer doInBackground(String... params) {
+			NetworkManager nm = NetworkManager.getInstance(mmContext);
+
+			if (nm.isOnline()) {
+
+				return nm.testHttpUrl(params[0]);
+
+			} else {
+				return 0;
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(Integer result) {
+			super.onPostExecute(result);
+			mmHttpStatus = result;
+			addCalendar();
+			mProgressDialog.dismiss();
+		}
+
+	}
+
 	private class UpdateXmlTask extends AsyncTask<Context, Integer, Boolean> {
 
 		private Context mmContext = null;
@@ -315,6 +471,7 @@ public class AuthenticatorActivityTabed extends Activity {
 					Collections.sort(itemList);
 					publishProgress(60);
 					mItemList = itemList;
+					mItemList.add(0, new SpinnerItem(getString(R.string.calendar_backend_input_select_calendar), ""));
 					publishProgress(70);
 					success = true;
 				}

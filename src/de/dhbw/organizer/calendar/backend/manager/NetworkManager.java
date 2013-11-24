@@ -21,6 +21,16 @@
  */
 package de.dhbw.organizer.calendar.backend.manager;
 
+import java.io.IOException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import de.dhbw.organizer.calendar.Constants;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -32,30 +42,32 @@ import android.util.Log;
  * 
  * @author friedrda
  * 
- *  Thanks to Vivek Parihar
- *         http://stackoverflow.com/questions/4238921
+ *         Thanks to Vivek Parihar http://stackoverflow.com/questions/4238921
  *         /android-detect-whether-there-is-an-internet-connection-available
  * 
  */
 public class NetworkManager {
 
+	private static final String TAG = "Calendar Backend NetworkManager";
 	private ConnectivityManager connectivityManager;
 	private static NetworkManager instance = new NetworkManager();
 	static Context mContext;
 
 	NetworkInfo wifiInfo, mobileInfo;
-	boolean connected = false;
+	
 
 	public static NetworkManager getInstance(Context ctx) {
 		mContext = ctx;
 		return instance;
 	}
+	
 
-	public NetworkManager() {
-		// TODO Auto-generated constructor stub
-	}
-
+	/**
+	 * tests if device got any internet connection
+	 * @return true if availabe, false otherwise
+	 */
 	public boolean isOnline() {
+		boolean connected = false;
 		try {
 			connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -64,9 +76,51 @@ public class NetworkManager {
 			return connected;
 
 		} catch (Exception e) {
-			System.out.println("CheckConnectivity Exception: " + e.getMessage());
-			Log.v("connectivity", e.toString());
+			
+			Log.e(TAG, "isOnline() ERROR " + e.toString());
 		}
 		return connected;
 	}
+
+	/**
+	 * this function tests to download the file from the given URL and returns
+	 * the HTTP status code
+	 * 
+	 * @param url
+	 * @return http status code, or 0 by any error
+	 */
+	public int testHttpUrl(String url) {
+
+		if (isOnline()) {
+
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(url);
+
+			if (!httpGet.containsHeader("Accept-Encoding")) {
+				httpGet.addHeader("Accept-Encoding", "gzip");
+			}
+
+			HttpResponse httpResponse = null;
+
+			try {
+				httpResponse = httpClient.execute(httpGet);
+
+				int httpStatus = httpResponse.getStatusLine().getStatusCode();
+				Log.i(TAG, "url = " + url + " HTTP:  " + httpStatus);
+				return httpStatus;
+
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				Log.e(TAG, "ERROR: " + e.getMessage());
+				return 0;
+			} catch (IOException e) {
+				Log.e(TAG, "ERROR: " + e.getMessage());
+				e.printStackTrace();
+				return 0;
+			}
+		} else
+			return 0;
+
+	}
+
 }
