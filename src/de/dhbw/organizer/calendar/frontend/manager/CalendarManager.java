@@ -35,7 +35,8 @@ public class CalendarManager {
 		Events.TITLE,
 		Events.DTSTART,
 		Events.DTEND,
-		Events.EVENT_LOCATION
+		Events.EVENT_LOCATION,
+		Events.DESCRIPTION
 	};
 
 	// The desired calendar columns
@@ -48,7 +49,8 @@ public class CalendarManager {
 		Instances.TITLE,
 		Instances.DTSTART,
 		Instances.DTEND,
-		Instances.EVENT_LOCATION
+		Instances.EVENT_LOCATION,
+		Instances.DESCRIPTION
 	};
 
 	static int[] to = new int[] { R.id.id,
@@ -89,14 +91,16 @@ public class CalendarManager {
 			long eventdtstart = 0;
 			long eventdtend = 0;
 			String date = null;
+			String eventDescription = null;
 
 			eventID = cur.getString(0);
 			eventName = cur.getString(1);
 			eventdtstart = cur.getLong(2);
 			eventdtend = cur.getLong(3);
 			eventLocation = cur.getString(4);
+			eventDescription = cur.getString(5);
 		
-			listOfEvents.add(new CalendarEvent(eventName, eventdtstart,eventdtend, eventLocation));
+			listOfEvents.add(new CalendarEvent(eventName, eventdtstart,eventdtend, eventLocation, eventDescription));
 			
 			// set the index of the element to scroll to the actual element
 			Time now = new Time();

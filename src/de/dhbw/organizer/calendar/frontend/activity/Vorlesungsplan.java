@@ -11,6 +11,7 @@ import de.dhbw.organizer.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -127,6 +128,8 @@ public class Vorlesungsplan extends Activity {
 			break;
 		case R.id.item2:
 			Log.d("Menu pressed", "Menu 2 has been pressed");
+			
+			this.startActivity(getOpenFacebookIntent(this));
 
 			break;
 		default:
@@ -221,6 +224,18 @@ public class Vorlesungsplan extends Activity {
 
 		setListContent(this, (((TextView) view).getText()).toString());
 	}
+	
+	public static Intent getOpenFacebookIntent(Context context) {
+
+		   try {
+		    context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+		    return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/<id_here>"));
+		   } catch (Exception e) {
+		    return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/<user_name_here>"));
+		   }
+		}
+	
+	
 
 	/**
 	 * 

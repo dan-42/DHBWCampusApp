@@ -6,15 +6,17 @@ public class CalendarEvent {
 	private long startTime; // Time in Millis
 	private long endTime; // Time in Millis
 	private String location;
+	private String description;
 
 	// Constructor for the Event list Class
 	public CalendarEvent(String name, long startTime, long endTime,
-			String location) {
+			String location, String description) {
 		super();
 		this.name = name;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.location = location;
+		this.description = description;
 	}
 
 	// Getter and setter methods for all the fields.
@@ -46,7 +48,15 @@ public class CalendarEvent {
 		return location;
 	}
 
-	public void setLocation(String mail) {
-		this.location = mail;
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
