@@ -12,14 +12,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-<<<<<<< HEAD
 import android.util.Log;
 import android.view.LayoutInflater;
-=======
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.util.Log;
->>>>>>> 52284cd81aec9a17dba4331db408c0f8fa21a539
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
