@@ -300,7 +300,7 @@ public class ICalHelper {
 				Date untilDate = cal.getTime();
 
 				String until = parseIcalDateToString(untilDate, null);
-				Log.i(TAG, "buildRrule() no UNTIL or COUNT, so set UNTIL to " + untilDate.toString() + "   ICAL:" + until);
+				//Log.i(TAG, "buildRrule() no UNTIL or COUNT, so set UNTIL to " + untilDate.toString() + "   ICAL:" + until);
 				sb.append(";UNTIL=").append(until);
 			}
 
@@ -583,9 +583,9 @@ public class ICalHelper {
 			// String timeZoneIdFromStartDate =
 			// recurringEvent.getDateStart().getTimezoneId();
 
-			Log.d(TAG, "--------------------------------------");
-			Log.d(TAG, "RECURRING EVENT");
-			Log.d(TAG, "\tSTARTDATE: toString()\t" + startDate.toString());
+			//Log.d(TAG, "--------------------------------------");
+			//Log.d(TAG, "RECURRING EVENT");
+			//Log.d(TAG, "\tSTARTDATE: toString()\t" + startDate.toString());
 			// Log.d(TAG, "\tSTARTDATE: timeZone \t" + timeZoneIdFromStartDate);
 			// Log.d(TAG, "\tSTARTDATE: timeZoneConv \t" +
 			// TimeZone.getTimeZone("timeZoneIdFromStartDate").getID());
@@ -609,10 +609,10 @@ public class ICalHelper {
 
 			}
 
-			Log.d(TAG, "RDATA: ");
-			Log.d(TAG, "\t --------------");
-			Log.d(TAG, rdata.toString());
-			Log.d(TAG, "\t --------------");
+			//Log.d(TAG, "RDATA: ");
+			//Log.d(TAG, "\t --------------");
+			//Log.d(TAG, rdata.toString());
+			//Log.d(TAG, "\t --------------");
 
 			try {
 				Calendar cal = Calendar.getInstance();
@@ -663,8 +663,8 @@ public class ICalHelper {
 					 */
 					boolean skip = false;
 					if (startDstOffset != dstOffset) {
-						Log.i(TAG, "startDstOffset = " + startDstOffset + "\t dstOffset = " + dstOffset);
-						Log.d(TAG, "dif = \t\t" + d.getTime());
+						//Log.i(TAG, "startDstOffset = " + startDstOffset + "\t dstOffset = " + dstOffset);
+						//Log.d(TAG, "dif = \t\t" + d.getTime());
 
 						for (Date date : exceptionDates) {
 							long check = d.getTime() - date.getTime() + offset;
@@ -697,7 +697,7 @@ public class ICalHelper {
 
 					if (hasRec == true) {
 						sdf.setTimeZone(TimeZone.getTimeZone(e.getDateStart().getTimezoneId()));
-						Log.d(TAG, "has EXDATE: " + title + "  -- " + sdf.format(e.getDateStart().getValue()));
+						//Log.d(TAG, "has EXDATE: " + title + "  -- " + sdf.format(e.getDateStart().getValue()));
 					}
 
 					atomarEvents.add(e);
