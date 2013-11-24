@@ -41,7 +41,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -133,7 +132,7 @@ public class AuthenticatorActivityTabed extends Activity {
 		 * Spinner TAB
 		 */
 		TabHost.TabSpec specSpinner = mTabHost.newTabSpec("tab_spinner");
-		specSpinner.setContent(R.id.calenda_account_spinner_tab);
+		specSpinner.setContent(R.id.calendar_backend_account_tab_spinner);
 
 		specSpinner.setIndicator(getResources().getString(R.string.calendar_backend_account_tab_title_by_list));
 		mTabHost.addTab(specSpinner);
@@ -142,7 +141,7 @@ public class AuthenticatorActivityTabed extends Activity {
 		 * text input TAB
 		 */
 		TabHost.TabSpec specManual = mTabHost.newTabSpec("tab_manual");
-		specManual.setContent(R.id.calendar_account_manual_tab);
+		specManual.setContent(R.id.calendar_backend_account_manual_tab);
 		specManual.setIndicator(getResources().getString(R.string.calendar_backend_account_tab_title_by_hand));
 		mTabHost.addTab(specManual);
 
@@ -151,17 +150,17 @@ public class AuthenticatorActivityTabed extends Activity {
 		 */
 		mTabHost.setCurrentTab(0);
 
-		mUpdateListButton = (ImageButton) findViewById(R.id.calendar_account_select_ical_update_button);
+		mUpdateListButton = (ImageButton) findViewById(R.id.calendar_backend_account_select_ical_update_button);
 
-		mProgress = (ProgressBar) findViewById(R.id.calendar_list_update_progressbar);
+		mProgress = (ProgressBar) findViewById(R.id.calendar_backend_account_calendar_list_update_progressbar);
 
 		mInfoMessage = (TextView) findViewById(R.id.calendar_backend_account_information_message);
 
-		mIcalSpinner = (Spinner) findViewById(R.id.ical_calendar_spinner);
+		mIcalSpinner = (Spinner) findViewById(R.id.calendar_backend_account_ical_calendar_spinner);
 
-		mDisplayNameEditText = (EditText) findViewById(R.id.display_name_editText);
+		mDisplayNameEditText = (EditText) findViewById(R.id.calendar_backend_account_display_name_editText);
 
-		mICalUrlEditText = (EditText) findViewById(R.id.ical_url_editText);
+		mICalUrlEditText = (EditText) findViewById(R.id.calendar_backend_account_ical_url_editText);
 
 		try {
 			mItemList = (ArrayList<SpinnerItem>) cm.getSelectableCalendars();
@@ -183,13 +182,6 @@ public class AuthenticatorActivityTabed extends Activity {
 
 		mProgressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.calendar_account_tabed, menu);
-		return true;
 	}
 
 	/**
@@ -234,9 +226,6 @@ public class AuthenticatorActivityTabed extends Activity {
 		CalendarManager cm = CalendarManager.get(this);
 		final Account account = new Account(mCalendarDisplayName, Constants.ACCOUNT_TYPE);
 
-		
-		
-
 		/**
 		 * Validate Display name
 		 */
@@ -249,11 +238,10 @@ public class AuthenticatorActivityTabed extends Activity {
 		} else if (!mCalendarDisplayName.matches(REG_EX_DISPLAY_NAME_PATTERN)) {
 			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_displayname_invalid));
 			mFormIsValid = false;
-		}else if (cm.calendarExists(account)) {
+		} else if (cm.calendarExists(account)) {
 			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_calendar_already_exists));
 			mFormIsValid = false;
-		}
-		else {
+		} else {
 			mDisplayNameEditText.setError(null);
 			mFormIsValid = true;
 		}

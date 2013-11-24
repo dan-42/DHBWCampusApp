@@ -97,57 +97,57 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			long calendarId = mCalendarManager.getCalendarId(account);
 
 			String calendarHttpUrl = mAccountManager.getUserData(account, Constants.KEY_ACCOUNT_CAL_URL);
+			if (calendarHttpUrl != null && calendarHttpUrl.length() > 11) {
 
-			
-			//todo check if URL is null
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(calendarHttpUrl);
+				// todo check if URL is null
+				HttpClient httpClient = new DefaultHttpClient();
+				HttpGet httpGet = new HttpGet(calendarHttpUrl);
 
-			if (!httpGet.containsHeader("Accept-Encoding")) {
-				httpGet.addHeader("Accept-Encoding", "gzip");
-			}
-
-			try {
-
-				Log.i(TAG, "http execute()");
-				httpResponse = httpClient.execute(httpGet);
-
-				int httpStatus = httpResponse.getStatusLine().getStatusCode();
-
-				HttpEntity entity = httpResponse.getEntity();
-
-				if (httpStatus == 200 && entity != null) {
-
-					InputStream instream = AndroidHttpClient.getUngzippedContent(entity);
-
-					ICalendar ical = Biweekly.parse(instream).first();
-
-					instream.close();
-
-
-					ArrayList<VEvent> events = (ArrayList<VEvent>) ical.getEvents();
-					
-					
-
-					//mCalendarManager.deleteAllEvents(account, calendarId);
-
-					//mCalendarManager.insertEvents(account, calendarId, events);
-					
-					mCalendarManager.updateEvents(account, calendarId, events);
-
-					// save timestamp of last succsessful sync
-					setLastServerSyncMarker(account, System.currentTimeMillis());
-
-				} else {
-					Log.i(TAG, "entity == null");
+				if (!httpGet.containsHeader("Accept-Encoding")) {
+					httpGet.addHeader("Accept-Encoding", "gzip");
 				}
 
-			} catch (ClientProtocolException e) {
+				try {
 
-				e.printStackTrace();
-			} catch (IOException e) {
+					Log.i(TAG, "http execute()");
+					httpResponse = httpClient.execute(httpGet);
 
-				e.printStackTrace();
+					int httpStatus = httpResponse.getStatusLine().getStatusCode();
+
+					HttpEntity entity = httpResponse.getEntity();
+
+					if (httpStatus == 200 && entity != null) {
+
+						InputStream instream = AndroidHttpClient.getUngzippedContent(entity);
+
+						ICalendar ical = Biweekly.parse(instream).first();
+
+						instream.close();
+
+						ArrayList<VEvent> events = (ArrayList<VEvent>) ical.getEvents();
+
+						// mCalendarManager.deleteAllEvents(account,
+						// calendarId);
+
+						// mCalendarManager.insertEvents(account, calendarId,
+						// events);
+
+						mCalendarManager.updateEvents(account, calendarId, events);
+
+						// save timestamp of last succsessful sync
+						setLastServerSyncMarker(account, System.currentTimeMillis());
+
+					} else {
+						Log.i(TAG, "entity == null");
+					}
+
+				} catch (ClientProtocolException e) {
+
+					e.printStackTrace();
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
 			}
 		} else {
 			Log.i(TAG, "NO Sync MIN_SYNC_INTERVRALL_IN_MILLIS = " + Constants.MIN_SYNC_INTERVRALL_IN_MILLIS);
@@ -159,7 +159,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	/**
 	 * get timestemp of last sync
-	 * @param account 
+	 * 
+	 * @param account
 	 * @return last sync timestemp in millis
 	 */
 	private long getLastServerSyncMarker(Account account) {

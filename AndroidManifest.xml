@@ -46,7 +46,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_calendar_main"
+        android:icon="@drawable/ic_dhbw_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
@@ -85,7 +85,7 @@
 
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
+                android:resource="@xml/calendar_backend_authenticator" />
         </service>
         <service
             android:name="de.dhbw.organizer.calendar.backend.syncadapter.SyncService"
@@ -96,7 +96,7 @@
 
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
+                android:resource="@xml/calendar_backend_syncadapter" />
         </service>
 
         <activity

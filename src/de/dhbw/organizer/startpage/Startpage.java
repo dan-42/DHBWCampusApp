@@ -1,16 +1,25 @@
 package de.dhbw.organizer.startpage;
 
+import java.util.List;
+
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
 import de.dhbw.organizer.calendar.frontend.activity.Settings;
 import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+<<<<<<< HEAD
 import android.util.Log;
 import android.view.LayoutInflater;
+=======
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.util.Log;
+>>>>>>> 52284cd81aec9a17dba4331db408c0f8fa21a539
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,19 +33,14 @@ import android.widget.ViewFlipper;
  * @author riedings
  * 
  */
-public class Startpage extends Activity implements
-		android.view.View.OnClickListener {
+public class Startpage extends Activity {
 
-	Button b1;
+	private static final String TAG = "Startpage";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.startpage_activity);
-
-		b1 = (Button) findViewById(R.id.button0);
-
-		b1.setOnClickListener(this);
 	}
 
 	@Override
@@ -46,12 +50,27 @@ public class Startpage extends Activity implements
 		return true;
 	}
 
-	@Override
-	public void onClick(View v) {
-
+	public void startCalendarActivity(View v) {
 		Intent myIntent = new Intent(v.getContext(), Vorlesungsplan.class);
 		startActivityForResult(myIntent, 0);
+	}
 
+	public void startMensaActivity(View v) {
+		PackageManager pm = getPackageManager();
+		Intent intent = pm.getLaunchIntentForPackage("de.dhbw.mensa");
+
+		if (intent != null) {
+
+			List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+			if (list.size() > 0) {
+				startActivity(intent);
+			} else {
+				Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
+			}
+
+		} else {
+			Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
+		}
 	}
 
 	@Override
