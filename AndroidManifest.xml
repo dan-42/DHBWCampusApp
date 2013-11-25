@@ -108,12 +108,26 @@
         </activity>
         <!-- CALENDAR FRONTEND -->
         <activity
-            android:name="de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan"
-            android:label="@string/app_name" >
+            android:name="de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan"            
+            android:icon="@drawable/ic_calendar"
+            android:label="@string/app_start_calendar" >
         </activity>
         <activity android:name="de.dhbw.organizer.calendar.frontend.activity.Settings" >
         </activity>
-        <activity android:name="de.dhbw.organizer.gebaudeplan.Gebaudeplan"></activity>
+         <!-- BUILDINGS -->
+        <activity
+            android:name="de.dhbw.organizer.gebaudeplan.Gebaudeplan"
+            android:icon="@drawable/ic_buildings"
+            android:label="@string/app_start_buildings" > 
+        </activity>
     </application>
 
+    
+    
+    
+    
+    
+    
+    
+    
 </manifest>

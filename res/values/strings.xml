@@ -31,6 +31,7 @@
     <string name="app_start_calendar">Vorlesungsplan</string>
     <string name="app_start_moodle">Moodle</string>
     <string name="app_start_mensa">Mensa</string>
+    <string name="app_start_buildings">Lageplan</string>
     <string name="app_start_hello_world">Hello Droid</string>
 
     <!-- CALENDAR -->
@@ -70,4 +71,10 @@
     <string name="hide_private_appointments">Private Termine ausblenden</string>
     <string name="startpage_menu_info">Info</string>
 
+    
+    <!-- BUILDINGS -->
+    <string name="buildings_image_title_map_kbc">KBC Lageplan</string>
+    <string name="buildings_image_title_map_hangstr">Hangstr. Lageplan</string>
+    <string name="buildings_image_title_buildings_hangstr">Hangstr. Gebäudeplan</string>
+    
 </resources>

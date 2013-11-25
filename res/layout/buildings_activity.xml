@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView           
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/buildings_image_title_map_kbc"
+            android:layout_marginTop="5dip"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageView            
+            android:layout_width="wrap_content"
+            android:layout_height="384dp"            
+            android:src="@drawable/img_buildings_map_kbc"
+            android:contentDescription="@string/buildings_image_title_map_kbc"/>
+        
+         <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:text="@string/buildings_image_title_map_hangstr"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="482dp"
+            android:src="@drawable/img_buildings_map_hangstr"
+            android:contentDescription="@string/buildings_image_title_map_hangstr" />
+        
+         <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:text="@string/buildings_image_title_buildings_hangstr"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="396dp"
+            android:src="@drawable/img_buildings_hangstr"
+            android:contentDescription="@string/buildings_image_title_buildings_hangstr"/>
+
+
+    </LinearLayout>
+
+</ScrollView>

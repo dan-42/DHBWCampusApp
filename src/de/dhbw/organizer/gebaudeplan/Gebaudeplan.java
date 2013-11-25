@@ -9,7 +9,7 @@ public class Gebaudeplan extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.gebaudeplan_activity);
+		setContentView(R.layout.buildings_activity);
 
 	}
 }
