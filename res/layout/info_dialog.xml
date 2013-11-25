@@ -3,82 +3,105 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <TextView
-        android:id="@+id/infoDialogText1"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="das ist ein standard text"
-        android:paddingLeft="5dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical" >
 
-   <ViewFlipper android:id="@+id/flipper"
-       android:layout_below="@+id/infoDialogText1"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:flipInterval="1700"
-             >
+        <TextView
+            android:id="@+id/infoDialogText1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="4dp"
+            android:text="@string/de_introducion"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="4dp"
+            android:text="@string/de_version"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="4dp"
+            android:text="@string/de_impressum"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="4dp"
+            android:text="@string/de_project_szi"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="4dp"
+            android:layout_gravity="center"
+            android:onClick="openSZIFacebookPage"
+            android:src="@drawable/facebook_icon" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="4dp"
+            android:text="@string/de_project_develpment_by"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ViewFlipper
+            android:id="@+id/flipper"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:flipInterval="1700" >
+
             <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/daniel"
+                android:textSize="22sp" />
+
             <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/patrick"
+                android:textSize="22sp" />
+
             <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
-            
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:textSize="22sp"
-                    android:text="sdfg"/>
-         
-</ViewFlipper>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/simon"
+                android:textSize="22sp" />
+        </ViewFlipper>
+    </LinearLayout>
 
 </RelativeLayout>

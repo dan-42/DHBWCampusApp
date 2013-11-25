@@ -77,4 +77,14 @@
     <string name="buildings_image_title_map_hangstr">Hangstr. Lageplan</string>
     <string name="buildings_image_title_buildings_hangstr">Hangstr. Gebäudeplan</string>
     
+    <!-- STARTPAGE -->
+    <!-- INFO -->
+    <string name="daniel">Daniel Friedrich</string>
+    <string name="patrick">Patrick Strittmatter</string>
+    <string name="simon">Simon Riedinger</string>
+    <string name="de_introducion">Eine App der DHBW Lörrach</string>
+    <string name="de_version">Alpha Version</string>
+    <string name="de_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstraße 46-50 \n79539 Lörrach</string>
+    <string name="de_project_szi">Ein Projekt des Studienzentrums der Informatik </string>
+    <string name="de_project_develpment_by">Entstanden im Rahmen der Seminararbeit von: </string>
 </resources>
