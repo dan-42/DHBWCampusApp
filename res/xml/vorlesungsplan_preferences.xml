@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory android:title="Einstellungen">
+            <CheckBoxPreference android:title="Private Termine ausblenden" android:summary="blendet alle als privat gekennzeichneten Termine aus"/>
+            <CheckBoxPreference android:title="Alle vergangenen Termine ausblenden" android:summary="blendet die vergangenen Termine in der Liste aus"/>
+        </PreferenceCategory>
+    </PreferenceScreen>
