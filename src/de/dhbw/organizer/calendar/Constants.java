@@ -27,6 +27,11 @@ package de.dhbw.organizer.calendar;
 import android.graphics.Color;
 
 public class Constants {
+	
+	/**
+	 * Authority type  
+	 */
+	public static final String ACCOUNT_CALENDAR_AUTHORITY = "com.android.calendar";
 	/**
      * Account type string.
      */
@@ -52,12 +57,12 @@ public class Constants {
     /**
      * default colors, if all are already used, the first is taken
      */
-    public static final int[] CALENDAR_COLORS = new int[] {	Color.RED, //FF0000	default
-    														//Color.parseColor("#FF3636"), //brighter
-    														Color.parseColor("#FF7070"), //brighter
-    														Color.parseColor("#DB0000"), //darker 
-    														Color.parseColor("#A80000")}; //darker
-
+    public static final int[] CALENDAR_COLORS = new int[] {	Color.parseColor("#e2001a"), //DHBW RED    						
+    														Color.parseColor("#b83347"), //between DHBW RED and DHBW dark red  														
+    														Color.parseColor("#8b0011"), //DHBW dark red 
+    														Color.parseColor("#ff5858"), //brighter than DHBW red
+    														Color.parseColor("#ff9999"), //brighter than DHBW red, more like rosa
+    														}; 
     /**
      * min time interval between two syncs in millis 
      */
@@ -72,4 +77,6 @@ public class Constants {
 	 * URL where the XML is to obtain the up to date calendar list
 	 */
 	public static final String EXTERNAL_CALENDAR_LIST_URL = "http://hemera.bf-it.eu/dh/calendar_calendars.xml";
+
+	
 }

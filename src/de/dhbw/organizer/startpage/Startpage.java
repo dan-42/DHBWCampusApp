@@ -76,6 +76,8 @@ public class Startpage extends Activity {
 
 		} else {
 			Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
+			Toast.makeText(this, getString(R.string.mensa_error_not_installed), Toast.LENGTH_LONG).show();
+			
 		}
 	}
 
@@ -101,7 +103,7 @@ public class Startpage extends Activity {
 	}
 
 	/**
-	 * erstellt ein Dialog, welches u.a. das Impressum enthält
+	 * erstellt ein Dialog, welches u.a. das Impressum enthï¿½lt
 	 * 
 	 * @return
 	 */
@@ -134,7 +136,7 @@ public class Startpage extends Activity {
 	 *            View, which opens the function
 	 */
 	public void openSZIFacebookPage(View v) {
-		// Open Facebook Page of "Informatik an der DHBW Lörrach"
+		// Open Facebook Page of "Informatik an der DHBW Lï¿½rrach"
 		openFacebookWithPath(this, "profile/189992694374119");
 
 	}

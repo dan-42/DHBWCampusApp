@@ -83,7 +83,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		// make sure Calendar exists, other wise create it
 		// could be deleted, by user interaction or by first Sync
 		if (!mCalendarManager.calendarExists(account)) {
-			mCalendarManager.createCalendar(account);
+			mCalendarManager.createCalendar(account, null);
 		}
 
 		long nowInMillis = System.currentTimeMillis();

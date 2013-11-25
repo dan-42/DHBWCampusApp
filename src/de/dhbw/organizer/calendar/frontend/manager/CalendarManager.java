@@ -1,18 +1,18 @@
 package de.dhbw.organizer.calendar.frontend.manager;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Instances;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.format.Time;
 import android.util.Log;
 import de.dhbw.organizer.R;
@@ -20,18 +20,15 @@ import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.frontend.adapter.CalendarEvent;
 import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 public class CalendarManager {
+
+	private static final String TAG = "calendar frontend CalendarManager";
 
 	public int mIndexOfActualEvent;
 	public boolean mIndexAlreadySet;
 
 	// The desired event columns
-	public static final String[] EVENT_PROJECTION = new String[] { Events._ID,
-			Events.TITLE, Events.DTSTART, Events.DTEND, Events.EVENT_LOCATION,
+	public static final String[] EVENT_PROJECTION = new String[] { Events._ID, Events.TITLE, Events.DTSTART, Events.DTEND, Events.EVENT_LOCATION,
 			Events.DESCRIPTION };
 
 	// The desired calendar columns
@@ -39,14 +36,31 @@ public class CalendarManager {
 	};
 
 	// The desired columns to be bound
-	static String[] columns = new String[] { Instances._ID, Instances.TITLE,
-			Instances.DTSTART, Instances.DTEND, Instances.EVENT_LOCATION,
+	static String[] columns = new String[] { Instances._ID, Instances.TITLE, Instances.DTSTART, Instances.DTEND, Instances.EVENT_LOCATION,
 			Instances.DESCRIPTION };
 
 	static int[] to = new int[] { R.id.id, R.id.name, // 0
 			R.id.time, // 1
 			R.id.location // 2
 	};
+
+	/**
+	 * Trigger a sync to an Calendar
+	 * 
+	 * @param Calendar
+	 *            String from colum Calendar.name  e.g. "STUV"
+	 */
+	public void syncCalendar(String calendar) {
+		Log.i(TAG, "syncCalendar() " + " syncronising Calendar " + calendar);
+
+		Account account = new Account(calendar, Constants.ACCOUNT_TYPE);
+
+		Bundle settingsBundle = new Bundle();
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+
+		ContentResolver.requestSync(account, Constants.ACCOUNT_CALENDAR_AUTHORITY, settingsBundle);
+	}
 
 	/**
 	 * 
@@ -65,8 +79,7 @@ public class CalendarManager {
 
 		ContentResolver cr = context.getContentResolver();
 
-		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?",
-				new String[] { CalendarName }, Events.DTSTART);
+		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?", new String[] { CalendarName }, Events.DTSTART);
 
 		List<CalendarEvent> listOfEvents = new ArrayList<CalendarEvent>();
 
@@ -87,8 +100,7 @@ public class CalendarManager {
 			eventLocation = cur.getString(4);
 			eventDescription = cur.getString(5);
 
-			listOfEvents.add(new CalendarEvent(eventName, eventdtstart,
-					eventdtend, eventLocation, eventDescription));
+			listOfEvents.add(new CalendarEvent(eventName, eventdtstart, eventdtend, eventLocation, eventDescription));
 
 			// set the index of the element to scroll to the actual element
 			Time now = new Time();
@@ -110,6 +122,7 @@ public class CalendarManager {
 	}
 
 
+
 	/**
 	 * 
 	 * @return ArrayList with calendar names with account type
@@ -124,8 +137,7 @@ public class CalendarManager {
 
 		ContentResolver cr = context.getContentResolver();
 
-		cur = cr.query(uri, CALENDAR_PROJECTION, Calendars.ACCOUNT_TYPE
-				+ " = ?", new String[] { Constants.ACCOUNT_TYPE }, null);
+		cur = cr.query(uri, CALENDAR_PROJECTION, Calendars.ACCOUNT_TYPE + " = ?", new String[] { Constants.ACCOUNT_TYPE }, null);
 
 		while (cur.moveToNext()) {
 			String calendarName = null;

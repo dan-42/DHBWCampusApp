@@ -64,6 +64,8 @@ class Authenticator extends AbstractAccountAuthenticator {
 		return bundle;
 	}
 
+	
+	
 	@Override
 	public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account, Bundle options) {
 		Log.v(TAG, "confirmCredentials()");

@@ -33,6 +33,11 @@
     <string name="app_start_mensa">Mensa</string>
     <string name="app_start_buildings">Lageplan</string>
     <string name="app_start_hello_world">Hello Droid</string>
+    
+    
+    <!-- MENSA -->
+    <string name="mensa_error_not_installed">The DHBW Mensa App is not installed</string>
+    
 
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->

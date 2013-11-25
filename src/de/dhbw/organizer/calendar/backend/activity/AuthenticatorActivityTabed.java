@@ -25,6 +25,7 @@
 
 package de.dhbw.organizer.calendar.backend.activity;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -106,6 +107,8 @@ public class AuthenticatorActivityTabed extends Activity {
 	private String mCalendarDisplayName = null;
 
 	private String mCalendarICalUrl = null;
+	
+	private Color mCalendarColor = null;
 
 	private HttpConnectionTester mHttpConnectionTester = null;
 
@@ -355,7 +358,7 @@ public class AuthenticatorActivityTabed extends Activity {
 					setAccountAuthenticatorResult(intent.getExtras());
 					setResult(RESULT_OK, intent);
 
-					cm.createCalendar(account);
+					cm.createCalendar(account, mCalendarColor);
 					finish();
 
 				} else {
