@@ -182,6 +182,13 @@
                     android:textStyle="normal"
                     android:typeface="sans" />
                 -->
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_start_banner_testversion" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
