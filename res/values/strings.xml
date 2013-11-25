@@ -28,7 +28,7 @@
 
     <!-- MAIN VIEW -->
     <string name="app_name">DHBW Organizer</string>
-    <string name="app_start_calendar">Vorlesungsplan</string>
+    <string name="app_start_calendar">Kalender</string>
     <string name="app_start_moodle">Moodle</string>
     <string name="app_start_mensa">Mensa</string>
     <string name="app_start_buildings">Lageplan</string>
