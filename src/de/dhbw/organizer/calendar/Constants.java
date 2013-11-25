@@ -27,6 +27,11 @@ package de.dhbw.organizer.calendar;
 import android.graphics.Color;
 
 public class Constants {
+	
+	/**
+	 * Authority type  
+	 */
+	public static final String ACCOUNT_CALENDAR_AUTHORITY = "com.android.calendar";
 	/**
      * Account type string.
      */
@@ -72,4 +77,6 @@ public class Constants {
 	 * URL where the XML is to obtain the up to date calendar list
 	 */
 	public static final String EXTERNAL_CALENDAR_LIST_URL = "http://hemera.bf-it.eu/dh/calendar_calendars.xml";
+
+	
 }
