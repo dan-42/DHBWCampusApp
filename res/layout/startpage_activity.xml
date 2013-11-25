@@ -145,6 +145,24 @@
                 android:layout_weight="1"
                 android:orientation="horizontal" >
 
+                
+                <!-- BANNER TEST VERSION -->
+				<!-- 
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_start_banner_testversion" /> 
+                -->
+				<!-- BANNER RAUM FUER WEITERE IDEEN -->
+                <ImageView                    
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_start_banner_ideas" />
+                
+                
+                
+                
                 <!--
                 <Button
                     android:id="@+id/start_button_blackboard"
@@ -182,12 +200,8 @@
                     android:textStyle="normal"
                     android:typeface="sans" />
                 -->
-
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/img_start_banner_testversion" />
+                
+                
 
             </LinearLayout>
         </LinearLayout>
