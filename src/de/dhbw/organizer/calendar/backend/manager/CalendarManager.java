@@ -24,6 +24,7 @@
  */
 package de.dhbw.organizer.calendar.backend.manager;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,6 +45,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
@@ -161,7 +163,8 @@ public class CalendarManager {
 	 * @return true if no error occurred
 	 */
 	public boolean loadExternalXml() {
-		boolean success = false;
+		boolean success = false;		
+		
 
 		NetworkManager nm = NetworkManager.getInstance(mContext);
 		AssetManager assetManager = mContext.getAssets();
@@ -206,6 +209,8 @@ public class CalendarManager {
 
 		return success;
 	}
+
+	
 
 	/**
 	 * check if a calendar already exists
@@ -278,24 +283,30 @@ public class CalendarManager {
 	 * creates a new Calendar with the given account
 	 * 
 	 * @param account
-	 * @param mContext
+	 * @param Color
+	 *            , can be null for default!
 	 * @return calendar id
 	 */
-	public long createCalendar(Account account) {
+	public long createCalendar(Account account, Color color) {
 		Log.d(TAG, "Calendar With by Account Name");
 
 		ContentResolver cr = mContext.getContentResolver();
 
 		Uri creationUri = asSyncAdapter(Calendars.CONTENT_URI, account.name, account.type);
 
-		int color = getNextCalendarColor();
+		int colorInHex;
+		if (color == null) {
+			colorInHex = getNextCalendarColor();
+		} else {
+			colorInHex = color.getRGB();
+		}
 		ContentValues values = new ContentValues();
 
 		values.put(Calendars.ACCOUNT_NAME, account.name);
 		values.put(Calendars.ACCOUNT_TYPE, account.type);
 		values.put(Calendars.NAME, account.name);
 		values.put(Calendars.CALENDAR_DISPLAY_NAME, Constants.CALENDAR_DISPLAY_NAME_PREFIX + account.name);
-		values.put(Calendars.CALENDAR_COLOR, color);
+		values.put(Calendars.CALENDAR_COLOR, colorInHex);
 		values.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_READ);
 		values.put(Calendars.OWNER_ACCOUNT, account.name);
 		values.put(Calendars.SYNC_EVENTS, 1);
@@ -566,8 +577,9 @@ public class CalendarManager {
 	 * @param account
 	 * @param calendarId
 	 * @param e
-	 * @return
+	 * @return keep it for test purpose
 	 */
+	@SuppressWarnings("unused")
 	private long insertEvent(Account account, long calendarId, VEvent e, TimeZone tz) {
 
 		ContentResolver cr = mContext.getContentResolver();
