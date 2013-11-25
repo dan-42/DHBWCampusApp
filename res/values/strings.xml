@@ -87,4 +87,6 @@
     <string name="de_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstraße 46-50 \n79539 Lörrach</string>
     <string name="de_project_szi">Ein Projekt des Studienzentrums der Informatik </string>
     <string name="de_project_develpment_by">Entstanden im Rahmen der Seminararbeit von: </string>
+    <string name="de_suppliers">Mit Unterstützung der Mensa App und freundlicher Unterstützung der DHBW Karlsruhe</string>
+    <string name="de_copyright">Das copyright der Icons Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studenten des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler</string>
 </resources>
