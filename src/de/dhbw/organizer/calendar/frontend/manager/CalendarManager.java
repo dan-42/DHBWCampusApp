@@ -109,35 +109,6 @@ public class CalendarManager {
 		return adapter;
 	}
 
-	/**
-	 * 
-	 * @param context
-	 * @param CalendarName
-	 * @return
-	 */
-	
-	/*
-	public int getActualEvent(Context context, String CalendarName) {
-
-		Uri uri = CalendarContract.Events.CONTENT_URI;
-
-		Cursor cur = null;
-
-		ContentResolver cr = context.getContentResolver();
-
-		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?",
-				new String[] { CalendarName }, null);
-
-		while (cur.moveToNext()) {
-			// Zeit mit der aktuellen vergleichen und die Position zurückliefern
-
-		}
-
-		SimpleCursorAdapter dataAdapter = new SimpleCursorAdapter(context,
-				R.layout.calendar_activity_listview, cur, columns, to, 0);
-
-		return 1;
-	}*/
 
 	/**
 	 * 

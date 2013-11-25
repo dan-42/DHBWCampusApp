@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
 import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
 import de.dhbw.organizer.calendar.frontend.manager.CalendarManager;
+import de.dhbw.organizer.calendar.frontend.preferences.Preferences;
 import de.dhbw.organizer.calendar.helper.FileHelper;
 import de.dhbw.organizer.R;
 import android.app.Activity;
@@ -17,6 +18,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,6 +46,9 @@ public class Vorlesungsplan extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		
+
 
 		/*
 		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
@@ -140,6 +145,11 @@ public class Vorlesungsplan extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.calendar_menu, menu);
 
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.calendar_refresh, menu);
+	    super.onCreateOptionsMenu(menu);
+		
+		
 		return true;
 	}
 
@@ -155,10 +165,22 @@ public class Vorlesungsplan extends Activity {
 
 			break;
 		case R.id.item2:
+			/*
 			final Intent settings = new Intent(this,
 					Settings.class);
-			this.startActivity(settings);
+			this.startActivity(settings);*/
+			
+			final Intent preferences = new Intent(this, Preferences.class);
+			this.startActivity(preferences);
 
+			break;
+			
+		case R.id.jumptotoday:
+			goToActualEvent();
+			break;
+			
+		case R.id.refresh:
+			// do the refresh
 			break;
 		default:
 			break;
@@ -194,13 +216,22 @@ public class Vorlesungsplan extends Activity {
 
 		// set Adapter to display List
 		mEventList.setAdapter(mEvents);
+		
+		goToActualEvent();
 
-		// go to acutal Date
+	}
+	
+	/**
+	 * Method to set the selection to the actual event
+	 */
+	private void goToActualEvent(){
+		// go to actual Date
 		Log.d("Index of Actual Event",
 				String.valueOf(mCalendarManager.mIndexOfActualEvent));
 		mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
 	}
-
+	
+	
 	/**
 	 * 
 	 * @param view

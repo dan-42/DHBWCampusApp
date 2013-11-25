@@ -63,7 +63,7 @@ public class EventAdapter extends BaseAdapter {
 		long startTime = entry.getStartTime();
 		long endTime = entry.getEndTime();
 		String startDate = getDate(startTime, "EEEE dd.MM.yy HH:mm");
-		String endDate = getDate(endTime, "dd.MM.yy HH:mm");
+		String endDate = getDate(endTime, "HH:mm");
 
 		tvTime.setText(startDate + " - " + endDate);
 

@@ -17,32 +17,11 @@
             android:text="@string/hide_private_appointments" />
 
         <CheckBox
-            android:id="@+id/CheckBox02"
-            style="@style/margins"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hide_private_appointments" />
-
-        <CheckBox
-            android:id="@+id/CheckBox03"
-            style="@style/margins"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hide_private_appointments" />
-
-        <CheckBox
             android:id="@+id/checkBox1"
             style="@style/margins"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/hide_old_events" />
-
-        <CheckBox
-            android:id="@+id/checkBox2"
-            style="@style/margins"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hide_private_appointments" />
     </LinearLayout>
 
     <Space

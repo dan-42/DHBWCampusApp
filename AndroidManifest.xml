@@ -120,6 +120,7 @@
             android:icon="@drawable/ic_buildings"
             android:label="@string/app_start_buildings" > 
         </activity>
+        <activity android:name="de.dhbw.organizer.calendar.frontend.preferences.Preferences"></activity>
     </application>
 
     
