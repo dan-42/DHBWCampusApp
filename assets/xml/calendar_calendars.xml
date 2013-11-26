@@ -9,7 +9,7 @@ this list is shipped with the Android App DHBW-Organizer
     LastUpdate="2013-11-14" >
 
    <Calendar>
-	<DisplayName>STUV</DisplayName>
+	<DisplayName>StuV</DisplayName>
 	<iCalUrl>https://webmail.dhbw-loerrach.de/owa/calendar/stuv@dhbw-loerrach.de/Kalender/calendar.ics</iCalUrl>
 </Calendar>
 <Calendar>

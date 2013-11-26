@@ -81,6 +81,10 @@ public class AuthenticatorActivityTabed extends Activity {
 	private AccountManager mAccountManager;
 
 	private TextView mInfoMessage;
+	
+	private TextView mErrorMessageSpinner;
+	
+	private TextView mErrorMessageByhand;
 
 	private ImageButton mUpdateListButton;
 
@@ -158,6 +162,10 @@ public class AuthenticatorActivityTabed extends Activity {
 		mProgress = (ProgressBar) findViewById(R.id.calendar_backend_account_calendar_list_update_progressbar);
 
 		mInfoMessage = (TextView) findViewById(R.id.calendar_backend_account_information_message);
+		
+		mErrorMessageByhand = (TextView) findViewById(R.id.calendar_backend_account_warning_message_manual);
+		
+		mErrorMessageSpinner = (TextView) findViewById(R.id.calendar_backend_account_warning_message);
 
 		mIcalSpinner = (Spinner) findViewById(R.id.calendar_backend_account_ical_calendar_spinner);
 
@@ -184,7 +192,23 @@ public class AuthenticatorActivityTabed extends Activity {
 		mIcalSpinner.setAdapter(mAdapter);
 
 		mProgressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+		
+		
 
+	}	
+	
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(!NetworkManager.getInstance(this).isOnline()){
+			mErrorMessageSpinner.setText(getText(R.string.calendar_backend_network_error));
+			mErrorMessageByhand.setText(getText(R.string.calendar_backend_network_error));			
+		}
+		else {
+			mErrorMessageSpinner.setText(null);
+			mErrorMessageByhand.setText(null);
+		}
 	}
 
 	/**
@@ -193,6 +217,16 @@ public class AuthenticatorActivityTabed extends Activity {
 	 * @param view
 	 */
 	public void addCalendarFromSpinner(View View) {
+		
+		if(!NetworkManager.getInstance(this).isOnline()){
+			mErrorMessageSpinner.setText(getText(R.string.calendar_backend_network_error));
+			mErrorMessageByhand.setText(getText(R.string.calendar_backend_network_error));	
+			return;
+		}
+		else {
+			mErrorMessageSpinner.setText(null);
+			mErrorMessageByhand.setText(null);
+		}
 
 		SpinnerItem selected = (SpinnerItem) mIcalSpinner.getSelectedItem();
 		if (mIcalSpinner.getSelectedItemPosition() == 0 || selected.equals(getString(R.string.calendar_backend_input_select_calendar))) {
@@ -221,6 +255,15 @@ public class AuthenticatorActivityTabed extends Activity {
 	 * @param view
 	 */
 	public void addCalendarFromInputForm(View view) {
+		if(!NetworkManager.getInstance(this).isOnline()){
+			mErrorMessageSpinner.setText(getText(R.string.calendar_backend_network_error));
+			mErrorMessageByhand.setText(getText(R.string.calendar_backend_network_error));	
+			return;
+		}
+		else {
+			mErrorMessageSpinner.setText(null);
+			mErrorMessageByhand.setText(null);
+		}
 
 		mCalendarDisplayName = mDisplayNameEditText.getText().toString();
 		mCalendarICalUrl = mICalUrlEditText.getText().toString();
