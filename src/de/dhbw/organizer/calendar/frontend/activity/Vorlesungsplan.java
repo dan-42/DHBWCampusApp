@@ -46,9 +46,6 @@ public class Vorlesungsplan extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		
-
 
 		/*
 		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
@@ -60,13 +57,12 @@ public class Vorlesungsplan extends Activity {
 		FileHelper fileHelper = new FileHelper();
 
 		try {
-			String Calendarname = fileHelper.readFileAsString(this,
-					"lastCalendarOpened");
+			String Calendarname = fileHelper.readFileAsString(this, "lastCalendarOpened");
 			setListContent(this, Calendarname);
 		} catch (Exception e) {
 			// create File
 			fileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
-			// Toast: Bitte füge einen neuen Kalender hinzu
+			// Toast: Bitte fï¿½ge einen neuen Kalender hinzu
 		}
 
 	}
@@ -81,11 +77,10 @@ public class Vorlesungsplan extends Activity {
 		if (mCalendarList.isEmpty()) {
 
 			// Hier ein Toast der sagt bitte neuen Kalender erstellen, dann von
-			// links nach rechts wischen um Kalender auszuwählen
+			// links nach rechts wischen um Kalender auszuwï¿½hlen
 			Log.d("Kalendar: ", "mCalendarList is empty");
 
-			final Intent intent = new Intent(this,
-					AuthenticatorActivityTabed.class);
+			final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
 			this.startActivity(intent);
 
 		} else {
@@ -93,8 +88,7 @@ public class Vorlesungsplan extends Activity {
 			if (mCalendarList.size() == 1) {
 				FileHelper fileHelper = new FileHelper();
 				try {
-					fileHelper.writeFileAsString(Vorlesungsplan.this,
-							"lastCalendarOpened", mCalendarList.get(0));
+					fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", mCalendarList.get(0));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -103,8 +97,7 @@ public class Vorlesungsplan extends Activity {
 		}
 
 		// Set the adapter for the list view
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.calendar_drawer_listview_item, mCalendarList));
+		mDrawerListView.setAdapter(new ArrayAdapter<String>(this, R.layout.calendar_drawer_listview_item, mCalendarList));
 
 		mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -145,11 +138,10 @@ public class Vorlesungsplan extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.calendar_menu, menu);
 
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.calendar_refresh, menu);
-	    super.onCreateOptionsMenu(menu);
-		
-		
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.calendar_refresh, menu);
+		super.onCreateOptionsMenu(menu);
+
 		return true;
 	}
 
@@ -159,26 +151,25 @@ public class Vorlesungsplan extends Activity {
 		// Handle the New Calendar and the Settings Menu
 		switch (item.getItemId()) {
 		case R.id.item1:
-			final Intent newCalendar = new Intent(this,
-					AuthenticatorActivityTabed.class);
+			final Intent newCalendar = new Intent(this, AuthenticatorActivityTabed.class);
 			this.startActivity(newCalendar);
 
 			break;
 		case R.id.item2:
 			/*
-			final Intent settings = new Intent(this,
-					Settings.class);
-			this.startActivity(settings);*/
-			
+			 * final Intent settings = new Intent(this, Settings.class);
+			 * this.startActivity(settings);
+			 */
+
 			final Intent preferences = new Intent(this, Preferences.class);
 			this.startActivity(preferences);
 
 			break;
-			
+
 		case R.id.jumptotoday:
 			goToActualEvent();
 			break;
-			
+
 		case R.id.refresh:
 			// do the refresh
 			break;
@@ -211,27 +202,28 @@ public class Vorlesungsplan extends Activity {
 		mEventList = (ListView) findViewById(R.id.listView1);
 
 		// get the Events as an Adapter
-		EventAdapter mEvents = mCalendarManager.getCalendarEvents(this,
-				calendarName);
+		EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);
 
 		// set Adapter to display List
 		mEventList.setAdapter(mEvents);
-		
+
 		goToActualEvent();
 
 	}
-	
+
 	/**
 	 * Method to set the selection to the actual event
 	 */
-	private void goToActualEvent(){
+	private void goToActualEvent() {
 		// go to actual Date
-		Log.d("Index of Actual Event",
-				String.valueOf(mCalendarManager.mIndexOfActualEvent));
-		mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
+		if (mCalendarManager != null && mCalendarManager.mIndexOfActualEvent > 0) {
+			Log.d("Index of Actual Event", String.valueOf(mCalendarManager.mIndexOfActualEvent));
+			mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
+		} else {
+			Log.i("goToActualEvent()", "Index of Actual Event not set, no Calendar");
+		}
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param view
@@ -245,13 +237,10 @@ public class Vorlesungsplan extends Activity {
 	public static Intent getOpenFacebookIntent(Context context) {
 
 		try {
-			context.getPackageManager()
-					.getPackageInfo("com.facebook.katana", 0);
-			return new Intent(Intent.ACTION_VIEW,
-					Uri.parse("fb://profile/<id_here>"));
+			context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+			return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/<id_here>"));
 		} catch (Exception e) {
-			return new Intent(Intent.ACTION_VIEW,
-					Uri.parse("https://www.facebook.com/<user_name_here>"));
+			return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/<user_name_here>"));
 		}
 	}
 
@@ -260,16 +249,12 @@ public class Vorlesungsplan extends Activity {
 	 * @author Seimon
 	 * 
 	 */
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView parent, View view, int position,
-				long id) {
-			Toast.makeText(Vorlesungsplan.this, ((TextView) view).getText(),
-					Toast.LENGTH_LONG).show();
+		public void onItemClick(AdapterView parent, View view, int position, long id) {
+			Toast.makeText(Vorlesungsplan.this, ((TextView) view).getText(), Toast.LENGTH_LONG).show();
 			mDrawerLayout.closeDrawer(mDrawerListView);
-			Log.d((((TextView) view).getText()).toString(),
-					(((TextView) view).getText()).toString());
+			Log.d((((TextView) view).getText()).toString(), (((TextView) view).getText()).toString());
 
 			selectItem(view);
 
@@ -278,8 +263,7 @@ public class Vorlesungsplan extends Activity {
 			// schreibe in die Datei
 			FileHelper fileHelper = new FileHelper();
 			try {
-				fileHelper.writeFileAsString(Vorlesungsplan.this,
-						"lastCalendarOpened", calendarName);
+				fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", calendarName);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -24,7 +24,7 @@
  */
 package de.dhbw.organizer.calendar.backend.manager;
 
-import java.awt.Color;
+//import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,6 +44,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -298,7 +299,8 @@ public class CalendarManager {
 		if (color == null) {
 			colorInHex = getNextCalendarColor();
 		} else {
-			colorInHex = color.getRGB();
+			//colorInHex = Color.r
+					colorInHex = getNextCalendarColor();
 		}
 		ContentValues values = new ContentValues();
 
