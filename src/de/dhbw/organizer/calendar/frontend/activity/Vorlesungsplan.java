@@ -3,6 +3,7 @@ package de.dhbw.organizer.calendar.frontend.activity;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
 import de.dhbw.organizer.calendar.frontend.adapter.CalendarEvent;
 import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
@@ -10,6 +11,7 @@ import de.dhbw.organizer.calendar.frontend.manager.CalendarManager;
 import de.dhbw.organizer.calendar.frontend.preferences.Preferences;
 import de.dhbw.organizer.calendar.helper.FileHelper;
 import de.dhbw.organizer.R;
+import android.accounts.Account;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -183,6 +185,11 @@ public class Vorlesungsplan extends Activity {
 		case R.id.refresh:
 			mCalendarManager.syncCalendar(mCalendarName);
 			break;
+			
+		case R.id.item3:
+			 de.dhbw.organizer.calendar.backend.manager.CalendarManager mCalendarManagerBackend = de.dhbw.organizer.calendar.backend.manager.CalendarManager.get(this) ;
+			Account account = new Account(mCalendarName, Constants.ACCOUNT_TYPE );
+			mCalendarManagerBackend.deleteCalendarByName(account, mCalendarName);
 		default:
 			break;
 		}
