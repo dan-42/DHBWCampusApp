@@ -23,14 +23,14 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="0dip"
+                android:layout_height="wrap_content"
                 android:layout_weight="42.75"
                 android:orientation="horizontal" >
 
                 <Button
                     android:id="@+id/start_button_calendar"
                     style="@style/Button"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_calendar"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
@@ -44,7 +44,7 @@
                 <Button
                     android:id="@+id/start_button_buildings"
                     style="@style/Button"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_buildings"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
@@ -57,7 +57,7 @@
                 <Button
                     android:id="@+id/start_button_mensa"
                     style="@style/Button"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_mensa"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
@@ -80,11 +80,41 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal" >
-
+                
+                 <Button
+                    android:id="@+id/start_button_feedback"
+                    style="@style/Button"
+                    android:layout_height="120dp"
+                    android:drawableTop="@drawable/ic_feedback"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:text="@string/app_start_feedback"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:singleLine="true"
+                    android:typeface="sans"
+                    android:onClick="startOnlineFeedback" />
+                
+                
+                  <Button
+                    android:id="@+id/start_button_spacer"
+                    style="@style/Button"
+                    android:layout_height="120dp"
+                    android:drawableTop="@drawable/ic_spacer"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+                  
+                    
+				
+				
+				<!-- 
                 <Button
                     android:id="@+id/start_button_moodle"
                     style="@style/Button"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_moodle"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
@@ -96,7 +126,7 @@
                 <Button
                     android:id="@+id/start_button_hello_world"
                     style="@style/Button"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_hello_world"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
@@ -105,11 +135,13 @@
                     android:textColor="#000000"
                     android:textStyle="normal"
                     android:typeface="sans" />
+                
+                 -->
 
                 <Button
-                    android:id="@+id/start_button_news"
+                    android:id="@+id/start_button_spacer"
                     style="@style/Button"
-                    android:layout_height="100dp"
+                    android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_spacer"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
@@ -147,20 +179,21 @@
 
                 
                 <!-- BANNER TEST VERSION -->
-				<!-- 
+				 
                 <ImageView
                     android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/img_start_banner_testversion" /> 
-                -->
+                
 				<!-- BANNER RAUM FUER WEITERE IDEEN -->
+               <!-- 
                 <ImageView                    
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/img_start_banner_ideas" />
                 
-                
+                --> 
                 
                 
                 <!--

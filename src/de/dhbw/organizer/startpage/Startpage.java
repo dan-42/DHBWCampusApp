@@ -80,6 +80,10 @@ public class Startpage extends Activity {
 			
 		}
 	}
+	public void startOnlineFeedback(View v){
+		
+		Toast.makeText(this, "Voll gut!", Toast.LENGTH_LONG).show();
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -128,6 +132,8 @@ public class Startpage extends Activity {
 				}).setCancelable(false).create();
 
 	}
+	
+	
 
 	/**
 	 * Method to open the FB page of information technic
