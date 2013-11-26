@@ -38,7 +38,7 @@
     
     <!-- MAIN VIEW -->
     <!-- INFO -->
-    <string name="de_app_start_info_url_szi">profile/189992694374119</string>
+    <string name="de_app_start_facebook_profile_id_szi">189992694374119</string>
     <string name="de_app_start_info_daniel">Daniel Friedrich</string>
     <string name="de_app_start_info_patrick">Patrick Strittmatter</string>
     <string name="de_app_start_info_simon">Simon Riedinger</string>
