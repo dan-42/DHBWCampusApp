@@ -14,8 +14,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
+            android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingStart="16dp"
             android:paddingTop="4dp"
             android:text="@string/de_introducion"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -25,8 +27,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
+            android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingStart="16dp"
             android:paddingTop="4dp"
             android:text="@string/de_version"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -36,8 +40,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
+            android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingStart="16dp"
             android:paddingTop="4dp"
             android:text="@string/de_impressum"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -47,8 +53,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
+            android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingStart="16dp"
             android:paddingTop="4dp"
             android:text="@string/de_project_szi"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -60,8 +68,10 @@
             android:layout_gravity="center"
             android:onClick="openSZIFacebookPage"
             android:paddingBottom="4dp"
+            android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingStart="16dp"
             android:paddingTop="4dp"
             android:src="@drawable/facebook_icon" />
 
@@ -70,8 +80,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
+            android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingStart="16dp"
             android:paddingTop="4dp"
             android:text="@string/de_project_develpment_by"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -111,8 +123,10 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/linearLayout2"
             android:paddingBottom="4dp"
+            android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingStart="16dp"
             android:paddingTop="4dp"
             android:text="@string/de_suppliers" />
 
@@ -123,8 +137,10 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/textView5"
             android:paddingBottom="4dp"
+            android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingStart="16dp"
             android:paddingTop="4dp"
             android:text="@string/de_copyright" />
     </LinearLayout>

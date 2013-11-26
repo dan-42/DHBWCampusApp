@@ -164,7 +164,7 @@ public class Startpage extends Activity {
 	 */
 	public void openSZIFacebookPage(View v) {
 		// Open Facebook Page of "Informatik an der DHBW L�rrach"
-		openFacebookWithPath(this, "profile/189992694374119");
+		openFacebookWithPath(this, this.getResources().getString(R.string.app_start_url_szi));
 
 	}
 
