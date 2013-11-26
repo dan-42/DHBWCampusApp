@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/item1" android:title="@string/de_calendar_menu_new_calendar"></item>
-    <item android:id="@+id/item2" android:title="@string/de_calendar_menu_preferences"></item>
-    <item android:id="@+id/item3" android:title="@string/de_calendar_menu_delete_calendar"></item>
+    <item android:id="@+id/de_calendar_menu_new_calendar" android:title="@string/de_calendar_menu_new_calendar"></item>
+    <item android:id="@+id/de_calendar_menu_preferences" android:title="@string/de_calendar_menu_preferences"></item>
+    <item android:id="@+id/de_calendar_menu_delete_calendar" android:title="@string/de_calendar_menu_delete_calendar"></item>
 </menu>

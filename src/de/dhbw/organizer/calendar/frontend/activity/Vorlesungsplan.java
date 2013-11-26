@@ -161,21 +161,21 @@ public class Vorlesungsplan extends Activity {
 
 		// Handle the New Calendar and the Settings Menu
 		switch (item.getItemId()) {
-		case R.id.item1:
+		case R.id.de_calendar_menu_new_calendar:
 			final Intent newCalendar = new Intent(this,
 					AuthenticatorActivityTabed.class);
 			this.startActivity(newCalendar);
 
 			break;
-		case R.id.item2:
-			/*
-			 * final Intent settings = new Intent(this, Settings.class);
-			 * this.startActivity(settings);
-			 */
-
+			
+		case R.id.de_calendar_menu_preferences:
 			final Intent preferences = new Intent(this, Preferences.class);
 			this.startActivity(preferences);
 
+			break;
+
+		case R.id.de_calendar_menu_delete_calendar:
+			// delete Calendar
 			break;
 
 		case R.id.jumptotoday:
@@ -185,10 +185,7 @@ public class Vorlesungsplan extends Activity {
 		case R.id.refresh:
 			mCalendarManager.syncCalendar(mCalendarName);
 			break;
-			
-		case R.id.item3:
-			// delete Calendar
-			break;
+
 		default:
 			break;
 		}
@@ -220,9 +217,9 @@ public class Vorlesungsplan extends Activity {
 		// get the Events as an Adapter
 		EventAdapter mEvents = mCalendarManager.getCalendarEvents(this,
 				calendarName);
-		
+
 		mCalendarName = calendarName;
-		
+
 		// set Adapter to display List
 		mEventList.setAdapter(mEvents);
 
@@ -257,8 +254,6 @@ public class Vorlesungsplan extends Activity {
 
 		setListContent(this, (((TextView) view).getText()).toString());
 	}
-
-	
 
 	/**
 	 * 
