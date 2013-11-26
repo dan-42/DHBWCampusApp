@@ -24,6 +24,8 @@
  */
 package de.dhbw.organizer.calendar;
 
+import java.util.Calendar;
+
 import android.graphics.Color;
 
 public class Constants {
@@ -77,6 +79,14 @@ public class Constants {
 	 * URL where the XML is to obtain the up to date calendar list
 	 */
 	public static final String EXTERNAL_CALENDAR_LIST_URL = "http://hemera.bf-it.eu/dh/calendar_calendars.xml";
+	
+	
+	/**
+	 * TEST VERSION ends on Thu Feb 28 00:00:00 CET 2013
+	 * 1393542000 * 1000
+	 */
+	public static final long TIME_END_TEST_VERSION = 1393542000000l;
+	
 
 	
 }

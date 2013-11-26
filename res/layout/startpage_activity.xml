@@ -32,40 +32,39 @@
                     style="@style/Button"
                     android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_calendar"
+                    android:onClick="startCalendarActivity"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
                     android:text="@string/app_start_calendar"
                     android:textColor="#000000"
                     android:textStyle="normal"
-                    android:typeface="sans" 
-                    android:onClick="startCalendarActivity"  />
-                
+                    android:typeface="sans" />
 
                 <Button
                     android:id="@+id/start_button_buildings"
                     style="@style/Button"
                     android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_buildings"
+                    android:onClick="startGebaudeActivity"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
                     android:text="@string/app_start_buildings"
                     android:textColor="#000000"
                     android:textStyle="normal"
-                    android:typeface="sans" 
-                    android:onClick="startGebaudeActivity" />
+                    android:typeface="sans" />
 
                 <Button
                     android:id="@+id/start_button_mensa"
                     style="@style/Button"
                     android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_mensa"
+                    android:onClick="startMensaActivity"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
                     android:text="@string/app_start_mensa"
                     android:textColor="#000000"
                     android:textStyle="normal"
-                    android:typeface="sans"
-                    android:onClick="startMensaActivity"                 />
+                    android:typeface="sans" />
             </LinearLayout>
 
             <LinearLayout
@@ -80,23 +79,22 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal" >
-                
-                 <Button
+
+                <Button
                     android:id="@+id/start_button_feedback"
                     style="@style/Button"
                     android:layout_height="120dp"
                     android:drawableTop="@drawable/ic_feedback"
+                    android:onClick="startOnlineFeedback"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
+                    android:singleLine="true"
                     android:text="@string/app_start_feedback"
                     android:textColor="#000000"
                     android:textStyle="normal"
-                    android:singleLine="true"
-                    android:typeface="sans"
-                    android:onClick="startOnlineFeedback" />
-                
-                
-                  <Button
+                    android:typeface="sans" />
+
+                <Button
                     android:id="@+id/start_button_spacer"
                     style="@style/Button"
                     android:layout_height="120dp"
@@ -106,11 +104,8 @@
                     android:textColor="#000000"
                     android:textStyle="normal"
                     android:typeface="sans" />
-                  
-                    
-				
-				
-				<!-- 
+
+                <!--
                 <Button
                     android:id="@+id/start_button_moodle"
                     style="@style/Button"
@@ -135,8 +130,7 @@
                     android:textColor="#000000"
                     android:textStyle="normal"
                     android:typeface="sans" />
-                
-                 -->
+                -->
 
                 <Button
                     android:id="@+id/start_button_spacer"
@@ -175,27 +169,42 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal" >
+                android:orientation="vertical" >
+
+                <!-- android:orientation="horizontal" > -->
+
+
+                <!-- BANNER TEST VERSION -->
 
                 
-                <!-- BANNER TEST VERSION -->
-				 
+
                 <ImageView
                     android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/img_start_banner_testversion" /> 
+                    android:layout_gravity="center"
+                    android:layout_margin="10dip"
+                    android:src="@drawable/img_start_banner_testversion" />
                 
-				<!-- BANNER RAUM FUER WEITERE IDEEN -->
-               <!-- 
+                <TextView
+                    android:id="@+id/start_app_testversion_timeleft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dip"
+                    android:textColor="@color/darkGray"
+                    android:textSize="25dip"
+                    android:textStyle="bold" />
+
+                <!-- BANNER RAUM FUER WEITERE IDEEN -->
+                <!--
                 <ImageView                    
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/img_start_banner_ideas" />
-                
-                --> 
-                
-                
+                -->
+
+
                 <!--
                 <Button
                     android:id="@+id/start_button_blackboard"
@@ -233,8 +242,6 @@
                     android:textStyle="normal"
                     android:typeface="sans" />
                 -->
-                
-                
 
             </LinearLayout>
         </LinearLayout>
