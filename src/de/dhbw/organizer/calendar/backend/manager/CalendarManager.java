@@ -350,6 +350,35 @@ public class CalendarManager {
 		}
 
 	}
+	
+	/**
+	 * Deletes all Events from the EventsDB and the Calendar from the CalendarDB
+	 * identified by the _ID and ACCOUNT_TYPE
+	 * 
+	 * @param mContext
+	 * @param account
+	 * @return true if delete was successful
+	 */
+	public boolean deleteCalendarByName(Account account, String calendarName) {
+
+		deleteAllEventsByCalendarName(account, calendarName);
+
+		ContentResolver cr = mContext.getContentResolver();
+		String selection = "((" + Calendars.NAME + " = ?) AND  (" + Calendars.ACCOUNT_TYPE + " = ?))";
+		String[] selectionArgs = new String[] { calendarName, account.type };
+
+		long ret = cr.delete(Calendars.CONTENT_URI, selection, selectionArgs);
+
+		if (ret == 1) {
+			return true;
+		} else if (ret == 0) {
+			return false;
+		} else {
+			Log.w(TAG, "WARNING deleteCalendar() deleted " + ret + " rows, should be only one!");
+			return true;
+		}
+
+	}
 
 	/**
 	 * Deletes all Events from a given CalendarID
@@ -365,6 +394,34 @@ public class CalendarManager {
 		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
 		String where = "( ( " + Events.CALENDAR_ID + " = ? ))";
 		String[] selectionArgs = new String[] { Long.toString(calendarId) };
+
+		int del = cr.delete(uri, where, selectionArgs);
+
+		Log.d(TAG, "deleted " + del + " Events");
+
+		if (del > 0) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+	
+	
+	/**
+	 * Deletes all Events from a given CalendarID
+	 * 
+	 * @param account
+	 * @param calendarId
+	 * @return returns true if deletion was scussessful
+	 */
+	public boolean deleteAllEventsByCalendarName(Account account, String calendarName) {
+		Log.d(TAG, "delte all Events from CalendarId = " + calendarName);
+
+		ContentResolver cr = mContext.getContentResolver();
+		Uri uri = asSyncAdapter(Events.CONTENT_URI, account.name, account.type);
+		String where = "( ( " + Events.CALENDAR_DISPLAY_NAME + " = ? ))";
+		String[] selectionArgs = new String[] { calendarName };
 
 		int del = cr.delete(uri, where, selectionArgs);
 

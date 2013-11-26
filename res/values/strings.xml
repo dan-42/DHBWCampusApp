@@ -34,6 +34,7 @@
     <string name="app_start_buildings">Lageplan</string>
     <string name="app_start_hello_world">Hello Droid</string>
     <string name="app_start_feedback">Feedback</string>
+    <string name="app_start_facebook_prodile_id_szi">189992694374119</string>
     
     <!-- MENSA -->
     <string name="mensa_error_not_installed">The DHBW Mensa App is not installed</string>
