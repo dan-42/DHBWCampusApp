@@ -82,18 +82,19 @@ public class CalendarManager {
 
 		ContentResolver cr = context.getContentResolver();
 
-		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?", new String[] { CalendarName }, Events.DTSTART);
+		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?",
+				new String[] { CalendarName }, Events.DTSTART);
 
 		List<CalendarEvent> listOfEvents = new ArrayList<CalendarEvent>();
 
 		int i = 0;
-		while (cur.moveToNext()) {			
+		while (cur.moveToNext()) {
 			String eventName = null;
 			String eventLocation = null;
 			long eventdtstart = 0;
-			long eventdtend = 0;			
+			long eventdtend = 0;
 			String eventDescription = null;
-			
+
 			eventName = cur.getString(1);
 			eventdtstart = cur.getLong(2);
 			eventdtend = cur.getLong(3);
@@ -101,15 +102,17 @@ public class CalendarManager {
 			eventDescription = cur.getString(5);
 
 			// set the index of the element to scroll to the actual element
-				
-			if ((eventdtend >= System.currentTimeMillis()) && (!mIndexAlreadySet)) {
+
+			if ((eventdtend >= System.currentTimeMillis())
+					&& (!mIndexAlreadySet)) {
 				mIndexOfActualEvent = i;
-				mIndexAlreadySet = true;				
-				listOfEvents.add(new CalendarEvent(eventName, eventdtstart, eventdtend, eventLocation, eventDescription, true));
-			}
-			else{				
-				listOfEvents.add(new CalendarEvent(eventName, eventdtstart, eventdtend, eventLocation, eventDescription, false));
-				
+				mIndexAlreadySet = true;
+				listOfEvents.add(new CalendarEvent(eventName, eventdtstart,
+						eventdtend, eventLocation, eventDescription, true));
+			} else {
+				listOfEvents.add(new CalendarEvent(eventName, eventdtstart,
+						eventdtend, eventLocation, eventDescription, false));
+
 			}
 			i++;
 		}
