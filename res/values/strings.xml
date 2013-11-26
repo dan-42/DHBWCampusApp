@@ -27,7 +27,7 @@
 <resources>
 
     <!-- MAIN VIEW -->
-    <string name="app_name">DHBW Organizer</string>
+    <string name="app_name">CampusApp</string>
     <string name="app_start_calendar">Kalender</string>
     <string name="app_start_moodle">Moodle</string>
     <string name="app_start_mensa">Mensa</string>
@@ -42,7 +42,7 @@
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->
     <string name="calendar_backend_account_action_settings">Settings</string>
-    <string name="calendar_backend_account_label">DHBW Organizer</string>
+    <string name="calendar_backend_account_label">CampusApp</string>
     <string name="calendar_backend_account_tab_title_by_list">by List</string>
     <string name="calendar_backend_account_tab_title_by_hand">by Hand</string>
     <string name="calendar_backend_account_ui_activity_authenticating">ui_activity_authenticating</string>
