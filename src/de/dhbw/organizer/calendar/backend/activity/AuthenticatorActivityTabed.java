@@ -25,7 +25,6 @@
 
 package de.dhbw.organizer.calendar.backend.activity;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,7 +107,7 @@ public class AuthenticatorActivityTabed extends Activity {
 	private String mCalendarDisplayName = null;
 
 	private String mCalendarICalUrl = null;
-	
+
 	private Color mCalendarColor = null;
 
 	private HttpConnectionTester mHttpConnectionTester = null;
@@ -228,7 +227,6 @@ public class AuthenticatorActivityTabed extends Activity {
 
 		mFormIsValid = true;
 		CalendarManager cm = CalendarManager.get(this);
-		final Account account = new Account(mCalendarDisplayName, Constants.ACCOUNT_TYPE);
 
 		/**
 		 * Validate Display name
@@ -242,12 +240,17 @@ public class AuthenticatorActivityTabed extends Activity {
 		} else if (!mCalendarDisplayName.matches(REG_EX_DISPLAY_NAME_PATTERN)) {
 			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_displayname_invalid));
 			mFormIsValid = false;
-		} else if (cm.calendarExists(account)) {
-			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_calendar_already_exists));
-			mFormIsValid = false;
 		} else {
-			mDisplayNameEditText.setError(null);
-			mFormIsValid = true;
+			
+			final Account account = new Account(mCalendarDisplayName, Constants.ACCOUNT_TYPE);
+			
+			if (cm.calendarExists(account)) {
+				mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_calendar_already_exists));
+				mFormIsValid = false;
+			} else {
+				mDisplayNameEditText.setError(null);
+				mFormIsValid = true;
+			}
 		}
 
 		// stop do nothing if Display is still invalid
