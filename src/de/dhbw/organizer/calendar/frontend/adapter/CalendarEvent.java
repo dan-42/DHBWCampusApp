@@ -1,5 +1,7 @@
 package de.dhbw.organizer.calendar.frontend.adapter;
 
+import android.R.bool;
+
 public class CalendarEvent {
 
 	private String name;
@@ -7,15 +9,17 @@ public class CalendarEvent {
 	private long endTime; // Time in Millis
 	private String location;
 	private String description;
+	private boolean color;
 
 	public CalendarEvent(String name, long startTime, long endTime,
-			String location, String description) {
+			String location, String description, boolean color) {
 		super();
 		this.name = name;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.location = location;
 		this.description = description;
+		this.color = color;
 	}
 
 	public String getName() {
@@ -56,5 +60,12 @@ public class CalendarEvent {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public boolean getColor() {
+		return color;
+	}
+
+	public void setColor(boolean color) {
+		this.color = color;
 	}
 }

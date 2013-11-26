@@ -8,10 +8,13 @@ import java.util.List;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
 import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,10 +24,12 @@ import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
 
+@SuppressLint("ResourceAsColor")
 public class EventAdapter extends BaseAdapter {
 
 	private Context context;
@@ -76,17 +81,31 @@ public class EventAdapter extends BaseAdapter {
 		iv1.setVisibility(View.INVISIBLE);
 
 		String description = entry.getDescription();
-		
 
+		LinearLayout l1 = (LinearLayout) convertView
+				.findViewById(R.id.linearLayout1);
+		l1.setClickable(false);
+
+		LinearLayout l2 = (LinearLayout) convertView
+				.findViewById(R.id.linearLayout2);
+		l2.setClickable(false);
+
+		if (entry.getColor()) {
+			Resources res = this.context.getResources();
+			int color = res.getColor(R.color.red);
+			l2.setBackgroundColor(color);
+		}
+		
+		
 		if (FbEventParser.parseFbEvent(description) != null) {
 			String eventUrl = FbEventParser.parseFbEvent(description);
 			iv1.setVisibility(View.VISIBLE);
 			iv1.setTag(eventUrl);
 			iv1.setOnClickListener(new OnClickListener() {
-			
+
 				@Override
 				public void onClick(View v) {
-					Log.d("FaceBook","Facebook App started");
+					Log.d("FaceBook", "Facebook App started");
 					startActivity2(v);
 				}
 			});
@@ -95,56 +114,64 @@ public class EventAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	private void startActivity2(View v){
+	private void startActivity2(View v) {
 		Context context = v.getContext();
-		String path = (((ImageView) v).getTag()).toString();		
+		String path = (((ImageView) v).getTag()).toString();
 		openFacebookWithPath(context, path);
-		
+
 	}
-	
+
 	private void showDialog(CalendarEvent entry) {
 		// Create and show your dialog
 		// Depending on the Dialogs button clicks delete it or do nothing
 	}
-	
+
 	/**
-	 * opens the Facebook App or the WebBrowser when no FB App is available
-	 * thx to Mayank Saini 
-	 * http://stackoverflow.com/questions/10299777/open-a-facebook-page-from-android-app
+	 * opens the Facebook App or the WebBrowser when no FB App is available thx
+	 * to Mayank Saini
+	 * http://stackoverflow.com/questions/10299777/open-a-facebook
+	 * -page-from-android-app
 	 * 
-	 * @param Context, current Context 
-	 * @param String path, musst be like "events/43219384371892" or "pages/4237894923"
+	 * @param Context
+	 *            , current Context
+	 * @param String
+	 *            path, musst be like "events/43219384371892" or
+	 *            "pages/4237894923"
 	 */
-	private  void openFacebookWithPath(Context context, String path) {
+	private void openFacebookWithPath(Context context, String path) {
 		final String TAG = "openFacebookWithPath() ";
-		
-        final String urlFb = "fb://event/" + path;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(urlFb));
 
-        // If Facebook application is installed, use that else launch a browser
-        final PackageManager packageManager = context.getPackageManager();
-        
-        List<ResolveInfo> list =  packageManager.queryIntentActivities(intent,PackageManager.MATCH_DEFAULT_ONLY);
-        if (list.size() == 0) {
-            final String urlBrowser = "https://www.facebook.com/events/" + path;
-            Log.i(TAG, " urlBrowser " + urlBrowser);
-            intent.setData(Uri.parse(urlBrowser));
-        }
+		final String urlFb = "fb://event/" + path;
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setData(Uri.parse(urlFb));
 
-        context.startActivity(intent);
-    }
-	
+		// If Facebook application is installed, use that else launch a browser
+		final PackageManager packageManager = context.getPackageManager();
+
+		List<ResolveInfo> list = packageManager.queryIntentActivities(intent,
+				PackageManager.MATCH_DEFAULT_ONLY);
+		if (list.size() == 0) {
+			final String urlBrowser = "https://www.facebook.com/events/" + path;
+			Log.i(TAG, " urlBrowser " + urlBrowser);
+			intent.setData(Uri.parse(urlBrowser));
+		}
+
+		context.startActivity(intent);
+	}
+
 	public static Intent getOpenFacebookIntent(Context context, String eventUrl) {
 
-		   try {
-		    context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-		    //return new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/<id_here>"));
-		    return new Intent(Intent.ACTION_VIEW, Uri.parse(eventUrl));
-		   } catch (Exception e) {
-		    return new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/<user_name_here>"));
-		   }
+		try {
+			context.getPackageManager()
+					.getPackageInfo("com.facebook.katana", 0);
+			// return new Intent(Intent.ACTION_VIEW,
+			// Uri.parse("fb://profile/<id_here>"));
+			return new Intent(Intent.ACTION_VIEW, Uri.parse(eventUrl));
+		} catch (Exception e) {
+			return new Intent(Intent.ACTION_VIEW,
+					Uri.parse("https://www.facebook.com/<user_name_here>"));
 		}
+	}
 
 	/**
 	 * Return date in specified format.
