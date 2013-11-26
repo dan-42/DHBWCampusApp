@@ -1,8 +1,5 @@
 package de.dhbw.organizer.calendar.frontend.adapter;
 
-
-
-
 public class CalendarEvent {
 
 	private String name;
@@ -64,6 +61,7 @@ public class CalendarEvent {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public boolean getColor() {
 		return color;
 	}
@@ -74,11 +72,11 @@ public class CalendarEvent {
 
 	public void setBackgroundColor(int backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		
+
 	}
-	
+
 	public int getBackgroundColor() {
 		return backgroundColor;
-		
+
 	}
 }
