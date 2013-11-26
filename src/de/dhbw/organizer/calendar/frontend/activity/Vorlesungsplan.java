@@ -199,7 +199,7 @@ public class Vorlesungsplan extends Activity {
 		// Exeption: Kalender nicht vorhanden behandeln!
 
 		// find the Listview
-		mEventList = (ListView) findViewById(R.id.listView1);
+		mEventList = (ListView) findViewById(R.id.calendar_frontend_listView);
 
 		// get the Events as an Adapter
 		EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);

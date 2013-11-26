@@ -87,16 +87,13 @@ public class CalendarManager {
 		List<CalendarEvent> listOfEvents = new ArrayList<CalendarEvent>();
 
 		int i = 0;
-		while (cur.moveToNext()) {
-			String eventID = null;
+		while (cur.moveToNext()) {			
 			String eventName = null;
 			String eventLocation = null;
 			long eventdtstart = 0;
-			long eventdtend = 0;
-			String date = null;
+			long eventdtend = 0;			
 			String eventDescription = null;
-
-			eventID = cur.getString(0);
+			
 			eventName = cur.getString(1);
 			eventdtstart = cur.getLong(2);
 			eventdtend = cur.getLong(3);
@@ -104,18 +101,13 @@ public class CalendarManager {
 			eventDescription = cur.getString(5);
 
 			// set the index of the element to scroll to the actual element
-			Time now = new Time();
-			now.setToNow();
-
-			long ms = now.toMillis(false);
-
-			if ((eventdtend >= ms) && (!mIndexAlreadySet)) {
-				mIndexOfActualEvent = i;
-				mIndexAlreadySet = true;
 				
+			if ((eventdtend >= System.currentTimeMillis()) && (!mIndexAlreadySet)) {
+				mIndexOfActualEvent = i;
+				mIndexAlreadySet = true;				
 				listOfEvents.add(new CalendarEvent(eventName, eventdtstart, eventdtend, eventLocation, eventDescription, true));
 			}
-			else{
+			else{				
 				listOfEvents.add(new CalendarEvent(eventName, eventdtstart, eventdtend, eventLocation, eventDescription, false));
 				
 			}
