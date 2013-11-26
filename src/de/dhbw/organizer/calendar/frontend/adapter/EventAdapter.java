@@ -86,7 +86,13 @@ public class EventAdapter extends BaseAdapter {
 				.findViewById(R.id.linearLayout2);
 
 		// setze die Hintergrundfarbe
-		linearLayout.setBackgroundColor(entry.getBackgroundColor());
+		
+		if(startTime < System.currentTimeMillis()){
+			linearLayout.setBackgroundColor(Color.LTGRAY);
+		}
+		else {			
+			linearLayout.setBackgroundColor(entry.getBackgroundColor());
+		}
 		
 		if (FbEventParser.parseFbEvent(description) != null) {
 			String eventUrl = FbEventParser.parseFbEvent(description);
