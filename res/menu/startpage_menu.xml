@@ -1,10 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/startpage_menu_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/calendar_backend_account_action_settings"/>
+    
     <item android:id="@+id/startpage_menu_info" android:title="@string/startpage_menu_info" android:orderInCategory="101"></item>
 
 

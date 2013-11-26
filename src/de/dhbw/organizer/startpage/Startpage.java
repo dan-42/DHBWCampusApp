@@ -7,12 +7,10 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +24,7 @@ import android.widget.ViewFlipper;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
+import de.dhbw.organizer.calendar.helper.IntentHelper;
 import de.dhbw.organizer.gebaudeplan.Gebaudeplan;
 
 /**
@@ -43,11 +42,10 @@ public class Startpage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		
 		if (Constants.TIME_END_TEST_VERSION > System.currentTimeMillis()) {
 			setContentView(R.layout.startpage_activity);
 			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft);
-			
+
 			mTextViewTimeLeft.setText(sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
@@ -124,8 +122,6 @@ public class Startpage extends Activity {
 		case R.id.startpage_menu_info:
 			getInfoDialog().show();
 			break;
-		case R.id.startpage_menu_settings:
-			break;
 		default:
 			break;
 
@@ -164,39 +160,8 @@ public class Startpage extends Activity {
 	 */
 	public void openSZIFacebookPage(View v) {
 		// Open Facebook Page of "Informatik an der DHBW L�rrach"
-		openFacebookWithPath(this, "profile/189992694374119");
+		IntentHelper.openFacebook(this, "189992694374119", IntentHelper.Facebook.PROFILE);
 
-	}
-
-	/**
-	 * opens the Facebook App or the WebBrowser when no FB App is available thx
-	 * to Mayank Saini
-	 * http://stackoverflow.com/questions/10299777/open-a-facebook
-	 * -page-from-android-app
-	 * 
-	 * @param Context
-	 *            , current Context
-	 * @param String
-	 *            path, must be like "events/43219384371892" or
-	 *            "pages/4237894923"
-	 */
-	private void openFacebookWithPath(Context context, String path) {
-		final String TAG = "openFacebookWithPath() ";
-		final String urlFb = "fb://" + path;
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setData(Uri.parse(urlFb));
-
-		// If Facebook application is installed, use that else launch a browser
-		final PackageManager packageManager = context.getPackageManager();
-
-		List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-		if (list.size() == 0) {
-			final String urlBrowser = "https://www.facebook.com/" + path;
-			Log.i(TAG, " urlBrowser " + urlBrowser);
-			intent.setData(Uri.parse(urlBrowser));
-		}
-
-		context.startActivity(intent);
 	}
 
 }
