@@ -82,20 +82,11 @@ public class EventAdapter extends BaseAdapter {
 
 		String description = entry.getDescription();
 
-		LinearLayout l1 = (LinearLayout) convertView
-				.findViewById(R.id.linearLayout1);
-		l1.setClickable(false);
-
-		LinearLayout l2 = (LinearLayout) convertView
+		LinearLayout linearLayout = (LinearLayout) convertView
 				.findViewById(R.id.linearLayout2);
-		l2.setClickable(false);
 
-		if (entry.getColor()) {
-			Resources res = this.context.getResources();
-			int color = res.getColor(R.color.red);
-			l2.setBackgroundColor(color);
-		}
-		
+		// setze die Hintergrundfarbe
+		linearLayout.setBackgroundColor(entry.getBackgroundColor());
 		
 		if (FbEventParser.parseFbEvent(description) != null) {
 			String eventUrl = FbEventParser.parseFbEvent(description);

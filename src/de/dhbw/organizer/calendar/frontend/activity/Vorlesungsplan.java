@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
+import de.dhbw.organizer.calendar.frontend.adapter.CalendarEvent;
 import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
 import de.dhbw.organizer.calendar.frontend.manager.CalendarManager;
 import de.dhbw.organizer.calendar.frontend.preferences.Preferences;
@@ -12,6 +13,8 @@ import de.dhbw.organizer.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -23,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -219,6 +223,10 @@ public class Vorlesungsplan extends Activity {
 		if (mCalendarManager != null && mCalendarManager.mIndexOfActualEvent > 0) {
 			Log.d("Index of Actual Event", String.valueOf(mCalendarManager.mIndexOfActualEvent));
 			mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
+			
+			CalendarEvent l2 = (CalendarEvent)mEventList.getItemAtPosition(mCalendarManager.mIndexOfActualEvent); 
+			
+			l2.setBackgroundColor(Color.RED);
 		} else {
 			Log.i("goToActualEvent()", "Index of Actual Event not set, no Calendar");
 		}
