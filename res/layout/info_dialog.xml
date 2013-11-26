@@ -19,7 +19,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_introducion"
+            android:text="@string/de_app_start_info_introducion"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -32,7 +32,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_version"
+            android:text="@string/de_app_start_info_version"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -45,7 +45,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_impressum"
+            android:text="@string/de_app_start_info_impressum"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -58,7 +58,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_project_szi"
+            android:text="@string/de_app_start_info_project_szi"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
@@ -85,7 +85,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_project_develpment_by"
+            android:text="@string/de_app_start_info_project_develpment_by"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ViewFlipper
@@ -98,21 +98,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/daniel"
+                android:text="@string/de_app_start_info_daniel"
                 android:textSize="22sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/patrick"
+                android:text="@string/de_app_start_info_patrick"
                 android:textSize="22sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/simon"
+                android:text="@string/de_app_start_info_simon"
                 android:textSize="22sp" />
         </ViewFlipper>
 
@@ -128,7 +128,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_suppliers" />
+            android:text="@string/de_app_start_info_suppliers" />
 
         <TextView
             android:id="@+id/textView6"
@@ -142,7 +142,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_copyright" />
+            android:text="@string/de_app_start_info_copyright" />
     </LinearLayout>
 
 </ScrollView>

@@ -34,7 +34,21 @@
     <string name="app_start_buildings">Lageplan</string>
     <string name="app_start_hello_world">Hello Droid</string>
     <string name="app_start_feedback">Feedback</string>
-    <string name="app_start_url_szi">profile/189992694374119</string>
+    
+    
+    <!-- MAIN VIEW -->
+    <!-- INFO -->
+    <string name="de_app_start_info_url_szi">profile/189992694374119</string>
+    <string name="de_app_start_info_daniel">Daniel Friedrich</string>
+    <string name="de_app_start_info_patrick">Patrick Strittmatter</string>
+    <string name="de_app_start_info_simon">Simon Riedinger</string>
+    <string name="de_app_start_info_introducion">Eine App der DHBW Lörrach</string>
+    <string name="de_app_start_info_version">Alpha Version</string>
+    <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstraße 46-50 \n79539 Lörrach</string>
+    <string name="de_app_start_info_project_szi">Ein Projekt des Studienzentrums der Informatik </string>
+    <string name="de_app_start_info_project_develpment_by">Entstanden im Rahmen der Seminararbeit von: </string>
+    <string name="de_app_start_info_suppliers">Mit Unterstützung der Mensa App und freundlicher Unterstützung der DHBW Karlsruhe</string>
+    <string name="de_app_start_info_copyright">Das copyright der Icons Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studenten des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler</string>
     
     <!-- MENSA -->
     <string name="mensa_error_not_installed">The DHBW Mensa App is not installed</string>
@@ -89,16 +103,5 @@
     <string name="buildings_image_title_map_hangstr">Hangstr. Lageplan</string>
     <string name="buildings_image_title_buildings_hangstr">Hangstr. Gebäudeplan</string>
     
-    <!-- STARTPAGE -->
-    <!-- INFO -->
-    <string name="daniel">Daniel Friedrich</string>
-    <string name="patrick">Patrick Strittmatter</string>
-    <string name="simon">Simon Riedinger</string>
-    <string name="de_introducion">Eine App der DHBW Lörrach</string>
-    <string name="de_version">Alpha Version</string>
-    <string name="de_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstraße 46-50 \n79539 Lörrach</string>
-    <string name="de_project_szi">Ein Projekt des Studienzentrums der Informatik </string>
-    <string name="de_project_develpment_by">Entstanden im Rahmen der Seminararbeit von: </string>
-    <string name="de_suppliers">Mit Unterstützung der Mensa App und freundlicher Unterstützung der DHBW Karlsruhe</string>
-    <string name="de_copyright">Das copyright der Icons Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studenten des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler</string>
+    
 </resources>
