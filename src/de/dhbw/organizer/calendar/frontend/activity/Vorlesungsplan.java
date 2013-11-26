@@ -65,7 +65,7 @@ public class Vorlesungsplan extends Activity {
 			setListContent(this, Calendarname);
 		} catch (Exception e) {
 			// create File
-			fileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
+			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
 			// Toast: Bitte f�ge einen neuen Kalender hinzu
 		}
 
