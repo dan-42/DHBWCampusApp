@@ -300,7 +300,7 @@ public class CalendarManager {
 			colorInHex = getNextCalendarColor();
 		} else {
 			//colorInHex = Color.r
-					colorInHex = getNextCalendarColor();
+			colorInHex = getNextCalendarColor();
 		}
 		ContentValues values = new ContentValues();
 
