@@ -160,7 +160,7 @@ public class Startpage extends Activity {
 	 */
 	public void openSZIFacebookPage(View v) {
 		// Open Facebook Page of "Informatik an der DHBW L�rrach"
-<<<<<<< HEAD
+
 		openFacebookWithPath(this, this.getResources().getString(R.string.de_app_start_info_url_szi));
 
 	}
@@ -192,9 +192,9 @@ public class Startpage extends Activity {
 			Log.i(TAG, " urlBrowser " + urlBrowser);
 			intent.setData(Uri.parse(urlBrowser));
 		}
-=======
+
 		IntentHelper.openFacebook(this, this.getResources().getString(R.string.app_start_facebook_prodile_id_szi), IntentHelper.Facebook.PROFILE);
->>>>>>> 33ca780c3faf919f4fc367b642c8ac6acbea454a
+
 
 	}
 
