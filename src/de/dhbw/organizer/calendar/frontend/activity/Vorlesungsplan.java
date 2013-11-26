@@ -44,6 +44,7 @@ public class Vorlesungsplan extends Activity {
 	private ActionBarDrawerToggle mActionBarDrawerToggle;
 	private ArrayList<String> mCalendarList;
 	private CalendarManager mCalendarManager;
+	private String mCalendarName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +181,7 @@ public class Vorlesungsplan extends Activity {
 			break;
 
 		case R.id.refresh:
-			// do the refresh
+			mCalendarManager.syncCalendar(mCalendarName);
 			break;
 		default:
 			break;
@@ -213,7 +214,9 @@ public class Vorlesungsplan extends Activity {
 		// get the Events as an Adapter
 		EventAdapter mEvents = mCalendarManager.getCalendarEvents(this,
 				calendarName);
-
+		
+		mCalendarName = calendarName;
+		
 		// set Adapter to display List
 		mEventList.setAdapter(mEvents);
 
@@ -264,7 +267,7 @@ public class Vorlesungsplan extends Activity {
 
 	/**
 	 * 
-	 * @author Seimon
+	 * @author riedings
 	 * 
 	 */
 	private class DrawerItemClickListener implements

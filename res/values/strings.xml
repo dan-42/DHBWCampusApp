@@ -65,7 +65,7 @@
     <string name="calendar_backend_update_successful">update was successful</string>
     <string name="calendar_backend_account_add_calendar_manual">add calendar by hand</string>
     <string name="calendar_backend_account_display_name">Display Name</string>
-    <string name="calendar_backend_account_ical_url">iCal Adress</string>
+    <string name="calendar_backend_account_ical_url">iCal address</string>
 
     <!-- CALENDAR FRONTEND -->
     <string name="drawer_open">Open navigation drawer</string>
@@ -75,7 +75,12 @@
     <string name="hide_old_events">Alle vergangenen Termine ausblenden</string>
     <string name="hide_private_appointments">Private Termine ausblenden</string>
     <string name="startpage_menu_info">Info</string>
-
+	
+	<!-- CALENDAR FRONTEND -->
+	<!-- MENU -->
+    <string name="de_calendar_menu_new_calendar">Neuen Kalender</string>
+    <string name="de_calendar_menu_preferences">Einstellungen</string>
+    <string name="de_calendar_menu_delete_calendar">Kalender löschen</string>
     
     <!-- BUILDINGS -->
     <string name="buildings_image_title_map_kbc">KBC Lageplan</string>

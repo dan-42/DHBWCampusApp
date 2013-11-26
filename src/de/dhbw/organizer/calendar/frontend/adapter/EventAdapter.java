@@ -29,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
 
-@SuppressLint("ResourceAsColor")
 public class EventAdapter extends BaseAdapter {
 
 	private Context context;
