@@ -187,9 +187,8 @@ public class Vorlesungsplan extends Activity {
 			break;
 			
 		case R.id.item3:
-			 de.dhbw.organizer.calendar.backend.manager.CalendarManager mCalendarManagerBackend = de.dhbw.organizer.calendar.backend.manager.CalendarManager.get(this) ;
-			Account account = new Account(mCalendarName, Constants.ACCOUNT_TYPE );
-			mCalendarManagerBackend.deleteCalendarByName(account, mCalendarName);
+			// delete Calendar
+			break;
 		default:
 			break;
 		}
