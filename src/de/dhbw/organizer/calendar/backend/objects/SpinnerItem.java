@@ -24,7 +24,7 @@ public class SpinnerItem implements Comparable<SpinnerItem> {
 	 * @return the mDisplayName
 	 */
 	public String getmDisplayName() {
-		return mDisplayName.toUpperCase();
+		return mDisplayName;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class SpinnerItem implements Comparable<SpinnerItem> {
 	@Override
 	public String toString() {
 
-		return mDisplayName.toUpperCase();
+		return mDisplayName;
 	}
 
 	/*

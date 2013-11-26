@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
+import de.dhbw.organizer.calendar.helper.IntentHelper;
 
 public class EventAdapter extends BaseAdapter {
 
@@ -114,6 +115,10 @@ public class EventAdapter extends BaseAdapter {
 	private void startActivity2(View v) {
 		Context context = v.getContext();
 		String path = (((ImageView) v).getTag()).toString();
+		
+		
+		IntentHelper.openFacebook(context, path, IntentHelper.Facebook.EVENT);
+		
 		openFacebookWithPath(context, path);
 
 	}
@@ -156,19 +161,7 @@ public class EventAdapter extends BaseAdapter {
 		context.startActivity(intent);
 	}
 
-	public static Intent getOpenFacebookIntent(Context context, String eventUrl) {
-
-		try {
-			context.getPackageManager()
-					.getPackageInfo("com.facebook.katana", 0);
-			// return new Intent(Intent.ACTION_VIEW,
-			// Uri.parse("fb://profile/<id_here>"));
-			return new Intent(Intent.ACTION_VIEW, Uri.parse(eventUrl));
-		} catch (Exception e) {
-			return new Intent(Intent.ACTION_VIEW,
-					Uri.parse("https://www.facebook.com/<user_name_here>"));
-		}
-	}
+	
 
 	/**
 	 * Return date in specified format.

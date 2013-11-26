@@ -7,12 +7,10 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +24,7 @@ import android.widget.ViewFlipper;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
+import de.dhbw.organizer.calendar.helper.IntentHelper;
 import de.dhbw.organizer.gebaudeplan.Gebaudeplan;
 
 /**
@@ -43,11 +42,10 @@ public class Startpage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		
 		if (Constants.TIME_END_TEST_VERSION > System.currentTimeMillis()) {
 			setContentView(R.layout.startpage_activity);
 			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft);
-			
+
 			mTextViewTimeLeft.setText(sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
@@ -124,8 +122,6 @@ public class Startpage extends Activity {
 		case R.id.startpage_menu_info:
 			getInfoDialog().show();
 			break;
-		case R.id.startpage_menu_settings:
-			break;
 		default:
 			break;
 
@@ -164,6 +160,7 @@ public class Startpage extends Activity {
 	 */
 	public void openSZIFacebookPage(View v) {
 		// Open Facebook Page of "Informatik an der DHBW L�rrach"
+<<<<<<< HEAD
 		openFacebookWithPath(this, this.getResources().getString(R.string.de_app_start_info_url_szi));
 
 	}
@@ -195,8 +192,10 @@ public class Startpage extends Activity {
 			Log.i(TAG, " urlBrowser " + urlBrowser);
 			intent.setData(Uri.parse(urlBrowser));
 		}
+=======
+		IntentHelper.openFacebook(this, this.getResources().getString(R.string.app_start_facebook_prodile_id_szi), IntentHelper.Facebook.PROFILE);
+>>>>>>> 33ca780c3faf919f4fc367b642c8ac6acbea454a
 
-		context.startActivity(intent);
 	}
 
 }

@@ -49,6 +49,8 @@
     <string name="de_app_start_info_project_develpment_by">Entstanden im Rahmen der Seminararbeit von: </string>
     <string name="de_app_start_info_suppliers">Mit Unterstützung der Mensa App und freundlicher Unterstützung der DHBW Karlsruhe</string>
     <string name="de_app_start_info_copyright">Das copyright der Icons Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studenten des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler</string>
+    <string name="app_start_facebook_prodile_id_szi">189992694374119</string>
+
     
     <!-- MENSA -->
     <string name="mensa_error_not_installed">The DHBW Mensa App is not installed</string>
