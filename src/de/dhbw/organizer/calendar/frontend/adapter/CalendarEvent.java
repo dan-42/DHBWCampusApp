@@ -1,6 +1,7 @@
 package de.dhbw.organizer.calendar.frontend.adapter;
 
-import android.R.bool;
+
+
 
 public class CalendarEvent {
 
@@ -10,6 +11,7 @@ public class CalendarEvent {
 	private String location;
 	private String description;
 	private boolean color;
+	private int backgroundColor;
 
 	public CalendarEvent(String name, long startTime, long endTime,
 			String location, String description, boolean color) {
@@ -20,6 +22,7 @@ public class CalendarEvent {
 		this.location = location;
 		this.description = description;
 		this.color = color;
+		this.backgroundColor = 0;
 	}
 
 	public String getName() {
@@ -67,5 +70,15 @@ public class CalendarEvent {
 
 	public void setColor(boolean color) {
 		this.color = color;
+	}
+
+	public void setBackgroundColor(int backgroundColor) {
+		this.backgroundColor = backgroundColor;
+		
+	}
+	
+	public int getBackgroundColor() {
+		return backgroundColor;
+		
 	}
 }
