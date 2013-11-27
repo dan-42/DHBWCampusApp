@@ -57,10 +57,8 @@ public class EventAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 		CalendarEvent entry = listEvents.get(position);
 		if (convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.calendar_activity_listview,
-					null);
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = inflater.inflate(R.layout.calendar_activity_listview, null);
 		}
 		TextView tvTitle = (TextView) convertView.findViewById(R.id.name);
 		tvTitle.setText(entry.getName());
@@ -73,8 +71,7 @@ public class EventAdapter extends BaseAdapter {
 
 		tvTime.setText(startDate + " - " + endDate);
 
-		TextView tvLocation = (TextView) convertView
-				.findViewById(R.id.location);
+		TextView tvLocation = (TextView) convertView.findViewById(R.id.location);
 		tvLocation.setText(entry.getLocation());
 
 		// set facebook icon if the description has a URL
@@ -83,17 +80,21 @@ public class EventAdapter extends BaseAdapter {
 
 		String description = entry.getDescription();
 
-		LinearLayout linearLayout = (LinearLayout) convertView
-				.findViewById(R.id.linearLayout2);
+		LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.linearLayout2);
+		LinearLayout linearLayout1 = (LinearLayout) convertView.findViewById(R.id.linearLayout1);
 
 		// setze die Hintergrundfarbe
 
 		if (startTime < System.currentTimeMillis()) {
-			linearLayout.setBackgroundColor(Color.LTGRAY);
+			//linearLayout.setBackgroundColor(Color.LTGRAY);
+			linearLayout1.setBackgroundColor(Color.LTGRAY);
 		} else if (entry.getColor()) {
-			linearLayout.setBackgroundColor(Constants.CALENDAR_COLORS[0]);
+			//linearLayout.setBackgroundColor(Constants.CALENDAR_COLORS[0]);
+			//linearLayout.setBackground(context.getResources().getDrawable(R.drawable.farbverlauf));
+			linearLayout1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.farbverlauf));
 		} else {
-			linearLayout.setBackgroundColor(entry.getBackgroundColor());
+			linearLayout1.setBackgroundColor(entry.getBackgroundColor());
+			
 		}
 
 		if (FbEventParser.parseFbEvent(description) != null) {
@@ -116,10 +117,9 @@ public class EventAdapter extends BaseAdapter {
 	private void startActivity2(View v) {
 		Context context = v.getContext();
 		String path = (((ImageView) v).getTag()).toString();
-		
-		
+
 		IntentHelper.openFacebook(context, path, IntentHelper.Facebook.EVENT);
-		
+
 		openFacebookWithPath(context, path);
 
 	}
@@ -151,8 +151,7 @@ public class EventAdapter extends BaseAdapter {
 		// If Facebook application is installed, use that else launch a browser
 		final PackageManager packageManager = context.getPackageManager();
 
-		List<ResolveInfo> list = packageManager.queryIntentActivities(intent,
-				PackageManager.MATCH_DEFAULT_ONLY);
+		List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 		if (list.size() == 0) {
 			final String urlBrowser = "https://www.facebook.com/events/" + path;
 			Log.i(TAG, " urlBrowser " + urlBrowser);
@@ -161,8 +160,6 @@ public class EventAdapter extends BaseAdapter {
 
 		context.startActivity(intent);
 	}
-
-	
 
 	/**
 	 * Return date in specified format.

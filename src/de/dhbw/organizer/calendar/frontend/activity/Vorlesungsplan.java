@@ -64,7 +64,6 @@ public class Vorlesungsplan extends Activity {
 		mCalendarUpdateListener = new OnCalenderUpdateListener();
 		mAccountManager.addOnAccountsUpdatedListener(mCalendarUpdateListener, null, false);
 		
-		
 		/*
 		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
 		 */
@@ -82,7 +81,6 @@ public class Vorlesungsplan extends Activity {
 			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
 			// Toast: Bitte f�ge einen neuen Kalender hinzu
 		}
-
 	}
 
 	@Override
@@ -91,7 +89,6 @@ public class Vorlesungsplan extends Activity {
 		if(mCalendarUpdateListener != null){
 			mAccountManager.removeOnAccountsUpdatedListener(mCalendarUpdateListener);
 		}
-				
 	};
 	
 	
@@ -121,7 +118,6 @@ public class Vorlesungsplan extends Activity {
 					e.printStackTrace();
 				}
 			}
-
 		}
 
 		// Set the adapter for the list view

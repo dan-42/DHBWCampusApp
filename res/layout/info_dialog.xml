@@ -114,6 +114,9 @@
                 android:gravity="center_horizontal"
                 android:text="@string/de_app_start_info_simon"
                 android:textSize="22sp" />
+
+
+
         </ViewFlipper>
 
         <TextView
