@@ -28,10 +28,10 @@
 
     <!-- MAIN VIEW -->
     <string name="app_name">CampusApp</string>
-    <string name="app_start_calendar">Kalender</string>
+    <string name="app_start_calendar">Calendar</string>
     <string name="app_start_moodle">Moodle</string>
     <string name="app_start_mensa">Mensa</string>
-    <string name="app_start_buildings">Lageplan</string>
+    <string name="app_start_buildings">Site Plan</string>
     <string name="app_start_hello_world">Hello Droid</string>
     <string name="app_start_feedback">Feedback</string>
     
@@ -42,68 +42,68 @@
     <string name="de_app_start_info_daniel">Daniel Friedrich</string>
     <string name="de_app_start_info_patrick">Patrick Strittmatter</string>
     <string name="de_app_start_info_simon">Simon Riedinger</string>
-    <string name="de_app_start_info_introducion">Eine App der DHBW Lörrach</string>
+    <string name="de_app_start_info_introducion">This app was created in a student project of computer science faculty at the University of Cooperative Education Loerrach.</string>
     <string name="de_app_start_info_version">Alpha Version</string>
-    <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstraße 46-50 \n79539 Lörrach</string>
-    <string name="de_app_start_info_project_szi">Ein Projekt des Studienzentrums der Informatik </string>
-    <string name="de_app_start_info_project_develpment_by">Entstanden im Rahmen der Seminararbeit von: </string>
-    <string name="de_app_start_info_suppliers">Mit Unterstützung der Mensa App und freundlicher Unterstützung der DHBW Karlsruhe</string>
-    <string name="de_app_start_info_copyright">Das copyright der Icons Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studenten des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler</string>
+    <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstrasse 46-50 \n79539 Loerrach \nGermany</string>
+    <string name="de_app_start_info_project_szi">-deleteme 'de_app_start_info_project_szi'- </string>
+    <string name="de_app_start_info_project_develpment_by">The initiators of this project: </string>
+    <string name="de_app_start_info_suppliers">With the support of Mensa app and the kind support of University of Cooperative Education Karlsruhe</string>
+    <string name="de_app_start_info_copyright">The copyright of the icons of Site Map, Mensa and Moodle are at the students of the course MWI at Cooperative State University Karlsruhe and under the direction of Prof. Dr. Wengler.</string>
     <string name="app_start_facebook_prodile_id_szi">189992694374119</string>
 
     
     <!-- MENSA -->
-    <string name="mensa_error_not_installed">The DHBW Mensa App is not installed</string>
+    <string name="mensa_error_not_installed">The DHBW Mensa App is not installed!</string>
     
 
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->
     <string name="calendar_backend_account_action_settings">Settings</string>
     <string name="calendar_backend_account_label">CampusApp</string>
-    <string name="calendar_backend_account_tab_title_by_list">by List</string>
-    <string name="calendar_backend_account_tab_title_by_hand">by Hand</string>
+    <string name="calendar_backend_account_tab_title_by_list">standard</string>
+    <string name="calendar_backend_account_tab_title_by_hand">advanced</string>
     <string name="calendar_backend_account_ui_activity_authenticating">ui_activity_authenticating</string>
     <string name="calendar_backend_account_select_ical_activity_newaccount_text">select a calendar:</string>
-    <string name="calendar_backend_account_select_ical_ok_button">OK</string>
-    <string name="calendar_backend_account_select_ical_cancel_button">Cancel</string>
-    <string name="calendar_backend_account_select_ical_update_button">Update calendar list</string>
+    <string name="calendar_backend_account_select_ical_ok_button">ok</string>
+    <string name="calendar_backend_account_select_ical_cancel_button">cancel</string>
+    <string name="calendar_backend_account_select_ical_update_button">update calendar list</string>
     <string name="calendar_backend_account_select_ical_new_calendar">add new Calendar</string>
     <string name="calendar_backend_input_select_calendar">select calendar</string>
     <string name="calendar_backend_input_error_no_calendar_selected">ERROR: no calendar selected!</string>
-    <string name="calendar_backend_input_error_displayname_to_short">to short, min 3 letters</string>
-    <string name="calendar_backend_input_error_displayname_to_long">to long, max 16 letters</string>
-    <string name="calendar_backend_input_error_displayname_invalid">only letters, numbers and whitespaces</string>
-    <string name="calendar_backend_input_error_icalurl_to_short">to short, min 11</string>
-    <string name="calendar_backend_input_error_icalurl_invalid">ICal Url is invalid</string>
-    <string name="calendar_backend_input_error_calendar_already_exists">Calendar already exists!</string>
-    <string name="calendar_backend_network_error">No network connection, cannot add new Calendar</string>
+    <string name="calendar_backend_input_error_displayname_to_short">ERROR: input too short, min. 3 letters!</string>
+    <string name="calendar_backend_input_error_displayname_to_long">ERROR: input too long, max. 16 letters!</string>
+    <string name="calendar_backend_input_error_displayname_invalid">ERROR: only letters, numbers and whitespaces!</string>
+    <string name="calendar_backend_input_error_icalurl_to_short">ERROR: too short, min. 11 letters!</string>
+    <string name="calendar_backend_input_error_icalurl_invalid">ERROR: ical URL is invalid!</string>
+    <string name="calendar_backend_input_error_calendar_already_exists">ERROR: calendar already exists!</string>
+    <string name="calendar_backend_network_error">No network connection, can&#8217;t add new calendar</string>
     <string name="calendar_backend_update_already_done">calendar list is already up to date</string>
-    <string name="calendar_backend_update_updating">calendar list is updating...</string>
-    <string name="calendar_backend_update_xml_error">error, can&#8217;t update caledar list</string>
+    <string name="calendar_backend_update_updating">calendar list is updating ...</string>
+    <string name="calendar_backend_update_xml_error">ERROR: can&#8217;t update caledar list!</string>
     <string name="calendar_backend_update_successful">update was successful</string>
-    <string name="calendar_backend_account_add_calendar_manual">add calendar by hand</string>
+    <string name="calendar_backend_account_add_calendar_manual">add calendar</string>
     <string name="calendar_backend_account_display_name">Display Name</string>
-    <string name="calendar_backend_account_ical_url">iCal address</string>
+    <string name="calendar_backend_account_ical_url">iCal URL</string>
 
     <!-- CALENDAR FRONTEND -->
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Sorry, there\'s no web browser available</string>
-    <string name="hide_old_events">Alle vergangenen Termine ausblenden</string>
-    <string name="hide_private_appointments">Private Termine ausblenden</string>
+    <string name="app_not_available">ERROR: there&#8217;s no web browser available!</string>
+    <string name="hide_old_events">Hide all past appointments</string>
+    <string name="hide_private_appointments">hide all private appointments</string>
     <string name="startpage_menu_info">Info</string>
 	
 	<!-- CALENDAR FRONTEND -->
 	<!-- MENU -->
-    <string name="de_calendar_menu_new_calendar">Neuen Kalender</string>
-    <string name="de_calendar_menu_preferences">Einstellungen</string>
-    <string name="de_calendar_menu_delete_calendar">Kalender löschen</string>
+    <string name="de_calendar_menu_new_calendar">new calendar</string>
+    <string name="de_calendar_menu_preferences">settings</string>
+    <string name="de_calendar_menu_delete_calendar">delete calendar</string>
     
     <!-- BUILDINGS -->
-    <string name="buildings_image_title_map_kbc">KBC Lageplan</string>
-    <string name="buildings_image_title_map_hangstr">Hangstr. Lageplan</string>
-    <string name="buildings_image_title_buildings_hangstr">Hangstr. Gebäudeplan</string>
+    <string name="buildings_image_title_map_kbc">KBC site plan</string>
+    <string name="buildings_image_title_map_hangstr">Hangstr. site plan</string>
+    <string name="buildings_image_title_buildings_hangstr">Hangstr. site plan<</string>
     
     
 </resources>
