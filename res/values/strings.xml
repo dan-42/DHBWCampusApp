@@ -35,6 +35,12 @@
     <string name="app_start_hello_world">Hello Droid</string>
     <string name="app_start_feedback">Feedback</string>
 
+     <string name="start_app_testversion_timeleft">Testversion ends on: </string>
+    
+    <string name="start_app_testversion_timeover">Test period ended, please install the current Version from the Google PlayStore.
+        \n\nOn any problems, please contact us at 
+        \nfriedrda@dhbw-loerrach.de</string>
+    
     <!-- MAIN VIEW -->
     <!-- INFO -->
     <string name="de_app_start_facebook_profile_id_szi">189992694374119</string>

@@ -16,13 +16,60 @@
         android:src="@drawable/img_start_banner_testversion" />
 
     <TextView
-        android:id="@+id/start_app_testversion_timeleft"
+        android:id="@+id/start_app_testversion_timeover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dip"
         android:textColor="@color/darkGray"
-        android:textSize="25dip"
-        android:textStyle="bold" />
+        android:textSize="20sp"
+        android:textStyle="bold" 
+        android:text="@string/start_app_testversion_timeover" />    
+     <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/start_button_feedback"
+                    style="@style/Button"
+                    android:layout_height="120dp"
+                    android:drawableTop="@drawable/ic_feedback"
+                    android:onClick="startOnlineFeedback"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:singleLine="true"
+                    android:text="@string/app_start_feedback"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+
+                <Button
+                    android:id="@+id/start_button_spacer"
+                    style="@style/Button"
+                    android:layout_height="120dp"
+                    android:drawableTop="@drawable/ic_spacer"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+
+               
+
+                <Button
+                    android:id="@+id/start_button_spacer"
+                    style="@style/Button"
+                    android:layout_height="120dp"
+                    android:drawableTop="@drawable/ic_spacer"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+                    android:typeface="sans" />
+
+            </LinearLayout>
+    
 
 </LinearLayout>

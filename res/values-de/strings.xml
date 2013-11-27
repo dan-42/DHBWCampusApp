@@ -35,6 +35,11 @@
     <string name="app_start_hello_world">Hallo Droide</string>
     <string name="app_start_feedback">Feedback</string>
     
+    <string name="start_app_testversion_timeleft">Testversion endet am: </string>    
+    <string name="start_app_testversion_timeover">Die Testperiode ist vorbei, bitte installiere die aktuelle Version vom Google PlayStore.
+                \n\nBei Problemen oder Fragen, melde dich bitte bei uns unter: 
+                \nfriedrda@dhbw-loerrach.de</string>
+    
     
     <!-- MAIN VIEW -->
     <!-- INFO -->
