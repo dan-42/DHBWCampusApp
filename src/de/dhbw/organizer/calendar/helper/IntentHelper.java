@@ -25,7 +25,7 @@ public class IntentHelper {
 	private static final String FB_APP_BASE_URL = "fb://";
 	private static final String FB_WEB_BASE_URL = "https://www.facebook.com/";
 
-	private static final String FB_APP_PROFILE_URL = FB_APP_BASE_URL + "profiles/";
+	private static final String FB_APP_PROFILE_URL = FB_APP_BASE_URL + "profile/";
 	private static final String FB_APP_EVENT_URL = FB_APP_BASE_URL + "event/";
 
 	private static final String FB_WEB_EVENT_URL = FB_WEB_BASE_URL + "events/";
@@ -52,6 +52,7 @@ public class IntentHelper {
 		String url = "";
 
 		if (isFacebookInstalled(context)) {
+			//build FB url
 			Log.d(TAG, "openFacebook() facebook is installed");
 			switch (fb) {
 			case EVENT:
@@ -59,11 +60,13 @@ public class IntentHelper {
 				break;
 			case PROFILE:
 				url = FB_APP_PROFILE_URL + id;
+				break;
 			default:
 				Log.e(TAG, "openFacebook() cannot open!");
 				break;
 			}
-		} else {
+		}//build web URL 
+		else {
 			Log.d(TAG, "openFacebook() facebook is NOT installed");
 			switch (fb) {
 			case EVENT:
@@ -77,6 +80,8 @@ public class IntentHelper {
 			}
 
 		}
+		
+		Log.d(TAG, "openFacebook() url = " + url);
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse(url));
 		context.startActivity(intent);
