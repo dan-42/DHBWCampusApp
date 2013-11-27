@@ -389,9 +389,9 @@ public class CalendarManager {
 	 * @param calendarId
 	 * @param eventList
 	 */
-	public void insertEvents(Account account, long calendarId, ArrayList<VEvent> eventList) {
+	public void insertEvents(Account account, long calendarId, ArrayList<VEvent> eventList, boolean ignorePrivateEvents) {
 
-		ArrayList<VEvent> atomarEventList = ICalHelper.seperateAllEvents(eventList);
+		ArrayList<VEvent> atomarEventList = ICalHelper.seperateAllEvents(eventList, ignorePrivateEvents);
 		Log.d(TAG, "insertEvents() " + atomarEventList.size() + " events to add in total");
 
 		insertEvents(account, calendarId, atomarEventList, TimeZone.getDefault());
@@ -406,9 +406,9 @@ public class CalendarManager {
 	 * @param calendarId
 	 * @param eventList
 	 */
-	public void updateEvents(Account account, long calendarId, ArrayList<VEvent> eventList) {
+	public void updateEvents(Account account, long calendarId, ArrayList<VEvent> eventList, boolean ignorePrivateEvents) {
 
-		ArrayList<VEvent> atomarEventList = ICalHelper.seperateAllEvents(eventList);
+		ArrayList<VEvent> atomarEventList = ICalHelper.seperateAllEvents(eventList, ignorePrivateEvents);
 		ArrayList<String> hashList = getHashOfEventsInDb(account, calendarId);
 
 		ArrayList<VEvent> eventsToInsert = new ArrayList<VEvent>();

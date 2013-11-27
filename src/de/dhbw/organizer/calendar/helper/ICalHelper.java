@@ -64,8 +64,7 @@ public class ICalHelper {
 	 * COUNT or UNTIL so we don't try to add ad infinti amount of events
 	 */
 	private static final int EVENT_MAX_UNTIL_OFFSET_IN_YEAR = 5;
-	
-	
+
 	private static final String XML_SCHEMA_VERSION = "1.0";
 
 	/**
@@ -111,7 +110,7 @@ public class ICalHelper {
 	 * @param eventList
 	 * @return
 	 */
-	public static ArrayList<VEvent> seperateAllEvents(ArrayList<VEvent> eventList) {
+	public static ArrayList<VEvent> seperateAllEvents(ArrayList<VEvent> eventList, boolean ingnorePrivateEvents) {
 
 		ArrayList<RecurringVEvent> recurringEvents = new ArrayList<RecurringVEvent>();
 		ArrayList<VEvent> tempEventList = new ArrayList<VEvent>();
@@ -122,6 +121,13 @@ public class ICalHelper {
 		 * split events into recurring events and regular events
 		 */
 		for (VEvent e : eventList) {
+
+			if (ingnorePrivateEvents) {
+				Classification classification = e.getClassification();
+				if (classification.isPrivate()) {
+					continue;
+				}
+			}
 
 			// no RRULE or nor RECURRENCE-ID
 			// we keep those seperate, to avoid unneeded processing
@@ -300,7 +306,8 @@ public class ICalHelper {
 				Date untilDate = cal.getTime();
 
 				String until = parseIcalDateToString(untilDate, null);
-				//Log.i(TAG, "buildRrule() no UNTIL or COUNT, so set UNTIL to " + untilDate.toString() + "   ICAL:" + until);
+				// Log.i(TAG, "buildRrule() no UNTIL or COUNT, so set UNTIL to "
+				// + untilDate.toString() + "   ICAL:" + until);
 				sb.append(";UNTIL=").append(until);
 			}
 
@@ -583,9 +590,9 @@ public class ICalHelper {
 			// String timeZoneIdFromStartDate =
 			// recurringEvent.getDateStart().getTimezoneId();
 
-			//Log.d(TAG, "--------------------------------------");
-			//Log.d(TAG, "RECURRING EVENT");
-			//Log.d(TAG, "\tSTARTDATE: toString()\t" + startDate.toString());
+			// Log.d(TAG, "--------------------------------------");
+			// Log.d(TAG, "RECURRING EVENT");
+			// Log.d(TAG, "\tSTARTDATE: toString()\t" + startDate.toString());
 			// Log.d(TAG, "\tSTARTDATE: timeZone \t" + timeZoneIdFromStartDate);
 			// Log.d(TAG, "\tSTARTDATE: timeZoneConv \t" +
 			// TimeZone.getTimeZone("timeZoneIdFromStartDate").getID());
@@ -609,10 +616,10 @@ public class ICalHelper {
 
 			}
 
-			//Log.d(TAG, "RDATA: ");
-			//Log.d(TAG, "\t --------------");
-			//Log.d(TAG, rdata.toString());
-			//Log.d(TAG, "\t --------------");
+			// Log.d(TAG, "RDATA: ");
+			// Log.d(TAG, "\t --------------");
+			// Log.d(TAG, rdata.toString());
+			// Log.d(TAG, "\t --------------");
 
 			try {
 				Calendar cal = Calendar.getInstance();
@@ -663,8 +670,9 @@ public class ICalHelper {
 					 */
 					boolean skip = false;
 					if (startDstOffset != dstOffset) {
-						//Log.i(TAG, "startDstOffset = " + startDstOffset + "\t dstOffset = " + dstOffset);
-						//Log.d(TAG, "dif = \t\t" + d.getTime());
+						// Log.i(TAG, "startDstOffset = " + startDstOffset +
+						// "\t dstOffset = " + dstOffset);
+						// Log.d(TAG, "dif = \t\t" + d.getTime());
 
 						for (Date date : exceptionDates) {
 							long check = d.getTime() - date.getTime() + offset;
@@ -697,7 +705,8 @@ public class ICalHelper {
 
 					if (hasRec == true) {
 						sdf.setTimeZone(TimeZone.getTimeZone(e.getDateStart().getTimezoneId()));
-						//Log.d(TAG, "has EXDATE: " + title + "  -- " + sdf.format(e.getDateStart().getValue()));
+						// Log.d(TAG, "has EXDATE: " + title + "  -- " +
+						// sdf.format(e.getDateStart().getValue()));
 					}
 
 					atomarEvents.add(e);
@@ -743,7 +752,7 @@ public class ICalHelper {
 
 		CalendarXmlParser cxp = new CalendarXmlParser(is);
 		return cxp.readCalendars();
-		
+
 	}
 
 	/**
@@ -762,12 +771,12 @@ public class ICalHelper {
 
 		private static final String XML_ATTR_VERSION = "Version";
 		private static final String XML_ATTR_LAST_UPDATE = "LastUpdate";
-		
+
 		private static final String XML_TAG_CALENDARS = "Calendars";
 		private static final String XML_TAG_DISPLAY_NAME = "DisplayName";
 		private static final String XML_TAG_ICAL_URL = "iCalUrl";
 		private static final String XML_TAG_CALENDAR = "Calendar";
-		
+
 		private String mNameSpace = "";
 
 		private XmlPullParserFactory mParserfactory = null;
@@ -776,17 +785,15 @@ public class ICalHelper {
 		public CalendarXmlParser(InputStream is) throws IOException {
 			try {
 				mParserfactory = XmlPullParserFactory.newInstance();
-				mParser = mParserfactory.newPullParser();				
+				mParser = mParserfactory.newPullParser();
 				mParser.setInput(new InputStreamReader(is));
 				mParser.next();
 			} catch (XmlPullParserException e) {
 				Log.e(TAG, "CalendarXmlParser() ERROR " + e.getMessage());
-			} 
-
-			
+			}
 
 			this.mNameSpace = mParser.getNamespace();
-			
+
 			String xmlVersion = mParser.getAttributeValue(mNameSpace, XML_ATTR_VERSION);
 			String xmlLastUpdate = mParser.getAttributeValue(mNameSpace, XML_ATTR_LAST_UPDATE);
 
@@ -796,7 +803,7 @@ public class ICalHelper {
 				Log.e(TAG, "XML VERSION don't match, error!");
 				throw new IOException();
 			}
-			
+
 		}
 
 		public ArrayList<SpinnerItem> readCalendars() throws XmlPullParserException, IOException {
