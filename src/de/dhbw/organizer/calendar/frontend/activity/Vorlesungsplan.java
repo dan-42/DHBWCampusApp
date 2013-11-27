@@ -65,8 +65,15 @@ public class Vorlesungsplan extends Activity {
 		mContext = this;
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		
+		mAccountManager = AccountManager.get(this);		
+
+		
+
 		mCalenderSyncStatusObserver = new CalenderSyncStatusObserver();
 		mAccountManager = AccountManager.get(this);
+
 
 		/*
 		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
@@ -87,10 +94,12 @@ public class Vorlesungsplan extends Activity {
 			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
 			// Toast: Bitte f�ge einen neuen Kalender hinzu
 		}
-
 	}
 
 	@Override
+	protected void onDestroy() {
+		super.onDestroy();	
+	}
 	protected void onResume() {
 		super.onResume();
 		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
@@ -129,7 +138,6 @@ public class Vorlesungsplan extends Activity {
 					e.printStackTrace();
 				}
 			}
-
 		}
 
 		// Set the adapter for the list view
