@@ -38,6 +38,7 @@ import java.util.TimeZone;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -90,6 +91,18 @@ public class CalendarManager {
 	 */
 	public static CalendarManager get(Context context) {
 		return new CalendarManager(context);
+
+	}
+	/**
+	 * deletes the account
+	 * 
+	 * @return
+	 */
+	public boolean deleteCalendar(String calenderName) {
+		Log.v(TAG, "deleteCalendar() " + calenderName);
+		final Account account = new Account(calenderName, Constants.ACCOUNT_TYPE);
+		AccountManager ac = AccountManager.get(mContext);
+		return ac.removeAccount(account, null, null).isDone();
 
 	}
 

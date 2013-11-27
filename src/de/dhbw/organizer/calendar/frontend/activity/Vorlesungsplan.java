@@ -12,6 +12,8 @@ import de.dhbw.organizer.calendar.frontend.preferences.Preferences;
 import de.dhbw.organizer.calendar.helper.FileHelper;
 import de.dhbw.organizer.R;
 import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.OnAccountsUpdateListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -47,13 +49,22 @@ public class Vorlesungsplan extends Activity {
 	private ArrayList<String> mCalendarList;
 	private CalendarManager mCalendarManager;
 	private String mCalendarName;
-
+	private Context mContext;
+	private OnCalenderUpdateListener  mCalendarUpdateListener;
+	private AccountManager mAccountManager;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mContext = this;
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
+		
+		mAccountManager = AccountManager.get(this);		
+		mCalendarUpdateListener = new OnCalenderUpdateListener();
+		mAccountManager.addOnAccountsUpdatedListener(mCalendarUpdateListener, null, false);
+		
+		
 		/*
 		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
 		 */
@@ -64,8 +75,7 @@ public class Vorlesungsplan extends Activity {
 		FileHelper fileHelper = new FileHelper();
 
 		try {
-			String Calendarname = fileHelper.readFileAsString(this,
-					"lastCalendarOpened");
+			String Calendarname = fileHelper.readFileAsString(this, "lastCalendarOpened");
 			setListContent(this, Calendarname);
 		} catch (Exception e) {
 			// create File
@@ -75,6 +85,16 @@ public class Vorlesungsplan extends Activity {
 
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();	
+		if(mCalendarUpdateListener != null){
+			mAccountManager.removeOnAccountsUpdatedListener(mCalendarUpdateListener);
+		}
+				
+	};
+	
+	
 	private void setDrawerContent() {
 
 		mCalendarList = mCalendarManager.getCalendarList(this);
@@ -88,8 +108,7 @@ public class Vorlesungsplan extends Activity {
 			// links nach rechts wischen um Kalender auszuw�hlen
 			Log.d("Kalendar: ", "mCalendarList is empty");
 
-			final Intent intent = new Intent(this,
-					AuthenticatorActivityTabed.class);
+			final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
 			this.startActivity(intent);
 
 		} else {
@@ -97,8 +116,7 @@ public class Vorlesungsplan extends Activity {
 			if (mCalendarList.size() == 1) {
 				FileHelper fileHelper = new FileHelper();
 				try {
-					fileHelper.writeFileAsString(Vorlesungsplan.this,
-							"lastCalendarOpened", mCalendarList.get(0));
+					fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", mCalendarList.get(0));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -107,8 +125,7 @@ public class Vorlesungsplan extends Activity {
 		}
 
 		// Set the adapter for the list view
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.calendar_drawer_listview_item, mCalendarList));
+		mDrawerListView.setAdapter(new ArrayAdapter<String>(this, R.layout.calendar_drawer_listview_item, mCalendarList));
 
 		mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -162,12 +179,11 @@ public class Vorlesungsplan extends Activity {
 		// Handle the New Calendar and the Settings Menu
 		switch (item.getItemId()) {
 		case R.id.de_calendar_menu_new_calendar:
-			final Intent newCalendar = new Intent(this,
-					AuthenticatorActivityTabed.class);
+			final Intent newCalendar = new Intent(this, AuthenticatorActivityTabed.class);
 			this.startActivity(newCalendar);
 
 			break;
-			
+
 		case R.id.de_calendar_menu_preferences:
 			final Intent preferences = new Intent(this, Preferences.class);
 			this.startActivity(preferences);
@@ -176,6 +192,17 @@ public class Vorlesungsplan extends Activity {
 
 		case R.id.de_calendar_menu_delete_calendar:
 			// delete Calendar
+			de.dhbw.organizer.calendar.backend.manager.CalendarManager cm = de.dhbw.organizer.calendar.backend.manager.CalendarManager.get(this);
+			cm.deleteCalendar(mCalendarName);
+			mCalendarList.remove(mCalendarName);
+			if (mCalendarList.size() > 0) {
+				mCalendarName = mCalendarList.get(0);
+				setListContent(this, mCalendarName);
+			} else {
+				mCalendarName = null;
+				setListContent(this, null);
+			}
+
 			break;
 
 		case R.id.jumptotoday:
@@ -214,16 +241,19 @@ public class Vorlesungsplan extends Activity {
 		// find the Listview
 		mEventList = (ListView) findViewById(R.id.calendar_frontend_listView);
 
-		// get the Events as an Adapter
-		EventAdapter mEvents = mCalendarManager.getCalendarEvents(this,
-				calendarName);
+		if (calendarName == null) {
+			EventAdapter mEvents = null;
+			mCalendarName = null;
+			mEventList.setAdapter(mEvents);
 
-		mCalendarName = calendarName;
-
-		// set Adapter to display List
-		mEventList.setAdapter(mEvents);
-
-		goToActualEvent();
+		} else {
+			// get the Events as an Adapter
+			EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);
+			mCalendarName = calendarName;
+			// set Adapter to display List
+			mEventList.setAdapter(mEvents);
+			goToActualEvent();
+		}
 
 	}
 
@@ -232,16 +262,12 @@ public class Vorlesungsplan extends Activity {
 	 */
 	private void goToActualEvent() {
 		// go to actual Date
-		if (mCalendarManager != null
-				&& mCalendarManager.mIndexOfActualEvent > 0) {
-			Log.d("Index of Actual Event",
-					String.valueOf(mCalendarManager.mIndexOfActualEvent));
-			mEventList.setSelectionFromTop(
-					mCalendarManager.mIndexOfActualEvent, 0);
+		if (mCalendarManager != null && mCalendarManager.mIndexOfActualEvent > 0) {
+			Log.d("Index of Actual Event", String.valueOf(mCalendarManager.mIndexOfActualEvent));
+			mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
 
 		} else {
-			Log.i("goToActualEvent()",
-					"Index of Actual Event not set, no Calendar");
+			Log.i("goToActualEvent()", "Index of Actual Event not set, no Calendar");
 		}
 	}
 
@@ -260,16 +286,12 @@ public class Vorlesungsplan extends Activity {
 	 * @author riedings
 	 * 
 	 */
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView parent, View view, int position,
-				long id) {
-			Toast.makeText(Vorlesungsplan.this, ((TextView) view).getText(),
-					Toast.LENGTH_LONG).show();
+		public void onItemClick(AdapterView parent, View view, int position, long id) {
+			Toast.makeText(Vorlesungsplan.this, ((TextView) view).getText(), Toast.LENGTH_LONG).show();
 			mDrawerLayout.closeDrawer(mDrawerListView);
-			Log.d((((TextView) view).getText()).toString(),
-					(((TextView) view).getText()).toString());
+			Log.d((((TextView) view).getText()).toString(), (((TextView) view).getText()).toString());
 
 			selectItem(view);
 
@@ -278,12 +300,29 @@ public class Vorlesungsplan extends Activity {
 			// schreibe in die Datei
 			FileHelper fileHelper = new FileHelper();
 			try {
-				fileHelper.writeFileAsString(Vorlesungsplan.this,
-						"lastCalendarOpened", calendarName);
+				fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", calendarName);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
+		}
+	}
+
+	private class OnCalenderUpdateListener implements OnAccountsUpdateListener {
+		public static final String TAG = "calendar OnCalenderUpdateListener";
+		@Override
+		public void onAccountsUpdated(Account[] accounts) {
+			Log.d(TAG, "onAccountsUpdated" );
+			
+			for(Account acc : accounts){
+				if(acc.type.equals(Constants.ACCOUNT_TYPE)){
+					if(acc.name.equals(mCalendarName)){
+						Log.d(TAG, "onAccountsUpdated name = " + mCalendarName );
+						setListContent(mContext, mCalendarName);
+					}
+				}
+			}
+			
 		}
 	}
 }

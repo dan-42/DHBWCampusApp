@@ -38,6 +38,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.OnAccountsUpdateListener;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
@@ -182,4 +183,5 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		mAccountManager.setUserData(account, SYNC_MARKER_KEY, Long.toString(marker));
 	}
 
+	
 }
