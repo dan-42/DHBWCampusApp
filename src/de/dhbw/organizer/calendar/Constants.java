@@ -78,7 +78,9 @@ public class Constants {
 	/**
 	 * URL where the XML is to obtain the up to date calendar list
 	 */
-	public static final String EXTERNAL_CALENDAR_LIST_URL = "http://hemera.bf-it.eu/dh/calendar_calendars.xml";
+	//public static final String EXTERNAL_CALENDAR_LIST_URL = "http://hemera.bf-it.eu/dh/calendar_calendars.xml";
+	public static final String EXTERNAL_CALENDAR_LIST_URL = "http://www.dhbw-loerrach.de/fileadmin/pubdocs/cal-app/calendar_calendars.xml";
+	
 	
 	
 	/**
