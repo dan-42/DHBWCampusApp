@@ -132,7 +132,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						// mCalendarManager.insertEvents(account, calendarId,
 						// events);
 
-						mCalendarManager.updateEvents(account, calendarId, events, true);
+						mCalendarManager.updateEvents(account, calendarId, events, false);
 
 						// save timestamp of last succsessful sync
 						setLastServerSyncMarker(account, System.currentTimeMillis());

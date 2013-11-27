@@ -163,8 +163,7 @@ public class CalendarManager {
 	 * @return true if no error occurred
 	 */
 	public boolean loadExternalXml() {
-		boolean success = false;		
-		
+		boolean success = false;
 
 		NetworkManager nm = NetworkManager.getInstance(mContext);
 		AssetManager assetManager = mContext.getAssets();
@@ -209,8 +208,6 @@ public class CalendarManager {
 
 		return success;
 	}
-
-	
 
 	/**
 	 * check if a calendar already exists
@@ -298,7 +295,7 @@ public class CalendarManager {
 		if (color == null) {
 			colorInHex = getNextCalendarColor();
 		} else {
-			//colorInHex = Color.r
+			// colorInHex = Color.r
 			colorInHex = getNextCalendarColor();
 		}
 		ContentValues values = new ContentValues();
@@ -349,7 +346,6 @@ public class CalendarManager {
 		}
 
 	}
-	
 
 	/**
 	 * Deletes all Events from a given CalendarID
@@ -377,9 +373,6 @@ public class CalendarManager {
 		}
 
 	}
-	
-	
-
 
 	/**
 	 * Inserts a List of VEvents into the Database, but splits and seperates
@@ -612,6 +605,15 @@ public class CalendarManager {
 		values.put(Events._SYNC_ID, e.getUid().getValue());
 		values.put(EVENTS_DB_TIME_STEMP_COLUMN, Long.toString(e.getDateTimeStamp().getValue().getTime()));
 		values.put(EVENTS_DB_HASH_COLUMN, hash);
+		
+		
+		if (e.getClassification() != null)
+			if (e.getClassification().isPrivate())
+				values.put(Events.ACCESS_LEVEL, Events.ACCESS_PRIVATE);
+			else
+				values.put(Events.ACCESS_LEVEL, Events.ACCESS_PUBLIC);
+		else
+			values.put(Events.ACCESS_LEVEL, Events.ACCESS_DEFAULT);
 
 		if (e.getDescription() != null)
 			values.put(Events.DESCRIPTION, e.getDescription().getValue());
