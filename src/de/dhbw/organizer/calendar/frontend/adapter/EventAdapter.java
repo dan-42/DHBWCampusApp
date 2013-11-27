@@ -5,29 +5,22 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import de.dhbw.organizer.R;
-import de.dhbw.organizer.calendar.Constants;
-import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
-import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
 import de.dhbw.organizer.calendar.helper.IntentHelper;
 
@@ -86,15 +79,15 @@ public class EventAdapter extends BaseAdapter {
 		// setze die Hintergrundfarbe
 
 		if (startTime < System.currentTimeMillis()) {
-			//linearLayout.setBackgroundColor(Color.LTGRAY);
+			// linearLayout.setBackgroundColor(Color.LTGRAY);
 			linearLayout1.setBackgroundColor(Color.LTGRAY);
 		} else if (entry.getColor()) {
-			//linearLayout.setBackgroundColor(Constants.CALENDAR_COLORS[0]);
-			//linearLayout.setBackground(context.getResources().getDrawable(R.drawable.farbverlauf));
+			// linearLayout.setBackgroundColor(Constants.CALENDAR_COLORS[0]);
+			// linearLayout.setBackground(context.getResources().getDrawable(R.drawable.farbverlauf));
 			linearLayout1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.farbverlauf));
 		} else {
 			linearLayout1.setBackgroundColor(entry.getBackgroundColor());
-			
+
 		}
 
 		if (FbEventParser.parseFbEvent(description) != null) {

@@ -24,8 +24,6 @@
  */
 package de.dhbw.organizer.calendar;
 
-import java.util.Calendar;
-
 import android.graphics.Color;
 
 public class Constants {

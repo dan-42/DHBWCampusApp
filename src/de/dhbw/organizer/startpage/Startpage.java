@@ -115,16 +115,12 @@ public class Startpage extends Activity {
 		}
 	}
 
-	public void startOnlineFeedback(View v) {
-
-		Toast.makeText(this, "Voll gut!", Toast.LENGTH_LONG).show();
+	public void startOnlineFeedback(View v) {		
 		IntentHelper.openWebBrowser(this, Constants.ONLINE_FEEDBACK_URL);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		Toast.makeText(Startpage.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+	public boolean onOptionsItemSelected(MenuItem item) {		
 		Log.d(String.valueOf(item.getItemId()), String.valueOf(R.id.startpage_menu_info));
 		switch (item.getItemId()) {
 		case R.id.startpage_menu_info:

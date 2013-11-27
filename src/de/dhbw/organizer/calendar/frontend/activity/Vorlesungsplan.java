@@ -3,26 +3,14 @@ package de.dhbw.organizer.calendar.frontend.activity;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import de.dhbw.organizer.calendar.Constants;
-import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
-import de.dhbw.organizer.calendar.frontend.adapter.CalendarEvent;
-import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
-import de.dhbw.organizer.calendar.frontend.manager.CalendarManager;
-import de.dhbw.organizer.calendar.frontend.preferences.Preferences;
-import de.dhbw.organizer.calendar.helper.FileHelper;
-import de.dhbw.organizer.R;
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.OnAccountsUpdateListener;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncStatusObserver;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -34,10 +22,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.dhbw.organizer.R;
+import de.dhbw.organizer.calendar.Constants;
+import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
+import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
+import de.dhbw.organizer.calendar.frontend.manager.CalendarManager;
+import de.dhbw.organizer.calendar.frontend.preferences.Preferences;
+import de.dhbw.organizer.calendar.helper.FileHelper;
 
 /**
  * @author riedings
@@ -66,14 +60,10 @@ public class Vorlesungsplan extends Activity {
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		
-		mAccountManager = AccountManager.get(this);		
-
-		
+		mAccountManager = AccountManager.get(this);
 
 		mCalenderSyncStatusObserver = new CalenderSyncStatusObserver();
 		mAccountManager = AccountManager.get(this);
-
 
 		/*
 		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
@@ -98,8 +88,9 @@ public class Vorlesungsplan extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();	
+		super.onDestroy();
 	}
+
 	protected void onResume() {
 		super.onResume();
 		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
@@ -305,7 +296,7 @@ public class Vorlesungsplan extends Activity {
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView parent, View view, int position, long id) {
-			Toast.makeText(Vorlesungsplan.this, ((TextView) view).getText(), Toast.LENGTH_LONG).show();
+			
 			mDrawerLayout.closeDrawer(mDrawerListView);
 			Log.d((((TextView) view).getText()).toString(), (((TextView) view).getText()).toString());
 
@@ -336,17 +327,17 @@ public class Vorlesungsplan extends Activity {
 		 */
 		@Override
 		public void onStatusChanged(int which) {
-			//Log.d(TAG, "onStatusChanged() ");
+			// Log.d(TAG, "onStatusChanged() ");
 			Account accounts[] = mAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
-			
-			//if Calendarname is not yet set, happens by first install, set the first calender
-			if(accounts.length > 0 && (mCalendarName == null || mCalendarName.equals(""))){
+			// if Calendarname is not yet set, happens by first install, set the
+			// first calender
+			if (accounts.length > 0 && (mCalendarName == null || mCalendarName.equals(""))) {
 				mCalendarName = accounts[0].name;
 			}
-			
+
 			for (Account a : accounts) {
-				//Log.d(TAG, "onStatusChanged() a.name = " + a.name);
+				// Log.d(TAG, "onStatusChanged() a.name = " + a.name);
 				if (a.name.equals(mCalendarName)) {
 					notifyView(ContentResolver.isSyncActive(a, CalendarContract.AUTHORITY));
 				}

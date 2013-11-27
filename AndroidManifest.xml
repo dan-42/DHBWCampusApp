@@ -25,7 +25,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dhbw.organizer"
     android:versionCode="030"
-    android:versionName="V0.3_Alpha" >
+    android:versionName="V0.3_Alpha_201311027" >
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
