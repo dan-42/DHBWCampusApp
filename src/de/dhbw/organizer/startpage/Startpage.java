@@ -52,7 +52,8 @@ public class Startpage extends Activity {
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
 			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft);
-			mTextViewTimeLeft.setText("Test ended, please install the current Version from the AppStore");
+			mTextViewTimeLeft
+					.setText("Test period ended, please install the current Version from the Google PlayStore. \n On any problems, please contact us at friedrda@dhbw-loerrach.de");
 		}
 
 	}
@@ -68,7 +69,8 @@ public class Startpage extends Activity {
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
 			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft);
-			mTextViewTimeLeft.setText("Test ended, please install the current Version from the AppStore");
+			mTextViewTimeLeft
+					.setText("Test period ended, please install the current Version from the Google PlayStore. \n On any problems, please contact us at friedrda@dhbw-loerrach.de");
 		}
 
 	};

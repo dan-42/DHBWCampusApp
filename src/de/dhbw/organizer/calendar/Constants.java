@@ -82,10 +82,11 @@ public class Constants {
 	
 	
 	/**
-	 * TEST VERSION ends on Thu Feb 28 00:00:00 CET 2013
-	 * 1393542000 * 1000
+	 * TEST VERSION ends on 2013-12-31  23:59
+	 * 
 	 */
-	public static final long TIME_END_TEST_VERSION = 1393542000000l;
+	public static final long TIME_END_TEST_VERSION = 1386975540000l;
+	//	public static final long TIME_END_TEST_VERSION = System.currentTimeMillis() + 10000;
 	
 
 	
