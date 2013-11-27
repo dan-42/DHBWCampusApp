@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import de.dhbw.organizer.R;
+import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
 import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
 import android.annotation.SuppressLint;
@@ -90,7 +91,7 @@ public class EventAdapter extends BaseAdapter {
 		if (startTime < System.currentTimeMillis()) {
 			linearLayout.setBackgroundColor(Color.LTGRAY);
 		} else if (entry.getColor()) {
-			linearLayout.setBackgroundColor(Color.RED);
+			linearLayout.setBackgroundColor(Constants.CALENDAR_COLORS[0]);
 		} else {
 			linearLayout.setBackgroundColor(entry.getBackgroundColor());
 		}
