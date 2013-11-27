@@ -15,12 +15,16 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.OnAccountsUpdateListener;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SyncStatusObserver;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -50,25 +54,26 @@ public class Vorlesungsplan extends Activity {
 	private CalendarManager mCalendarManager;
 	private String mCalendarName;
 	private Context mContext;
-	private OnCalenderUpdateListener  mCalendarUpdateListener;
+	private CalenderSyncStatusObserver mCalenderSyncStatusObserver;
 	private AccountManager mAccountManager;
-	
+	private ProgressDialog mUpdateViewDialog;
+	private Object mChangeListenerHandle;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		mAccountManager = AccountManager.get(this);		
-		mCalendarUpdateListener = new OnCalenderUpdateListener();
-		mAccountManager.addOnAccountsUpdatedListener(mCalendarUpdateListener, null, false);
-		
-		
+		mCalenderSyncStatusObserver = new CalenderSyncStatusObserver();
+		mAccountManager = AccountManager.get(this);
+
 		/*
 		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
 		 */
 		mCalendarManager = new CalendarManager();
+
+		mUpdateViewDialog = new ProgressDialog(mContext);
 
 		setDrawerContent();
 
@@ -86,15 +91,18 @@ public class Vorlesungsplan extends Activity {
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();	
-		if(mCalendarUpdateListener != null){
-			mAccountManager.removeOnAccountsUpdatedListener(mCalendarUpdateListener);
-		}
-				
+	protected void onResume() {
+		super.onResume();
+		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
 	};
-	
-	
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		ContentResolver.removeStatusChangeListener(mChangeListenerHandle);
+
+	};
+
 	private void setDrawerContent() {
 
 		mCalendarList = mCalendarManager.getCalendarList(this);
@@ -308,23 +316,55 @@ public class Vorlesungsplan extends Activity {
 		}
 	}
 
-	public class OnCalenderUpdateListener implements OnAccountsUpdateListener {
-		public static final String TAG = "calendar OnCalenderUpdateListener";
+	public class CalenderSyncStatusObserver implements SyncStatusObserver {
+		private static final String TAG = "calendar CalenderSyncStatusObserver";
+
+		private boolean mmLastSyncState = false;
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.content.SyncStatusObserver#onStatusChanged(int)
+		 */
 		@Override
-		public void onAccountsUpdated(Account[] accounts) {
-			Log.d(TAG, "onAccountsUpdated" );
+		public void onStatusChanged(int which) {
+			//Log.d(TAG, "onStatusChanged() ");
+			Account accounts[] = mAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+
 			
-			for(Account acc : accounts){
-				if(acc.type.equals(Constants.ACCOUNT_TYPE)){
-					if(acc.name.equals(mCalendarName)){
-						Log.d(TAG, "onAccountsUpdated name = " + mCalendarName );
-						setListContent(mContext, mCalendarName);
-					}
-				}
+			//if Calendarname is not yet set, happens by first install, set the first calender
+			if(accounts.length > 0 && (mCalendarName == null || mCalendarName.equals(""))){
+				mCalendarName = accounts[0].name;
 			}
 			
+			for (Account a : accounts) {
+				//Log.d(TAG, "onStatusChanged() a.name = " + a.name);
+				if (a.name.equals(mCalendarName)) {
+					notifyView(ContentResolver.isSyncActive(a, CalendarContract.AUTHORITY));
+				}
+			}
 		}
-		
-		
+
+		public void notifyView(final boolean isSyncing) {
+
+			runOnUiThread(new Runnable() {
+				public void run() {
+					if (isSyncing) {
+						mUpdateViewDialog.show();
+						Log.d(TAG, "notifyView()  is  syncing");
+					} else {
+
+						mUpdateViewDialog.dismiss();
+						setListContent(mContext, mCalendarName);
+
+						Log.d(TAG, "notifyView()  is not syncing");
+					}
+				}
+			});
+
+			mmLastSyncState = isSyncing;
+
+		}
+
 	}
 }
