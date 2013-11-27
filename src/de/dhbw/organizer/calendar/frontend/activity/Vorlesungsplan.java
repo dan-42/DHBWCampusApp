@@ -308,7 +308,7 @@ public class Vorlesungsplan extends Activity {
 		}
 	}
 
-	private class OnCalenderUpdateListener implements OnAccountsUpdateListener {
+	public class OnCalenderUpdateListener implements OnAccountsUpdateListener {
 		public static final String TAG = "calendar OnCalenderUpdateListener";
 		@Override
 		public void onAccountsUpdated(Account[] accounts) {
@@ -324,5 +324,7 @@ public class Vorlesungsplan extends Activity {
 			}
 			
 		}
+		
+		
 	}
 }

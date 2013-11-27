@@ -78,7 +78,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 		HttpResponse httpResponse = null;
 		Log.i(TAG, "SYNCC ME UP!");
-
+		
 		long lastSyncMarker = getLastServerSyncMarker(account);
 
 		// make sure Calendar exists, other wise create it
@@ -134,7 +134,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						// events);
 
 						mCalendarManager.updateEvents(account, calendarId, events, false);
-
+						
 						// save timestamp of last succsessful sync
 						setLastServerSyncMarker(account, System.currentTimeMillis());
 

@@ -28,8 +28,7 @@ public class CalendarManager {
 	public boolean mIndexAlreadySet;
 
 	// The desired event columns
-	public static final String[] EVENT_PROJECTION = new String[] { Events._ID,
-			Events.TITLE, Events.DTSTART, Events.DTEND, Events.EVENT_LOCATION,
+	public static final String[] EVENT_PROJECTION = new String[] { Events._ID, Events.TITLE, Events.DTSTART, Events.DTEND, Events.EVENT_LOCATION,
 			Events.DESCRIPTION };
 
 	// The desired calendar columns
@@ -37,8 +36,7 @@ public class CalendarManager {
 	};
 
 	// The desired columns to be bound
-	static String[] columns = new String[] { Instances._ID, Instances.TITLE,
-			Instances.DTSTART, Instances.DTEND, Instances.EVENT_LOCATION,
+	static String[] columns = new String[] { Instances._ID, Instances.TITLE, Instances.DTSTART, Instances.DTEND, Instances.EVENT_LOCATION,
 			Instances.DESCRIPTION };
 
 	static int[] to = new int[] { R.id.id, R.id.name, // 0
@@ -61,8 +59,8 @@ public class CalendarManager {
 		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 
-		ContentResolver.requestSync(account,
-				Constants.ACCOUNT_CALENDAR_AUTHORITY, settingsBundle);
+		ContentResolver.requestSync(account, Constants.ACCOUNT_CALENDAR_AUTHORITY, settingsBundle);
+
 	}
 
 	/**
@@ -82,8 +80,7 @@ public class CalendarManager {
 
 		ContentResolver cr = context.getContentResolver();
 
-		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?",
-				new String[] { CalendarName }, Events.DTSTART);
+		cur = cr.query(uri, EVENT_PROJECTION, Calendars.ACCOUNT_NAME + " = ?", new String[] { CalendarName }, Events.DTSTART);
 
 		List<CalendarEvent> listOfEvents = new ArrayList<CalendarEvent>();
 
@@ -103,15 +100,12 @@ public class CalendarManager {
 
 			// set the index of the element to scroll to the actual element
 
-			if ((eventdtend >= System.currentTimeMillis())
-					&& (!mIndexAlreadySet)) {
+			if ((eventdtend >= System.currentTimeMillis()) && (!mIndexAlreadySet)) {
 				mIndexOfActualEvent = i;
 				mIndexAlreadySet = true;
-				listOfEvents.add(new CalendarEvent(eventName, eventdtstart,
-						eventdtend, eventLocation, eventDescription, true));
+				listOfEvents.add(new CalendarEvent(eventName, eventdtstart, eventdtend, eventLocation, eventDescription, true));
 			} else {
-				listOfEvents.add(new CalendarEvent(eventName, eventdtstart,
-						eventdtend, eventLocation, eventDescription, false));
+				listOfEvents.add(new CalendarEvent(eventName, eventdtstart, eventdtend, eventLocation, eventDescription, false));
 
 			}
 			i++;
@@ -137,8 +131,7 @@ public class CalendarManager {
 
 		ContentResolver cr = context.getContentResolver();
 
-		cur = cr.query(uri, CALENDAR_PROJECTION, Calendars.ACCOUNT_TYPE
-				+ " = ?", new String[] { Constants.ACCOUNT_TYPE }, null);
+		cur = cr.query(uri, CALENDAR_PROJECTION, Calendars.ACCOUNT_TYPE + " = ?", new String[] { Constants.ACCOUNT_TYPE }, null);
 
 		while (cur.moveToNext()) {
 			String calendarName = null;
