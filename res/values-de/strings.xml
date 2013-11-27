@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * LICENSE: GPL v3 
+ * 
+ * Copyright (c) 2013 by
+ * Daniel Friedrich <friedrda@dhbw-loerrach.de>
+ * Simon Riedinger <riedings@dhbw-loerrach.de>
+ * Patrick Strittmatter <strittpa@dhbw-loerrach.de> 
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3.0 as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+
+
+<!-- @author: friedrda, riedings -->
+<resources>
+
+    <!-- MAIN VIEW -->
+    <string name="app_name">CampusApp</string>
+    <string name="app_start_calendar">Kalender</string>
+    <string name="app_start_moodle">Moodle</string>
+    <string name="app_start_mensa">Mensa</string>
+    <string name="app_start_buildings">Lageplan</string>
+    <string name="app_start_hello_world">Hallo Droide</string>
+    <string name="app_start_feedback">Feedback</string>
+    
+    
+    <!-- MAIN VIEW -->
+    <!-- INFO -->
+    <string name="de_app_start_facebook_profile_id_szi">189992694374119</string>
+    <string name="de_app_start_info_daniel">Daniel Friedrich</string>
+    <string name="de_app_start_info_patrick">Patrick Strittmatter</string>
+    <string name="de_app_start_info_simon">Simon Riedinger</string>
+    <string name="de_app_start_info_introducion">Diese App entstand in einem studentischen Projekt des Studiumzentrums Informatik an  der DHBW Lörrach.</string>
+    <string name="de_app_start_info_version">Version:</string>
+    <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstraße 46-50 \n79539 Lörrach</string>
+    <string name="de_app_start_info_project_develpment_by">Die Initiatoren des Projekts: </string>
+    <string name="de_app_start_info_suppliers">Mit Unterstützung der Mensa App und freundlicher Unterstützung der DHBW Karlsruhe</string>
+    <string name="de_app_start_info_copyright">Das Copyright der Icons von Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studenten des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler. </string>
+    <string name="app_start_facebook_prodile_id_szi">189992694374119</string>
+
+    
+    <!-- MENSA -->
+    <string name="mensa_error_not_installed">Die DHBW Mensa App ist nicht installiert! </string>
+    
+
+    <!-- CALENDAR -->
+    <!-- CALENDAR BACKEND -->
+    <string name="calendar_backend_account_action_settings">Einstellungen</string>
+    <string name="calendar_backend_account_label">CampusApp</string>
+    <string name="calendar_backend_account_tab_title_by_list">Standard</string>
+    <string name="calendar_backend_account_tab_title_by_hand">Erweitert</string>
+    <string name="calendar_backend_account_ui_activity_authenticating">ui_activity_authenticating</string>
+    <string name="calendar_backend_account_select_ical_activity_newaccount_text">Kalenderauswahl:</string>
+    <string name="calendar_backend_account_select_ical_ok_button">OK</string>
+    <string name="calendar_backend_account_select_ical_cancel_button">Abbrechen</string>
+    <string name="calendar_backend_account_select_ical_update_button">Kalenderliste aktualisieren</string>
+    <string name="calendar_backend_account_select_ical_new_calendar">Neuen Kalender hinzufügen</string>
+    <string name="calendar_backend_input_select_calendar">Bitte Kalender auswählen</string>
+    <string name="calendar_backend_input_error_no_calendar_selected">FEHLER: es wurde kein Kalender ausgewählt!</string>
+    <string name="calendar_backend_input_error_displayname_to_short">FEHLER: Eingabe zu kurz, min. 3 Zeichen!</string>
+    <string name="calendar_backend_input_error_displayname_to_long">FEHLER: Eingabe zu lang, max. 16 Zeichen!</string>
+    <string name="calendar_backend_input_error_displayname_invalid">FEHLER: Nur Zeichen, Ziffern und Leerzeichen erlaubt!</string>
+    <string name="calendar_backend_input_error_icalurl_to_short">FEHLER Eingabe zu Kurz, min. 11 Zeichen!</string>
+    <string name="calendar_backend_input_error_icalurl_invalid">FEHLER: Die URL ist ungültig!</string>
+    <string name="calendar_backend_input_error_calendar_already_exists">FEHLER: Der Kalender ist bereits vorhanden!</string>
+    <string name="calendar_backend_network_error">Es ist keine Internetverbindung vorhanden: Der Kalender konnte nicht hinzugefügt werden.</string>
+    <string name="calendar_backend_update_already_done">Die Kalenderliste ist bereits aktuell</string>
+    <string name="calendar_backend_update_updating">Die Kalenderliste wird aktualisiert ...</string>
+    <string name="calendar_backend_update_xml_error">FEHLER: Die Kalenderliste konnte nicht aktualisiert werden!</string>
+    <string name="calendar_backend_update_successful">Die Kalenderliste wurde erfolgreich aktualisiert</string>
+    <string name="calendar_backend_account_add_calendar_manual">Kalender hinzufügen</string>
+    <string name="calendar_backend_account_display_name">Anzeigename</string>
+    <string name="calendar_backend_account_ical_url">iCal URL</string>
+
+    <!-- CALENDAR FRONTEND -->
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Internetsuche</string>
+    <string name="app_not_available">FEHLER: Es wurde kein Webbrowser gefunden!</string>
+    <string name="hide_old_events">Alle vergangenen Termine ausblenden</string>
+    <string name="hide_private_appointments">Private Termine ausblenden</string>
+    <string name="startpage_menu_info">Info</string>
+	
+	<!-- CALENDAR FRONTEND -->
+	<!-- MENU -->
+    <string name="de_calendar_menu_new_calendar">Neuen Kalender</string>
+    <string name="de_calendar_menu_preferences">Einstellungen</string>
+    <string name="de_calendar_menu_delete_calendar">Kalender löschen</string>
+    
+    <!-- BUILDINGS -->
+    <string name="buildings_image_title_map_kbc">KBC Lageplan</string>
+    <string name="buildings_image_title_map_hangstr">Hangstr. Lageplan</string>
+    <string name="buildings_image_title_buildings_hangstr">Hangstr. Gebäudeplan</string>
+    
+    
+</resources>

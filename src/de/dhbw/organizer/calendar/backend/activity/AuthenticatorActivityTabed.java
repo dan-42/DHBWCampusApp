@@ -38,6 +38,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -552,6 +553,7 @@ public class AuthenticatorActivityTabed extends Activity {
 
 				mInfoMessage.setText(R.string.calendar_backend_update_successful);
 				mListUpdated = true;
+				mUpdateListButton.setVisibility(View.GONE);
 			} else {
 				mInfoMessage.setText(R.string.calendar_backend_update_xml_error);
 				mUpdateListButton.setEnabled(true);

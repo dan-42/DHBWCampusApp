@@ -78,16 +78,19 @@ public class Constants {
 	/**
 	 * URL where the XML is to obtain the up to date calendar list
 	 */
-	public static final String EXTERNAL_CALENDAR_LIST_URL = "http://hemera.bf-it.eu/dh/calendar_calendars.xml";
+	//public static final String EXTERNAL_CALENDAR_LIST_URL = "http://hemera.bf-it.eu/dh/calendar_calendars.xml";
+	public static final String EXTERNAL_CALENDAR_LIST_URL = "http://www.dhbw-loerrach.de/fileadmin/pubdocs/cal-app/calendar_calendars.xml";
+	
 	
 	
 	/**
 	 * TEST VERSION ends on 2013-12-31  23:59
+	 * 1388530740
 	 * 
 	 */
-	public static final long TIME_END_TEST_VERSION = 1386975540000l;
+	public static final long TIME_END_TEST_VERSION = 1388530740000l;
 	//	public static final long TIME_END_TEST_VERSION = System.currentTimeMillis() + 10000;
-	
+	public static final String ONLINE_FEEDBACK_URL = "https://www.umfrageonline.com/s/78754de";
 
 	
 }

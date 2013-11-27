@@ -11,8 +11,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +39,8 @@ public class Startpage extends Activity {
 
 	private static final String TAG = "Startpage";
 	private TextView mTextViewTimeLeft;
-
+	
+	
 	private SimpleDateFormat sdf = new SimpleDateFormat("'Testversion ends on: 'yyyy-MM-dd ", Locale.getDefault());
 
 	@Override
@@ -115,12 +118,13 @@ public class Startpage extends Activity {
 	public void startOnlineFeedback(View v) {
 
 		Toast.makeText(this, "Voll gut!", Toast.LENGTH_LONG).show();
+		IntentHelper.openWebBrowser(this, Constants.ONLINE_FEEDBACK_URL);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		Toast.makeText(Startpage.this, item.getTitle(), Toast.LENGTH_LONG).show();
+		Toast.makeText(Startpage.this, item.getTitle(), Toast.LENGTH_SHORT).show();
 		Log.d(String.valueOf(item.getItemId()), String.valueOf(R.id.startpage_menu_info));
 		switch (item.getItemId()) {
 		case R.id.startpage_menu_info:
@@ -146,7 +150,14 @@ public class Startpage extends Activity {
 		flipper.startFlipping();
 		flipper.setInAnimation((AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left)));
 		flipper.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right));
-
+		TextView versionNumber = (TextView) textEntryView.findViewById(R.id.start_app_version_string);
+		String versionName = "";
+		try {
+			versionName = "Version: " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+		} catch (NameNotFoundException e) { }
+		
+		versionNumber.setText(versionName);
+		
 		return new AlertDialog.Builder(this).setTitle("Info").setView(textEntryView).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
