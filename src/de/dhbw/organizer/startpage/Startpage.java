@@ -11,8 +11,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -148,7 +150,14 @@ public class Startpage extends Activity {
 		flipper.startFlipping();
 		flipper.setInAnimation((AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left)));
 		flipper.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right));
-
+		TextView versionNumber = (TextView) textEntryView.findViewById(R.id.start_app_version_string);
+		String versionName = "";
+		try {
+			versionName = "Version: " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+		} catch (NameNotFoundException e) { }
+		
+		versionNumber.setText(versionName);
+		
 		return new AlertDialog.Builder(this).setTitle("Info").setView(textEntryView).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {

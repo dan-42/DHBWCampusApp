@@ -43,9 +43,8 @@
     <string name="de_app_start_info_patrick">Patrick Strittmatter</string>
     <string name="de_app_start_info_simon">Simon Riedinger</string>
     <string name="de_app_start_info_introducion">This app was created in a student project of computer science faculty at the University of Cooperative Education Loerrach.</string>
-    <string name="de_app_start_info_version">Alpha Version</string>
+    <string name="de_app_start_info_version">Version: </string>
     <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstrasse 46-50 \n79539 Loerrach \nGermany</string>
-    <string name="de_app_start_info_project_szi">-deleteme 'de_app_start_info_project_szi'- </string>
     <string name="de_app_start_info_project_develpment_by">The initiators of this project: </string>
     <string name="de_app_start_info_suppliers">With the support of Mensa app and the kind support of University of Cooperative Education Karlsruhe</string>
     <string name="de_app_start_info_copyright">The copyright of the icons of Site Map, Mensa and Moodle are at the students of the course MWI at Cooperative State University Karlsruhe and under the direction of Prof. Dr. Wengler.</string>
@@ -103,7 +102,7 @@
     <!-- BUILDINGS -->
     <string name="buildings_image_title_map_kbc">KBC site plan</string>
     <string name="buildings_image_title_map_hangstr">Hangstr. site plan</string>
-    <string name="buildings_image_title_buildings_hangstr">Hangstr. site plan<</string>
+    <string name="buildings_image_title_buildings_hangstr">Hangstr. site plan</string>
     
     
 </resources>
