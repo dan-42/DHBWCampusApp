@@ -113,7 +113,7 @@ public class CalendarManager {
 
 		// set Adapter for List
 		EventAdapter adapter = new EventAdapter(context, listOfEvents);
-
+		cur.close();
 		return adapter;
 	}
 
@@ -142,7 +142,7 @@ public class CalendarManager {
 
 			Log.d("CALENDAR_NAME", calendarName);
 		}
-
+		cur.close();
 		return calendarList;
 
 	}
