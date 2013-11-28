@@ -7,14 +7,11 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,9 +36,8 @@ public class Startpage extends Activity {
 
 	private static final String TAG = "Startpage";
 	private TextView mTextViewTimeLeft;
-	
-	
-	private SimpleDateFormat sdf = new SimpleDateFormat("'Testversion ends on: 'yyyy-MM-dd ", Locale.getDefault());
+
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +45,12 @@ public class Startpage extends Activity {
 
 		if (Constants.TIME_END_TEST_VERSION > System.currentTimeMillis()) {
 			setContentView(R.layout.startpage_activity);
-			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft);
-
-			mTextViewTimeLeft.setText(sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
+			String text = getString(R.string.start_app_testversion_timeleft);
+			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft_textview);
+			mTextViewTimeLeft.setText(text + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
-			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft);
-			mTextViewTimeLeft
-					.setText("Test period ended, please install the current Version from the Google PlayStore. \n On any problems, please contact us at friedrda@dhbw-loerrach.de");
+
 		}
 
 	}
@@ -67,13 +61,12 @@ public class Startpage extends Activity {
 
 		if (Constants.TIME_END_TEST_VERSION > System.currentTimeMillis()) {
 			setContentView(R.layout.startpage_activity);
-			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft);
-			mTextViewTimeLeft.setText(sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
+			String text = getString(R.string.start_app_testversion_timeleft);
+			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft_textview);
+			mTextViewTimeLeft.setText(text + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
-			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft);
-			mTextViewTimeLeft
-					.setText("Test period ended, please install the current Version from the Google PlayStore. \n On any problems, please contact us at friedrda@dhbw-loerrach.de");
+
 		}
 
 	};
@@ -116,15 +109,11 @@ public class Startpage extends Activity {
 	}
 
 	public void startOnlineFeedback(View v) {
-
-		Toast.makeText(this, "Voll gut!", Toast.LENGTH_LONG).show();
 		IntentHelper.openWebBrowser(this, Constants.ONLINE_FEEDBACK_URL);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
-		Toast.makeText(Startpage.this, item.getTitle(), Toast.LENGTH_SHORT).show();
 		Log.d(String.valueOf(item.getItemId()), String.valueOf(R.id.startpage_menu_info));
 		switch (item.getItemId()) {
 		case R.id.startpage_menu_info:
@@ -154,10 +143,11 @@ public class Startpage extends Activity {
 		String versionName = "";
 		try {
 			versionName = "Version: " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-		} catch (NameNotFoundException e) { }
-		
+		} catch (NameNotFoundException e) {
+		}
+
 		versionNumber.setText(versionName);
-		
+
 		return new AlertDialog.Builder(this).setTitle("Info").setView(textEntryView).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {

@@ -34,7 +34,12 @@
     <string name="app_start_buildings">Site Plan</string>
     <string name="app_start_hello_world">Hello Droid</string>
     <string name="app_start_feedback">Feedback</string>
+
+     <string name="start_app_testversion_timeleft">Testversion ends on: </string>
     
+    <string name="start_app_testversion_timeover">Test period ended, please install the current Version from the Google PlayStore.
+        \n\nOn any problems, please contact us at 
+        \nfriedrda@dhbw-loerrach.de</string>
     
     <!-- MAIN VIEW -->
     <!-- INFO -->
@@ -47,13 +52,23 @@
     <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstrasse 46-50 \n79539 Loerrach \nGermany</string>
     <string name="de_app_start_info_project_develpment_by">The initiators of this project: </string>
     <string name="de_app_start_info_suppliers">With the support of Mensa app and the kind support of University of Cooperative Education Karlsruhe</string>
-    <string name="de_app_start_info_copyright">The copyright of the icons of Site Map, Mensa and Moodle are at the students of the course MWI at Cooperative State University Karlsruhe and under the direction of Prof. Dr. Wengler.</string>
+    <string name="de_app_start_info_copyright_icons">COPYRIGHT:
+        \nThe copyright of the icons of Site Map, Mensa and Moodle are at the students of the course MWI at Cooperative State University Karlsruhe and under the direction of Prof. Dr. Wengler.</string>
+    <string name="de_app_start_info_copyright_code">LICENSE: GPL v3
+        \nCopyright (c) 2013 by
+        \nDaniel Friedrich friedrda@dhbw-loerrach.de
+        \nSimon Riedinger riedings@dhbw-loerrach.de        
+        \nPatrick Strittmatter strittpa@dhbw-loerrach.de
+        \nSource code: https://github.com/DHBW-Loerrach 
+ \n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation.
+ \n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+ \n\nYou should have received a copy of the GNU General Public License
+ along with this program.  If not, see 
+ \nwww.gnu.org/licenses/.</string>
     <string name="app_start_facebook_prodile_id_szi">189992694374119</string>
 
-    
     <!-- MENSA -->
     <string name="mensa_error_not_installed">The DHBW Mensa App is not installed!</string>
-    
 
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->
@@ -92,17 +107,16 @@
     <string name="hide_old_events">Hide all past appointments</string>
     <string name="hide_private_appointments">hide all private appointments</string>
     <string name="startpage_menu_info">Info</string>
-	
-	<!-- CALENDAR FRONTEND -->
-	<!-- MENU -->
+
+    <!-- CALENDAR FRONTEND -->
+    <!-- MENU -->
     <string name="de_calendar_menu_new_calendar">new calendar</string>
     <string name="de_calendar_menu_preferences">settings</string>
     <string name="de_calendar_menu_delete_calendar">delete calendar</string>
-    
+
     <!-- BUILDINGS -->
     <string name="buildings_image_title_map_kbc">KBC site plan</string>
     <string name="buildings_image_title_map_hangstr">Hangstr. site plan</string>
     <string name="buildings_image_title_buildings_hangstr">Hangstr. site plan</string>
-    
-    
+
 </resources>

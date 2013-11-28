@@ -13,7 +13,6 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Instances;
-import android.text.format.Time;
 import android.util.Log;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;

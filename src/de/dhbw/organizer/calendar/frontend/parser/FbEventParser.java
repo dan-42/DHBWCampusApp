@@ -14,7 +14,7 @@ public class FbEventParser {
 	 * @param id
 	 * @param input
 	 */
-	private static void testIt(int id, String input)
+	/*private static void testIt(int id, String input)
 	{
 		// Ausgabe des Testfalls:
 		System.out.println(id + ": " + input);
@@ -29,7 +29,7 @@ public class FbEventParser {
 		}
 		
 		System.out.println();
-	}
+	}*/
 	
 	/**
 	 * Parsing Logic for parsing a String with a FB Url to only the FB Url

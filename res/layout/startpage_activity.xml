@@ -187,13 +187,14 @@
                     android:src="@drawable/img_start_banner_testversion" />
                 
                 <TextView
-                    android:id="@+id/start_app_testversion_timeleft"
+                    android:id="@+id/start_app_testversion_timeleft_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="10dip"
                     android:textColor="@color/darkGray"
                     android:textSize="25dip"
+                    android:text=""
                     android:textStyle="bold" />
 
                 <!-- BANNER RAUM FUER WEITERE IDEEN -->

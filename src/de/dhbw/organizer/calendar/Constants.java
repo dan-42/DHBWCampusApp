@@ -24,8 +24,6 @@
  */
 package de.dhbw.organizer.calendar;
 
-import java.util.Calendar;
-
 import android.graphics.Color;
 
 public class Constants {
@@ -89,7 +87,7 @@ public class Constants {
 	 * 
 	 */
 	public static final long TIME_END_TEST_VERSION = 1388530740000l;
-	//	public static final long TIME_END_TEST_VERSION = System.currentTimeMillis() + 10000;
+	//	public static final long TIME_END_TEST_VERSION = System.currentTimeMillis();
 	public static final String ONLINE_FEEDBACK_URL = "https://www.umfrageonline.com/s/78754de";
 
 	
