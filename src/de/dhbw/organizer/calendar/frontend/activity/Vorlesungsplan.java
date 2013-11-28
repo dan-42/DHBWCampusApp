@@ -235,12 +235,13 @@ public class Vorlesungsplan extends Activity {
 			this.startActivity(newCalendar);
 
 			break;
-
+/*
+ * currently un used
 		case R.id.de_calendar_menu_preferences:
 			final Intent preferences = new Intent(this, Preferences.class);
 			this.startActivity(preferences);
 
-			break;
+			break;*/
 
 		case R.id.de_calendar_menu_delete_calendar:
 			// delete Calendar
