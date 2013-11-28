@@ -99,7 +99,7 @@ public class CalendarManager {
 
 			// set the index of the element to scroll to the actual element
 
-			if ((eventdtend >= System.currentTimeMillis()) && (!mIndexAlreadySet)) {
+			if ((eventdtstart >= System.currentTimeMillis()) && (!mIndexAlreadySet)) {
 				mIndexOfActualEvent = i;
 				mIndexAlreadySet = true;
 				listOfEvents.add(new CalendarEvent(eventName, eventdtstart, eventdtend, eventLocation, eventDescription, true));

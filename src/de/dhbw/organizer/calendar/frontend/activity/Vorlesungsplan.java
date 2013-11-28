@@ -89,7 +89,6 @@ public class Vorlesungsplan extends Activity {
 		//mDrawerLayout.toggle();
 	
 		
-		mDrawerListView.setItemChecked(1, true);
 
 		FileHelper fileHelper = new FileHelper();
 
@@ -123,6 +122,9 @@ public class Vorlesungsplan extends Activity {
 	private void setDrawerContent() {
 
 		mCalendarList = mCalendarManager.getCalendarList(this);
+		
+		
+		
 
 		// get ListView defined in activity_main.xml
 		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
@@ -139,7 +141,7 @@ public class Vorlesungsplan extends Activity {
 		} else {
 			
 			
-			mDrawerListView.setItemChecked(mPosition, true);
+			
 			
 			
 			Log.d("Kalendar: ", mCalendarList.get(0));
@@ -160,7 +162,26 @@ public class Vorlesungsplan extends Activity {
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		
+		
+		// which element is selected?
+		FileHelper fileHelper = new FileHelper();
 
+		try {
+			String Calendarname = fileHelper.readFileAsString(this, "lastCalendarOpened");
+			setListContent(this, Calendarname);
+			
+
+			int actualSelectedCalendar = mCalendarList.indexOf(Calendarname);
+			mDrawerListView.setItemChecked(actualSelectedCalendar, true);
+		} catch (Exception e) {
+			// create File
+			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
+			// Toast: Bitte f�ge einen neuen Kalender hinzu
+		}
+		
+		
+
+		
 		// create ActionBarDrawerToggle
 		mActionBarDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 		mDrawerLayout, /* DrawerLayout object */
@@ -182,7 +203,7 @@ public class Vorlesungsplan extends Activity {
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				setDrawerContent();
-				mDrawerListView.setItemChecked(mPosition, true);
+				//mDrawerListView.setItemChecked(mPosition, true);
 			}
 		};
 
