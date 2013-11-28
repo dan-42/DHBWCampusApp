@@ -10,8 +10,7 @@ public class CalendarEvent {
 	private boolean color;
 	private int backgroundColor;
 
-	public CalendarEvent(String name, long startTime, long endTime,
-			String location, String description, boolean color) {
+	public CalendarEvent(String name, long startTime, long endTime, String location, String description, boolean color) {
 		super();
 		this.name = name;
 		this.startTime = startTime;

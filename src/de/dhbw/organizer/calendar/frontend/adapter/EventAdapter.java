@@ -94,6 +94,7 @@ public class EventAdapter extends BaseAdapter {
 			linearLayout1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.farbverlauf));
 		} else {
 			linearLayout1.setBackgroundColor(entry.getBackgroundColor());
+			linearLayout1.setBackgroundColor(Color.WHITE);
 			
 		}
 

@@ -58,6 +58,7 @@ public class Vorlesungsplan extends Activity {
 	private AccountManager mAccountManager;
 	private ProgressDialog mUpdateViewDialog;
 	private Object mChangeListenerHandle;
+	private int mPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,9 @@ public class Vorlesungsplan extends Activity {
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
+		mPosition = 0;
+		
+		mDrawerListView = (ListView)findViewById(R.id.left_drawer);
 		
 		mAccountManager = AccountManager.get(this);		
 
@@ -83,6 +87,12 @@ public class Vorlesungsplan extends Activity {
 		mUpdateViewDialog = new ProgressDialog(mContext);
 
 		setDrawerContent();
+		
+		mDrawerLayout.animate();
+		//mDrawerLayout.toggle();
+	
+		
+		mDrawerListView.setItemChecked(1, true);
 
 		FileHelper fileHelper = new FileHelper();
 
@@ -129,6 +139,11 @@ public class Vorlesungsplan extends Activity {
 			this.startActivity(intent);
 
 		} else {
+			
+			
+			mDrawerListView.setItemChecked(mPosition, true);
+			
+			
 			Log.d("Kalendar: ", mCalendarList.get(0));
 			if (mCalendarList.size() == 1) {
 				FileHelper fileHelper = new FileHelper();
@@ -146,6 +161,7 @@ public class Vorlesungsplan extends Activity {
 		mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		
 
 		// create ActionBarDrawerToggle
 		mActionBarDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
@@ -168,6 +184,7 @@ public class Vorlesungsplan extends Activity {
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				setDrawerContent();
+				mDrawerListView.setItemChecked(mPosition, true);
 			}
 		};
 
@@ -236,8 +253,6 @@ public class Vorlesungsplan extends Activity {
 		// Pass the event to ActionBarDrawerToggle, if it returns
 		// true, then it has handled the app icon touch event
 		if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
-			// zurueck auf den Homescreen einbauen!
-
 			return true;
 		}
 
@@ -265,6 +280,7 @@ public class Vorlesungsplan extends Activity {
 		} else {
 			// get the Events as an Adapter
 			EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);
+			//DayAdapter mEvents = mCalendarManager.getCalendarDays(this, calendarName);
 			mCalendarName = calendarName;
 			// set Adapter to display List
 			mEventList.setAdapter(mEvents);
@@ -310,9 +326,12 @@ public class Vorlesungsplan extends Activity {
 			Log.d((((TextView) view).getText()).toString(), (((TextView) view).getText()).toString());
 
 			selectItem(view);
+			
+			mPosition = position;
 
 			String calendarName = (((TextView) view).getText()).toString();
 
+			
 			// schreibe in die Datei
 			FileHelper fileHelper = new FileHelper();
 			try {
