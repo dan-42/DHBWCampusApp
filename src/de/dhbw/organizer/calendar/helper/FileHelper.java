@@ -165,7 +165,7 @@ public class FileHelper {
 	 * @return content of File as a String
 	 * @throws IOException
 	 */
-	public String readFileAsString(Context context, String fileName) throws IOException {
+	public static String readFileAsString(Context context, String fileName) throws IOException {
 
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(context.getFilesDir() + File.separator + fileName)));
 		String read;
@@ -186,7 +186,7 @@ public class FileHelper {
 	 * @param data
 	 * @throws IOException
 	 */
-	public void writeFileAsString(Context context, String fileName, String data) throws IOException {				
+	public static void writeFileAsString(Context context, String fileName, String data) throws IOException {				
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(context.getFilesDir() + File.separator + fileName)));
 		bufferedWriter.write(data);
 		bufferedWriter.close();

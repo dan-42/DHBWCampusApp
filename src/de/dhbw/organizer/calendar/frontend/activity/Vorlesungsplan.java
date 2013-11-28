@@ -30,7 +30,6 @@ import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
 import de.dhbw.organizer.calendar.frontend.adapter.EventAdapter;
 import de.dhbw.organizer.calendar.frontend.manager.CalendarManager;
-import de.dhbw.organizer.calendar.frontend.preferences.Preferences;
 import de.dhbw.organizer.calendar.helper.FileHelper;
 
 /**
@@ -52,7 +51,6 @@ public class Vorlesungsplan extends Activity {
 	private AccountManager mAccountManager;
 	private ProgressDialog mUpdateViewDialog;
 	private Object mChangeListenerHandle;
-	private int mPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +59,11 @@ public class Vorlesungsplan extends Activity {
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-		mPosition = 0;
-		
-		mDrawerListView = (ListView)findViewById(R.id.left_drawer);
-		
-		mAccountManager = AccountManager.get(this);		
-
-		
+		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
 
 		mAccountManager = AccountManager.get(this);
 
+		mAccountManager = AccountManager.get(this);
 
 		mCalenderSyncStatusObserver = new CalenderSyncStatusObserver();
 		mAccountManager = AccountManager.get(this);
@@ -83,24 +75,16 @@ public class Vorlesungsplan extends Activity {
 
 		mUpdateViewDialog = new ProgressDialog(mContext);
 		mUpdateViewDialog.setMessage(getString(R.string.calendar_frontend_updateing_calendar));
-				
 
 		setDrawerContent();
-		
-		mDrawerLayout.animate();
-		//mDrawerLayout.toggle();
-	
-		
-
-		FileHelper fileHelper = new FileHelper();
 
 		try {
-			String Calendarname = fileHelper.readFileAsString(this, "lastCalendarOpened");
-			setListContent(this, Calendarname);
+			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
 		} catch (Exception e) {
 			// create File
 			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
 			// Toast: Bitte f�ge einen neuen Kalender hinzu
+			mCalendarName = null;
 		}
 	}
 
@@ -111,7 +95,23 @@ public class Vorlesungsplan extends Activity {
 
 	protected void onResume() {
 		super.onResume();
+		mCalendarList = mCalendarManager.getCalendarList(this);
 		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
+		if (mDrawerLayout != null)
+			mDrawerLayout.closeDrawers();
+
+		if (mCalendarList.isEmpty()) {
+			final Intent newCalendar = new Intent(this, AuthenticatorActivityTabed.class);
+			this.startActivity(newCalendar);
+		} else {
+			if (mCalendarName == null) {
+				mCalendarName = mCalendarList.get(0);
+				setListContent(mContext, mCalendarName);
+			}
+			Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
+
+		}
+
 	};
 
 	@Override
@@ -124,9 +124,6 @@ public class Vorlesungsplan extends Activity {
 	private void setDrawerContent() {
 
 		mCalendarList = mCalendarManager.getCalendarList(this);
-		
-		
-		
 
 		// get ListView defined in activity_main.xml
 		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
@@ -141,11 +138,7 @@ public class Vorlesungsplan extends Activity {
 			this.startActivity(intent);
 
 		} else {
-			
-			
-			
-			
-			
+
 			Log.d("Kalendar: ", mCalendarList.get(0));
 			if (mCalendarList.size() == 1) {
 				FileHelper fileHelper = new FileHelper();
@@ -163,15 +156,13 @@ public class Vorlesungsplan extends Activity {
 		mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		
-		
+
 		// which element is selected?
 		FileHelper fileHelper = new FileHelper();
 
 		try {
 			String Calendarname = fileHelper.readFileAsString(this, "lastCalendarOpened");
 			setListContent(this, Calendarname);
-			
 
 			int actualSelectedCalendar = mCalendarList.indexOf(Calendarname);
 			mDrawerListView.setItemChecked(actualSelectedCalendar, true);
@@ -180,10 +171,7 @@ public class Vorlesungsplan extends Activity {
 			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
 			// Toast: Bitte f�ge einen neuen Kalender hinzu
 		}
-		
-		
 
-		
 		// create ActionBarDrawerToggle
 		mActionBarDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 		mDrawerLayout, /* DrawerLayout object */
@@ -205,7 +193,7 @@ public class Vorlesungsplan extends Activity {
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				setDrawerContent();
-				//mDrawerListView.setItemChecked(mPosition, true);
+				// mDrawerListView.setItemChecked(mPosition, true);
 			}
 		};
 
@@ -237,35 +225,39 @@ public class Vorlesungsplan extends Activity {
 			this.startActivity(newCalendar);
 
 			break;
-/*
- * currently un used
-		case R.id.de_calendar_menu_preferences:
-			final Intent preferences = new Intent(this, Preferences.class);
-			this.startActivity(preferences);
-
-			break;*/
+		/*
+		 * currently un used case R.id.de_calendar_menu_preferences: final
+		 * Intent preferences = new Intent(this, Preferences.class);
+		 * this.startActivity(preferences);
+		 * 
+		 * break;
+		 */
 
 		case R.id.de_calendar_menu_delete_calendar:
 			// delete Calendar
 			de.dhbw.organizer.calendar.backend.manager.CalendarManager cm = de.dhbw.organizer.calendar.backend.manager.CalendarManager.get(this);
 			cm.deleteCalendar(mCalendarName);
 			mCalendarList.remove(mCalendarName);
+
 			if (mCalendarList.size() > 0) {
 				mCalendarName = mCalendarList.get(0);
 				setListContent(this, mCalendarName);
 			} else {
 				mCalendarName = null;
 				setListContent(this, null);
+
+				final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
+				this.startActivity(intent);
 			}
 
 			break;
 
 		case R.id.jumptotoday:
-			Toast.makeText(mContext, R.string.calendar_frontend_list_goto_today, Toast.LENGTH_LONG).show();;
+			Toast.makeText(mContext, R.string.calendar_frontend_list_goto_today, Toast.LENGTH_LONG).show();
 			goToActualEvent();
 			break;
 
-		case R.id.refresh:			
+		case R.id.refresh:
 			mCalendarManager.syncCalendar(mCalendarName);
 			break;
 
@@ -303,11 +295,15 @@ public class Vorlesungsplan extends Activity {
 		} else {
 			// get the Events as an Adapter
 			EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);
-			//DayAdapter mEvents = mCalendarManager.getCalendarDays(this, calendarName);
+			// DayAdapter mEvents = mCalendarManager.getCalendarDays(this,
+			// calendarName);
 			mCalendarName = calendarName;
 			// set Adapter to display List
 			mEventList.setAdapter(mEvents);
 			goToActualEvent();
+
+			Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
+
 		}
 
 	}
@@ -344,21 +340,17 @@ public class Vorlesungsplan extends Activity {
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView parent, View view, int position, long id) {
-			
+
 			mDrawerLayout.closeDrawer(mDrawerListView);
 			Log.d((((TextView) view).getText()).toString(), (((TextView) view).getText()).toString());
 
 			selectItem(view);
-			
-			mPosition = position;
 
 			String calendarName = (((TextView) view).getText()).toString();
 
-			
-			// schreibe in die Datei
-			FileHelper fileHelper = new FileHelper();
+			// schreibe in die Datei			
 			try {
-				fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", calendarName);
+				FileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", calendarName);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -368,8 +360,6 @@ public class Vorlesungsplan extends Activity {
 
 	public class CalenderSyncStatusObserver implements SyncStatusObserver {
 		private static final String TAG = "calendar CalenderSyncStatusObserver";
-
-		private boolean mmLastSyncState = false;
 
 		/*
 		 * (non-Javadoc)
@@ -411,8 +401,6 @@ public class Vorlesungsplan extends Activity {
 					}
 				}
 			});
-
-			mmLastSyncState = isSyncing;
 
 		}
 
