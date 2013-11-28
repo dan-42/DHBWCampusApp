@@ -85,11 +85,14 @@
     <string name="calendar_backend_update_updating">Die Kalenderliste wird aktualisiert ...</string>
     <string name="calendar_backend_update_xml_error">FEHLER: Die Kalenderliste konnte nicht aktualisiert werden!</string>
     <string name="calendar_backend_update_successful">Die Kalenderliste wurde erfolgreich aktualisiert</string>
+    <string name="calendar_backend_adding_new_calendar">Neuer Kalender wird  hinzufügt</string>
     <string name="calendar_backend_account_add_calendar_manual">Kalender hinzufügen</string>
     <string name="calendar_backend_account_display_name">Anzeigename</string>
     <string name="calendar_backend_account_ical_url">iCal URL</string>
 
-    <!-- CALENDAR FRONTEND -->
+    <!-- CALENDAR FRONTEND -->    
+    <string name="calendar_frontend_updateing_calendar">updating calendar...</string>
+    <string name="calendar_frontend_list_goto_today">gehe zu heute</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Internetsuche</string>

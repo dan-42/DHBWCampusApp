@@ -47,6 +47,8 @@ public class Constants {
      */
     public static final String KEY_ACCOUNT_CAL_URL = "de.dhbw.organizer.callendar.url";
     
+    public static final String KEY_ACCOUNT_CAL_UUID = "de.dhbw.organizer.callendar.uuid";
+    
       
     /**
      * this String is added in front of every Calendar 

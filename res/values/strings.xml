@@ -95,11 +95,15 @@
     <string name="calendar_backend_update_updating">calendar list is updating ...</string>
     <string name="calendar_backend_update_xml_error">ERROR: can&#8217;t update caledar list!</string>
     <string name="calendar_backend_update_successful">update was successful</string>
+    <string name="calendar_backend_adding_new_calendar">adding new calendar</string>
     <string name="calendar_backend_account_add_calendar_manual">add calendar</string>
     <string name="calendar_backend_account_display_name">Display Name</string>
     <string name="calendar_backend_account_ical_url">iCal URL</string>
 
-    <!-- CALENDAR FRONTEND -->
+    <!-- CALENDAR FRONTEND -->   
+    
+    <string name="calendar_frontend_updateing_calendar">updating calendar...</string>
+    <string name="calendar_frontend_list_goto_today">goto today</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Web search</string>

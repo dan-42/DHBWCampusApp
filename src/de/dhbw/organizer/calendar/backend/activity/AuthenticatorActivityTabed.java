@@ -28,6 +28,7 @@ package de.dhbw.organizer.calendar.backend.activity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.UUID;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
@@ -37,8 +38,8 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SyncStatusObserver;
 import android.graphics.Color;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -82,9 +83,9 @@ public class AuthenticatorActivityTabed extends Activity {
 	private AccountManager mAccountManager;
 
 	private TextView mInfoMessage;
-	
+
 	private TextView mErrorMessageSpinner;
-	
+
 	private TextView mErrorMessageByhand;
 
 	private ImageButton mUpdateListButton;
@@ -119,12 +120,24 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	private ProgressDialog mProgressDialog = null;
 
+	private CalenderSyncStatusObserver mCalenderSyncStatusObserver;
+
+	private Object mCalenderSyncStatusObserverHandle;
+
+	/**
+	 * used to make sure therevare no refresh problems, e.g. when an accout with
+	 * the same name is added, removed an added very quickly in a row
+	 */
+	private UUID mAccountUuid;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		CalendarManager cm = CalendarManager.get(this);
 		mAccountManager = AccountManager.get(this);
+
+		mCalenderSyncStatusObserver = new CalenderSyncStatusObserver();
 
 		mAccountAuthenticatorResponse = getIntent().getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
 
@@ -163,9 +176,9 @@ public class AuthenticatorActivityTabed extends Activity {
 		mProgress = (ProgressBar) findViewById(R.id.calendar_backend_account_calendar_list_update_progressbar);
 
 		mInfoMessage = (TextView) findViewById(R.id.calendar_backend_account_information_message);
-		
+
 		mErrorMessageByhand = (TextView) findViewById(R.id.calendar_backend_account_warning_message_manual);
-		
+
 		mErrorMessageSpinner = (TextView) findViewById(R.id.calendar_backend_account_warning_message);
 
 		mIcalSpinner = (Spinner) findViewById(R.id.calendar_backend_account_ical_calendar_spinner);
@@ -193,23 +206,35 @@ public class AuthenticatorActivityTabed extends Activity {
 		mIcalSpinner.setAdapter(mAdapter);
 
 		mProgressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
-		
-		
+		mProgressDialog.setMessage(getString(R.string.calendar_backend_adding_new_calendar));
 
-	}	
-	
-	
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!NetworkManager.getInstance(this).isOnline()){
+
+		mCalenderSyncStatusObserverHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE,
+				mCalenderSyncStatusObserver);
+
+		if (!NetworkManager.getInstance(this).isOnline()) {
 			mErrorMessageSpinner.setText(getText(R.string.calendar_backend_network_error));
-			mErrorMessageByhand.setText(getText(R.string.calendar_backend_network_error));			
-		}
-		else {
+			mErrorMessageByhand.setText(getText(R.string.calendar_backend_network_error));
+		} else {
 			mErrorMessageSpinner.setText(null);
 			mErrorMessageByhand.setText(null);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		ContentResolver.removeStatusChangeListener(mCalenderSyncStatusObserverHandle);
 	}
 
 	/**
@@ -218,13 +243,12 @@ public class AuthenticatorActivityTabed extends Activity {
 	 * @param view
 	 */
 	public void addCalendarFromSpinner(View View) {
-		
-		if(!NetworkManager.getInstance(this).isOnline()){
+
+		if (!NetworkManager.getInstance(this).isOnline()) {
 			mErrorMessageSpinner.setText(getText(R.string.calendar_backend_network_error));
-			mErrorMessageByhand.setText(getText(R.string.calendar_backend_network_error));	
+			mErrorMessageByhand.setText(getText(R.string.calendar_backend_network_error));
 			return;
-		}
-		else {
+		} else {
 			mErrorMessageSpinner.setText(null);
 			mErrorMessageByhand.setText(null);
 		}
@@ -256,12 +280,11 @@ public class AuthenticatorActivityTabed extends Activity {
 	 * @param view
 	 */
 	public void addCalendarFromInputForm(View view) {
-		if(!NetworkManager.getInstance(this).isOnline()){
+		if (!NetworkManager.getInstance(this).isOnline()) {
 			mErrorMessageSpinner.setText(getText(R.string.calendar_backend_network_error));
-			mErrorMessageByhand.setText(getText(R.string.calendar_backend_network_error));	
+			mErrorMessageByhand.setText(getText(R.string.calendar_backend_network_error));
 			return;
-		}
-		else {
+		} else {
 			mErrorMessageSpinner.setText(null);
 			mErrorMessageByhand.setText(null);
 		}
@@ -285,9 +308,9 @@ public class AuthenticatorActivityTabed extends Activity {
 			mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_displayname_invalid));
 			mFormIsValid = false;
 		} else {
-			
+
 			final Account account = new Account(mCalendarDisplayName, Constants.ACCOUNT_TYPE);
-			
+
 			if (cm.calendarExists(account)) {
 				mDisplayNameEditText.setError(getString(R.string.calendar_backend_input_error_calendar_already_exists));
 				mFormIsValid = false;
@@ -392,8 +415,10 @@ public class AuthenticatorActivityTabed extends Activity {
 
 				if (!cm.calendarExists(account)) {
 
+					mAccountUuid = UUID.randomUUID();
 					mAccountManager.addAccountExplicitly(account, DEFAULT_PASSWORD, null);
 					mAccountManager.setUserData(account, Constants.KEY_ACCOUNT_CAL_URL, mCalendarICalUrl);
+					mAccountManager.setUserData(account, Constants.KEY_ACCOUNT_CAL_UUID, mAccountUuid.toString());
 
 					ContentResolver.setIsSyncable(account, CalendarContract.AUTHORITY, 1);
 					ContentResolver.setSyncAutomatically(account, CalendarContract.AUTHORITY, true);
@@ -407,7 +432,8 @@ public class AuthenticatorActivityTabed extends Activity {
 					setResult(RESULT_OK, intent);
 
 					cm.createCalendar(account, mCalendarColor);
-					finish();
+
+					triggerSync(account);
 
 				} else {
 					mInfoMessage.setText(R.string.calendar_backend_input_error_calendar_already_exists);
@@ -419,7 +445,92 @@ public class AuthenticatorActivityTabed extends Activity {
 		}
 	}
 
-	
+	private void triggerSync(Account account) {
+		Log.e(TAG, "triggerSync() -- do it :-)");
+		Bundle settingsBundle = new Bundle();
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+		/*
+		 * Request the sync for the default account, authority, and manual sync
+		 * settings
+		 */
+		ContentResolver.requestSync(account, CalendarContract.AUTHORITY, settingsBundle);
+
+	}
+
+	public class CalenderSyncStatusObserver implements SyncStatusObserver {
+		private static final String TAG = "calendar backend  CalenderSyncStatusObserver";
+
+		private boolean mmSyncStarted = false;
+		private boolean mmSyncStoped = false;
+
+		/**
+		 * @return the mmSyncStarted
+		 */
+		public boolean isSyncStarted() {
+			return mmSyncStarted;
+		}
+
+		/**
+		 * @return the mmSyncStoped
+		 */
+		public boolean isSyncStoped() {
+			return mmSyncStoped;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.content.SyncStatusObserver#onStatusChanged(int)
+		 */
+		@Override
+		public void onStatusChanged(int which) {
+			// Log.d(TAG, "onStatusChanged() ");
+			Account accounts[] = mAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+
+			for (Account a : accounts) {
+				if (a.name.equals(mCalendarDisplayName)) {
+
+					String aUuid = mAccountManager.getUserData(a, Constants.KEY_ACCOUNT_CAL_UUID);
+					if (aUuid.equals(mAccountUuid.toString())) {
+						Log.d(TAG, "onStatusChanged() a.name = " + a.name);
+						setFlags(ContentResolver.isSyncActive(a, CalendarContract.AUTHORITY));
+					} else {
+						Log.i(TAG, "onStatusChanged() NOT the Same UUID a.name = " + a.name);
+					}
+				
+				}
+			}
+		}
+
+		public void setFlags(final boolean isSyncing) {
+			Log.i(TAG, "notifyView() isSyncing = " + isSyncing);
+
+			if (!mmSyncStarted && isSyncing) {
+				Log.i(TAG, "notifyView() set mmSyncStarted true");
+				mmSyncStarted = true;
+			}
+
+			if (mmSyncStarted && !isSyncing) {
+				Log.i(TAG, "notifyView() set mmSyncStoped true");
+				mmSyncStoped = true;
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						mProgressDialog.dismiss();
+						finish();
+
+					}
+				});
+
+			}
+
+		}
+
+	}
+
 	/**
 	 * sub class to call an http get in background
 	 * 
@@ -468,7 +579,6 @@ public class AuthenticatorActivityTabed extends Activity {
 			super.onPostExecute(result);
 			mmHttpStatus = result;
 			addCalendar();
-			mProgressDialog.dismiss();
 		}
 
 	}

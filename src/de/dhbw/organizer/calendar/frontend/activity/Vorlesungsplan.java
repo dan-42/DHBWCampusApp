@@ -82,6 +82,8 @@ public class Vorlesungsplan extends Activity {
 		mCalendarManager = new CalendarManager();
 
 		mUpdateViewDialog = new ProgressDialog(mContext);
+		mUpdateViewDialog.setMessage(getString(R.string.calendar_frontend_updateing_calendar));
+				
 
 		setDrawerContent();
 		
@@ -259,10 +261,11 @@ public class Vorlesungsplan extends Activity {
 			break;
 
 		case R.id.jumptotoday:
+			Toast.makeText(mContext, R.string.calendar_frontend_list_goto_today, Toast.LENGTH_LONG).show();;
 			goToActualEvent();
 			break;
 
-		case R.id.refresh:
+		case R.id.refresh:			
 			mCalendarManager.syncCalendar(mCalendarName);
 			break;
 
