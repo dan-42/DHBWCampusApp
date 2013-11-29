@@ -51,6 +51,7 @@ public class Vorlesungsplan extends Activity {
 	private AccountManager mAccountManager;
 	private ProgressDialog mUpdateViewDialog;
 	private Object mChangeListenerHandle;
+	private boolean isAddCalendarActivityShown = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,118 +60,9 @@ public class Vorlesungsplan extends Activity {
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
-
-		mAccountManager = AccountManager.get(this);
-
-		mAccountManager = AccountManager.get(this);
-
-		mCalenderSyncStatusObserver = new CalenderSyncStatusObserver();
-		mAccountManager = AccountManager.get(this);
-
-		/*
-		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
-		 */
-		mCalendarManager = new CalendarManager();
-
-		mUpdateViewDialog = new ProgressDialog(mContext);
-		mUpdateViewDialog.setMessage(getString(R.string.calendar_frontend_updateing_calendar));
-
-		setDrawerContent();
-
-		try {
-			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
-		} catch (Exception e) {
-			// create File
-			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
-			// Toast: Bitte f�ge einen neuen Kalender hinzu
-			mCalendarName = null;
-		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
-	protected void onResume() {
-		super.onResume();
-		mCalendarList = mCalendarManager.getCalendarList(this);
-		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
-		if (mDrawerLayout != null)
-			mDrawerLayout.closeDrawers();
-
-		if (mCalendarList.isEmpty()) {
-			final Intent newCalendar = new Intent(this, AuthenticatorActivityTabed.class);
-			this.startActivity(newCalendar);
-		} else {
-			if (mCalendarName == null) {
-				mCalendarName = mCalendarList.get(0);
-				setListContent(mContext, mCalendarName);
-			}
-			Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
-
-		}
-
-	};
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		ContentResolver.removeStatusChangeListener(mChangeListenerHandle);
-
-	};
-
-	private void setDrawerContent() {
-
-		mCalendarList = mCalendarManager.getCalendarList(this);
-
-		// get ListView defined in activity_main.xml
-		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
-
-		if (mCalendarList.isEmpty()) {
-
-			// Hier ein Toast der sagt bitte neuen Kalender erstellen, dann von
-			// links nach rechts wischen um Kalender auszuw�hlen
-			Log.d("Kalendar: ", "mCalendarList is empty");
-
-			final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
-			this.startActivity(intent);
-
-		} else {
-
-			Log.d("Kalendar: ", mCalendarList.get(0));
-			if (mCalendarList.size() == 1) {
-				FileHelper fileHelper = new FileHelper();
-				try {
-					fileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", mCalendarList.get(0));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		// Set the adapter for the list view
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(this, R.layout.calendar_drawer_listview_item, mCalendarList));
-
-		mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
-
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-		// which element is selected?
-		FileHelper fileHelper = new FileHelper();
-
-		try {
-			String Calendarname = fileHelper.readFileAsString(this, "lastCalendarOpened");
-			setListContent(this, Calendarname);
-
-			int actualSelectedCalendar = mCalendarList.indexOf(Calendarname);
-			mDrawerListView.setItemChecked(actualSelectedCalendar, true);
-		} catch (Exception e) {
-			// create File
-			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
-			// Toast: Bitte f�ge einen neuen Kalender hinzu
-		}
+		mDrawerListView = (ListView) findViewById(R.id.left_drawer);
+		mDrawerListView.setOnItemClickListener(new DrawerItemClickListener());
 
 		// create ActionBarDrawerToggle
 		mActionBarDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
@@ -199,6 +91,113 @@ public class Vorlesungsplan extends Activity {
 
 		// Set actionBarDrawerToggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+
+		mAccountManager = AccountManager.get(this);
+
+		mAccountManager = AccountManager.get(this);
+
+		mCalenderSyncStatusObserver = new CalenderSyncStatusObserver();
+		mAccountManager = AccountManager.get(this);
+
+		/*
+		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
+		 */
+		mCalendarManager = new CalendarManager();
+
+		mUpdateViewDialog = new ProgressDialog(mContext);
+		mUpdateViewDialog.setMessage(getString(R.string.calendar_frontend_updateing_calendar));
+
+		setDrawerContent();
+
+		try {
+			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
+		} catch (Exception e) {
+			// create File
+			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
+			// Toast: Bitte f�ge einen neuen Kalender hinzu
+			mCalendarName = null;
+		}
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	protected void onResume() {
+		super.onResume();
+		mCalendarList = mCalendarManager.getCalendarList(this);
+
+		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
+
+		if (mDrawerLayout != null)
+			mDrawerLayout.closeDrawers();
+
+		if (mCalendarList.isEmpty()) {
+			mCalendarName = null;
+		}
+
+		if (mCalendarList.isEmpty() && !isAddCalendarActivityShown) {
+			isAddCalendarActivityShown = true;
+			final Intent newCalendar = new Intent(this, AuthenticatorActivityTabed.class);
+			this.startActivity(newCalendar);
+
+		} else if (mCalendarList.isEmpty() && isAddCalendarActivityShown) {
+			this.onBackPressed();
+
+		}
+
+		if (!mCalendarList.isEmpty() && mCalendarName == null) {
+			mCalendarName = mCalendarList.get(0);
+			setListContent(mContext, mCalendarName);
+		}
+
+		if (mCalendarName != null && mCalendarList.isEmpty())
+			Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
+
+	};
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		ContentResolver.removeStatusChangeListener(mChangeListenerHandle);
+
+	};
+
+	private void setDrawerContent() {
+
+		mCalendarList = mCalendarManager.getCalendarList(this);
+
+		if (mCalendarList.isEmpty()) {
+			return;
+
+		} else {
+
+			Log.d("Kalendar: ", mCalendarList.get(0));
+			if (mCalendarList.size() == 1) {
+				try {
+					FileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", mCalendarList.get(0));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// Set the adapter for the list view
+		mDrawerListView.setAdapter(new ArrayAdapter<String>(this, R.layout.calendar_drawer_listview_item, mCalendarList));
+
+		try {
+			String Calendarname = FileHelper.readFileAsString(this, "lastCalendarOpened");
+			setListContent(this, Calendarname);
+
+			int actualSelectedCalendar = mCalendarList.indexOf(Calendarname);
+			mDrawerListView.setItemChecked(actualSelectedCalendar, true);
+		} catch (Exception e) {
+			// create File
+			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
+			// Toast: Bitte f�ge einen neuen Kalender hinzu
+		}
 
 	}
 
@@ -236,18 +235,20 @@ public class Vorlesungsplan extends Activity {
 		case R.id.de_calendar_menu_delete_calendar:
 			// delete Calendar
 			de.dhbw.organizer.calendar.backend.manager.CalendarManager cm = de.dhbw.organizer.calendar.backend.manager.CalendarManager.get(this);
-			cm.deleteCalendar(mCalendarName);
-			mCalendarList.remove(mCalendarName);
+			if (mCalendarName != null) {
+				cm.deleteCalendar(mCalendarName);
+				mCalendarList.remove(mCalendarName);
 
-			if (mCalendarList.size() > 0) {
-				mCalendarName = mCalendarList.get(0);
-				setListContent(this, mCalendarName);
-			} else {
-				mCalendarName = null;
-				setListContent(this, null);
+				if (mCalendarList.size() > 0) {
+					mCalendarName = mCalendarList.get(0);
+					setListContent(this, mCalendarName);
+				} else {
+					mCalendarName = null;
+					setListContent(this, null);
 
-				final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
-				this.startActivity(intent);
+					final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
+					this.startActivity(intent);
+				}
 			}
 
 			break;
@@ -300,9 +301,11 @@ public class Vorlesungsplan extends Activity {
 			mCalendarName = calendarName;
 			// set Adapter to display List
 			mEventList.setAdapter(mEvents);
+			Log.i("setListContent", "goto today");
 			goToActualEvent();
 
-			Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
+			// Toast.makeText(mContext, mCalendarName,
+			// Toast.LENGTH_SHORT).show();
 
 		}
 
@@ -348,7 +351,7 @@ public class Vorlesungsplan extends Activity {
 
 			String calendarName = (((TextView) view).getText()).toString();
 
-			// schreibe in die Datei			
+			// schreibe in die Datei
 			try {
 				FileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", calendarName);
 			} catch (IOException e) {
@@ -360,6 +363,9 @@ public class Vorlesungsplan extends Activity {
 
 	public class CalenderSyncStatusObserver implements SyncStatusObserver {
 		private static final String TAG = "calendar CalenderSyncStatusObserver";
+
+		private boolean mmStartSync = false;
+		private boolean mmStopSync = false;
 
 		/*
 		 * (non-Javadoc)
@@ -387,22 +393,34 @@ public class Vorlesungsplan extends Activity {
 
 		public void notifyView(final boolean isSyncing) {
 
-			runOnUiThread(new Runnable() {
-				public void run() {
-					if (isSyncing) {
-						mUpdateViewDialog.show();
-						Log.d(TAG, "notifyView()  is  syncing");
-					} else {
+			if (!mmStartSync && isSyncing) {
+				mmStartSync = true;
+			} else if (mmStartSync && !isSyncing) {
+				mmStopSync = true;
+			}
 
-						mUpdateViewDialog.dismiss();
-						setListContent(mContext, mCalendarName);
+			if (mmStopSync) {
 
-						Log.d(TAG, "notifyView()  is not syncing");
+				runOnUiThread(new Runnable() {
+					public void run() {
+						if (isSyncing) {
+							mUpdateViewDialog.show();
+							Log.d(TAG, "notifyView()  is  syncing");
+						} else {
+
+							mUpdateViewDialog.dismiss();
+							setListContent(mContext, mCalendarName);
+
+							Log.d(TAG, "notifyView()  is not syncing");
+						}
 					}
-				}
-			});
+				});
+
+				mmStartSync = false;
+				mmStopSync = false;
+
+			}
 
 		}
-
 	}
 }

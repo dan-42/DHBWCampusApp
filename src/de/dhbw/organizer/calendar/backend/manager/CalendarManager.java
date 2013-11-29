@@ -93,6 +93,7 @@ public class CalendarManager {
 		return new CalendarManager(context);
 
 	}
+
 	/**
 	 * deletes the account
 	 * 
@@ -101,8 +102,14 @@ public class CalendarManager {
 	public boolean deleteCalendar(String calenderName) {
 		Log.v(TAG, "deleteCalendar() " + calenderName);
 		final Account account = new Account(calenderName, Constants.ACCOUNT_TYPE);
+		long id = getCalendarId(account);
+
 		AccountManager ac = AccountManager.get(mContext);
-		return ac.removeAccount(account, null, null).isDone();
+
+		deleteCalendar(account, id);
+		boolean sucess = ac.removeAccount(account, null, null).isDone();
+
+		return sucess;
 
 	}
 
@@ -342,10 +349,11 @@ public class CalendarManager {
 	public boolean deleteCalendar(Account account, long calendarId) {
 
 		deleteAllEvents(account, calendarId);
+		Uri url = asSyncAdapter(Calendars.CONTENT_URI, account.name, account.type);
 
 		ContentResolver cr = mContext.getContentResolver();
 		String selection = "((" + Calendars._ID + " = ?) AND  (" + Calendars.ACCOUNT_TYPE + " = ?))";
-		String[] selectionArgs = new String[] { Long.toString(calendarId), account.type };
+		String[] selectionArgs = new String[] { Long.toString(calendarId), Constants.ACCOUNT_TYPE };
 
 		long ret = cr.delete(Calendars.CONTENT_URI, selection, selectionArgs);
 
@@ -618,8 +626,7 @@ public class CalendarManager {
 		values.put(Events._SYNC_ID, e.getUid().getValue());
 		values.put(EVENTS_DB_TIME_STEMP_COLUMN, Long.toString(e.getDateTimeStamp().getValue().getTime()));
 		values.put(EVENTS_DB_HASH_COLUMN, hash);
-		
-		
+
 		if (e.getClassification() != null)
 			if (e.getClassification().isPrivate())
 				values.put(Events.ACCESS_LEVEL, Events.ACCESS_PRIVATE);

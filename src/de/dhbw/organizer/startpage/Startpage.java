@@ -47,7 +47,7 @@ public class Startpage extends Activity {
 			setContentView(R.layout.startpage_activity);
 			String text = getString(R.string.start_app_testversion_timeleft);
 			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft_textview);
-			mTextViewTimeLeft.setText(text + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
+			mTextViewTimeLeft.setText(text + " " + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
 
@@ -63,7 +63,7 @@ public class Startpage extends Activity {
 			setContentView(R.layout.startpage_activity);
 			String text = getString(R.string.start_app_testversion_timeleft);
 			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft_textview);
-			mTextViewTimeLeft.setText(text + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
+			mTextViewTimeLeft.setText(text + " " + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
 
