@@ -78,7 +78,7 @@ public class EventAdapter extends BaseAdapter {
 
 		// setze die Hintergrundfarbe
 
-		if (startTime < System.currentTimeMillis()) {
+		if (endTime < System.currentTimeMillis()) {
 			// linearLayout.setBackgroundColor(Color.LTGRAY);
 			linearLayout1.setBackgroundColor(Color.LTGRAY);
 		} else if (entry.getColor()) {
