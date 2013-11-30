@@ -22,7 +22,11 @@
  */
 -->
  
-<!-- @author: friedrda -->
+<!-- 
+/**
+ * @author: friedrda 
+ */
+-->
 
 <!-- android:contentAuthority="com.android.calendarcontract" -->
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"    

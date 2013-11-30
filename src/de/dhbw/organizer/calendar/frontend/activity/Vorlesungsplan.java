@@ -264,6 +264,7 @@ public class Vorlesungsplan extends Activity {
 	}
 
 	/**
+	 * Set the content of the List and go to the actual event
 	 * 
 	 * @param context
 	 *            The actual context
@@ -287,7 +288,7 @@ public class Vorlesungsplan extends Activity {
 			// DayAdapter mEvents = mCalendarManager.getCalendarDays(this,
 			// calendarName);
 			try {
-				if(mEvents.getCount() == 0){
+				if (mEvents.getCount() == 0) {
 					showDialogListEmpty();
 				}
 
@@ -362,6 +363,11 @@ public class Vorlesungsplan extends Activity {
 		}
 	}
 
+	/**
+	 * 
+	 * @author friedrda
+	 * 
+	 */
 	public class CalenderSyncStatusObserver implements SyncStatusObserver {
 		private static final String TAG = "calendar CalenderSyncStatusObserver";
 
@@ -392,6 +398,10 @@ public class Vorlesungsplan extends Activity {
 			}
 		}
 
+		/**
+		 * 
+		 * @param isSyncing
+		 */
 		public void notifyView(final boolean isSyncing) {
 
 			if (!mmStartSync && isSyncing) {
@@ -464,6 +474,9 @@ public class Vorlesungsplan extends Activity {
 
 	}
 
+	/**
+	 * show a dialog to inform the user, that the list is empty, and not broken
+	 */
 	private void showDialogListEmpty() {
 		// TODO Auto-generated method stub
 		new AlertDialog.Builder(this).setTitle(R.string.calendar_frontend_notice).setMessage(R.string.calendar_frontend_no_events)

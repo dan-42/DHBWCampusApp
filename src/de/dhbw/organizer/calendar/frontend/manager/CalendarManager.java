@@ -118,7 +118,7 @@ public class CalendarManager {
 	
 
 	/**
-	 * 
+	 * get the List of the calendar
 	 * @return ArrayList with calendar names with account type
 	 *         Calendars.ACCOUNT_TYPE
 	 */
