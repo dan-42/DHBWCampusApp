@@ -29,6 +29,7 @@
     <!-- GENERAL -->
     <string name="general_yes">Ja</string>
     <string name="general_no">Nein</string>
+    <string name="general_ok">Ok</string>
 
     <!-- MAIN VIEW -->
     <string name="app_name">CampusApp</string>
@@ -102,6 +103,8 @@
     <string name="calendar_frontend_delete_calendar">Willst Du diesen Kalender wirklich löschen</string>
     <string name="calendar_frontend_delete_calendar_dialog_heading">Bitte bestätigen</string>
     <string name="calendar_frontend_facebook_started">Facebook gestartet. Bitte warten...</string>
+    <string name="calendar_frontend_no_events">In diesem Kalender sind keine Einträge</string>
+    <string name="calendar_frontend_notice">Hinweis</string>
 
     <!-- CALENDAR FRONTEND -->
     <!-- MENU -->

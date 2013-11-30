@@ -117,6 +117,7 @@ public class Vorlesungsplan extends Activity {
 
 		try {
 			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
+			setListContent(this, mCalendarName);
 		} catch (Exception e) {
 			// create File
 			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
@@ -177,7 +178,6 @@ public class Vorlesungsplan extends Activity {
 
 		if (mCalendarList.isEmpty()) {
 			return;
-
 		} else {
 
 			Log.d("Kalendar: ", mCalendarList.get(0));
@@ -195,8 +195,6 @@ public class Vorlesungsplan extends Activity {
 
 		try {
 			String Calendarname = FileHelper.readFileAsString(this, "lastCalendarOpened");
-			setListContent(this, Calendarname);
-
 			int actualSelectedCalendar = mCalendarList.indexOf(Calendarname);
 			mDrawerListView.setItemChecked(actualSelectedCalendar, true);
 		} catch (Exception e) {
@@ -288,9 +286,22 @@ public class Vorlesungsplan extends Activity {
 			EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);
 			// DayAdapter mEvents = mCalendarManager.getCalendarDays(this,
 			// calendarName);
+			try {
+				if(mEvents.getCount() == 0){
+					showDialogListEmpty();
+				}
+
+			} catch (IndexOutOfBoundsException e) {
+
+				showDialogListEmpty();
+			}
+
 			mCalendarName = calendarName;
 			// set Adapter to display List
 			mEventList.setAdapter(mEvents);
+			// if(mEventList.is == null){
+			// showDialogListEmpty();
+			// }
 			Log.i("setListContent", "goto today");
 			goToActualEvent();
 
@@ -420,7 +431,8 @@ public class Vorlesungsplan extends Activity {
 	 * @return
 	 */
 	private void getConfirmDeleteDialog() {
-		new AlertDialog.Builder(this).setTitle(R.string.calendar_frontend_delete_calendar_dialog_heading).setMessage(R.string.calendar_frontend_delete_calendar)
+		new AlertDialog.Builder(this).setTitle(R.string.calendar_frontend_delete_calendar_dialog_heading)
+				.setMessage(R.string.calendar_frontend_delete_calendar)
 				.setPositiveButton(R.string.general_yes, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -450,6 +462,17 @@ public class Vorlesungsplan extends Activity {
 			}
 		}
 
+	}
+
+	private void showDialogListEmpty() {
+		// TODO Auto-generated method stub
+		new AlertDialog.Builder(this).setTitle(R.string.calendar_frontend_notice).setMessage(R.string.calendar_frontend_no_events)
+				.setPositiveButton(R.string.general_ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				}).show();
 	}
 
 }
