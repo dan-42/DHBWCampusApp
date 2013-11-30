@@ -178,7 +178,15 @@ public class Startpage extends Activity {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				dialog.cancel();
 			}
-		}).setCancelable(false).create();
+			
+		}).setCancelable(true).setOnCancelListener(new DialogInterface.OnCancelListener() {
+			
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				dialog.cancel();
+				
+			}
+		}).create();
 
 	}
 
