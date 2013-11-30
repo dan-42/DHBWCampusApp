@@ -73,7 +73,7 @@
     <string name="calendar_backend_account_select_ical_update_button">Kalenderliste aktualisieren</string>
     <string name="calendar_backend_account_select_ical_new_calendar">Neuen Kalender hinzufügen</string>
     <string name="calendar_backend_input_select_calendar">Bitte Kalender auswählen</string>
-    <string name="calendar_backend_input_error_no_calendar_selected">FEHLER: es wurde kein Kalender ausgewählt!</string>
+    <string name="calendar_backend_input_error_no_calendar_selected">FEHLER: Es wurde kein Kalender ausgewählt!</string>
     <string name="calendar_backend_input_error_displayname_to_short">FEHLER: Eingabe zu kurz, min. 3 Zeichen!</string>
     <string name="calendar_backend_input_error_displayname_to_long">FEHLER: Eingabe zu lang, max. 16 Zeichen!</string>
     <string name="calendar_backend_input_error_displayname_invalid">FEHLER: Nur Zeichen, Ziffern und Leerzeichen erlaubt!</string>
@@ -85,13 +85,13 @@
     <string name="calendar_backend_update_updating">Die Kalenderliste wird aktualisiert ...</string>
     <string name="calendar_backend_update_xml_error">FEHLER: Die Kalenderliste konnte nicht aktualisiert werden!</string>
     <string name="calendar_backend_update_successful">Die Kalenderliste wurde erfolgreich aktualisiert</string>
-    <string name="calendar_backend_adding_new_calendar">Neuer Kalender wird  hinzufügt</string>
+    <string name="calendar_backend_adding_new_calendar">Neuer Kalender wird  hinzugefügt</string>
     <string name="calendar_backend_account_add_calendar_manual">Kalender hinzufügen</string>
     <string name="calendar_backend_account_display_name">Anzeigename</string>
     <string name="calendar_backend_account_ical_url">iCal URL</string>
 
     <!-- CALENDAR FRONTEND -->    
-    <string name="calendar_frontend_updateing_calendar">updating calendar...</string>
+    <string name="calendar_frontend_updateing_calendar">Aktualisiere Kalender...</string>
     <string name="calendar_frontend_list_goto_today">gehe zu heute</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
