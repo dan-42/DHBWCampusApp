@@ -20,6 +20,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
@@ -74,19 +75,18 @@ public class EventAdapter extends BaseAdapter {
 
 		String description = entry.getDescription();
 
-		LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.linearLayout2);
-		LinearLayout linearLayout1 = (LinearLayout) convertView.findViewById(R.id.linearLayout1);
+		LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.linearLayout1);
 
 		// set background Colors
 
 		if (endTime < System.currentTimeMillis()) {
-			linearLayout1.setBackgroundColor(Color.LTGRAY);
+			linearLayout.setBackgroundColor(Color.LTGRAY);
 		} else if (entry.getColor()) {
-			linearLayout1.setBackgroundColor(Constants.CALENDAR_COLORS[0]);
+			linearLayout.setBackgroundColor(Constants.CALENDAR_COLORS[0]);
 		} else {
-			linearLayout1.setBackgroundColor(entry.getBackgroundColor());
+			linearLayout.setBackgroundColor(entry.getBackgroundColor());
 
-			linearLayout1.setBackgroundColor(Color.WHITE);
+			linearLayout.setBackgroundColor(Color.WHITE);
 			
 		}
 
@@ -108,6 +108,8 @@ public class EventAdapter extends BaseAdapter {
 	}
 
 	private void startActivity2(View v) {
+		Toast.makeText(context, R.string.calendar_frontend_facebook_started, Toast.LENGTH_SHORT).show();
+		
 		Context context = v.getContext();
 		String path = (((ImageView) v).getTag()).toString();
 
@@ -115,11 +117,6 @@ public class EventAdapter extends BaseAdapter {
 
 		openFacebookWithPath(context, path);
 
-	}
-
-	private void showDialog(CalendarEvent entry) {
-		// Create and show your dialog
-		// Depending on the Dialogs button clicks delete it or do nothing
 	}
 
 	/**

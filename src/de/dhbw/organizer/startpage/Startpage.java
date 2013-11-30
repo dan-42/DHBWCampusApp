@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,7 +91,8 @@ public class Startpage extends Activity {
 
 	public void startMensaActivity(View v) {
 		PackageManager pm = getPackageManager();
-		Intent intent = pm.getLaunchIntentForPackage("de.dhbw.mensa");
+		final String mensaId =getString(R.string.mensa_playstore_id);
+		Intent intent = pm.getLaunchIntentForPackage(mensaId);
 
 		if (intent != null) {
 
@@ -99,12 +101,22 @@ public class Startpage extends Activity {
 				startActivity(intent);
 			} else {
 				Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
+				
+				// Start Playstore and go to Mensa App
+				Intent intentMensa = new Intent(Intent.ACTION_VIEW);
+				intentMensa.setData(Uri.parse("market://details?id="+mensaId));
+				startActivity(intentMensa);
 			}
 
 		} else {
 			Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
 			Toast.makeText(this, getString(R.string.mensa_error_not_installed), Toast.LENGTH_LONG).show();
-
+			
+			// Start Playstore and go to Mensa App
+			Intent intentMensa = new Intent(Intent.ACTION_VIEW);
+			intentMensa.setData(Uri.parse("market://details?id="+mensaId));
+			startActivity(intentMensa);
+			
 		}
 	}
 

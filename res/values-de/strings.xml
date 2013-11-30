@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */
 -->
 
 
@@ -29,7 +29,7 @@
     <!-- GENERAL -->
     <string name="general_yes">Ja</string>
     <string name="general_no">Nein</string>
-    
+
     <!-- MAIN VIEW -->
     <string name="app_name">CampusApp</string>
     <string name="app_start_calendar">Kalender</string>
@@ -38,15 +38,14 @@
     <string name="app_start_buildings">Lageplan</string>
     <string name="app_start_hello_world">Hallo Droide</string>
     <string name="app_start_feedback">Feedback</string>
-    
-    <string name="start_app_testversion_timeleft">Testversion endet am: </string>    
+    <string name="start_app_testversion_timeleft">Testversion endet am: </string>
     <string name="start_app_testversion_timeover">Die Testperiode ist vorbei, bitte installiere die aktuelle Version vom Google PlayStore.
                 \n\nBei Problemen oder Fragen, melde dich bitte bei uns unter: 
                 \nfriedrda@dhbw-loerrach.de</string>
-    
-    
+
     <!-- MAIN VIEW -->
     <!-- INFO -->
+    <string name="startpage_menu_info">Info</string>
     <string name="de_app_start_facebook_profile_id_szi">189992694374119</string>
     <string name="de_app_start_info_daniel">Daniel Friedrich</string>
     <string name="de_app_start_info_patrick">Patrick Strittmatter</string>
@@ -54,17 +53,15 @@
     <string name="de_app_start_info_introducion">Diese App entstand in einem studentischen Projekt des Studiumzentrums Informatik an  der DHBW Lörrach.</string>
     <string name="de_app_start_info_version">Version:</string>
     <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstraße 46-50 \n79539 Lörrach</string>
-    
     <string name="app_start_info_study_center_compuet_sience">Studienzentrum Informatik DHBW-Lörrach</string>
     <string name="de_app_start_info_project_develpment_by">Die Initiatoren des Projekts: </string>
     <string name="de_app_start_info_suppliers"></string>
     <string name="de_app_start_info_copyright_icons">Das Copyright der Icons von Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studenten des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler. </string>
     <string name="app_start_facebook_prodile_id_szi">189992694374119</string>
 
-    
     <!-- MENSA -->
     <string name="mensa_error_not_installed">Die DHBW Mensa App ist nicht installiert! </string>
-    
+        <string name="mensa_playstore_id">de.dhbw.mensa</string>
 
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->
@@ -96,29 +93,24 @@
     <string name="calendar_backend_account_display_name">Anzeigename</string>
     <string name="calendar_backend_account_ical_url">iCal URL</string>
 
-    <!-- CALENDAR FRONTEND -->    
+    <!-- CALENDAR FRONTEND -->
     <string name="calendar_frontend_updateing_calendar">Aktualisiere Kalender...</string>
     <string name="calendar_frontend_list_goto_today">Gehe zu nächstem Termin</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Internetsuche</string>
-    <string name="app_not_available">FEHLER: Es wurde kein Webbrowser gefunden!</string>
-    <string name="hide_old_events">Alle vergangenen Termine ausblenden</string>
-    <string name="hide_private_appointments">Private Termine ausblenden</string>
-    <string name="startpage_menu_info">Info</string>
+    <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
+    <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
     <string name="calendar_frontend_delete_calendar">Willst Du diesen Kalender wirklich löschen</string>
     <string name="calendar_frontend_delete_calendar_dialog_heading">Bitte bestätigen</string>
-	
-	<!-- CALENDAR FRONTEND -->
-	<!-- MENU -->
+    <string name="calendar_frontend_facebook_started">Facebook gestartet. Bitte warten...</string>
+
+    <!-- CALENDAR FRONTEND -->
+    <!-- MENU -->
     <string name="de_calendar_menu_new_calendar">Neuen Kalender</string>
     <string name="de_calendar_menu_preferences">Einstellungen</string>
     <string name="de_calendar_menu_delete_calendar">Kalender löschen</string>
-    
+
     <!-- BUILDINGS -->
     <string name="buildings_image_title_map_kbc">KBC Lageplan</string>
     <string name="buildings_image_title_map_hangstr">Hangstraße Lageplan</string>
     <string name="buildings_image_title_buildings_hangstr">Hangstraße Gebäudeplan</string>
-    
-    
+
 </resources>
