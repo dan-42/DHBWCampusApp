@@ -50,8 +50,10 @@
     <string name="de_app_start_info_introducion">Diese App entstand in einem studentischen Projekt des Studiumzentrums Informatik an  der DHBW Lörrach.</string>
     <string name="de_app_start_info_version">Version:</string>
     <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstraße 46-50 \n79539 Lörrach</string>
+    
+    <string name="app_start_info_study_center_compuet_sience">Studienzentrum Informatik DHBW-Lörrach</string>
     <string name="de_app_start_info_project_develpment_by">Die Initiatoren des Projekts: </string>
-    <string name="de_app_start_info_suppliers">Mit Unterstützung der Mensa App und freundlicher Unterstützung der DHBW Karlsruhe</string>
+    <string name="de_app_start_info_suppliers"></string>
     <string name="de_app_start_info_copyright_icons">Das Copyright der Icons von Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studenten des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler. </string>
     <string name="app_start_facebook_prodile_id_szi">189992694374119</string>
 
@@ -92,7 +94,7 @@
 
     <!-- CALENDAR FRONTEND -->    
     <string name="calendar_frontend_updateing_calendar">Aktualisiere Kalender...</string>
-    <string name="calendar_frontend_list_goto_today">gehe zu heute</string>
+    <string name="calendar_frontend_list_goto_today">Gehe zu nächstem Termin</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_websearch">Internetsuche</string>
@@ -109,8 +111,8 @@
     
     <!-- BUILDINGS -->
     <string name="buildings_image_title_map_kbc">KBC Lageplan</string>
-    <string name="buildings_image_title_map_hangstr">Hangstr. Lageplan</string>
-    <string name="buildings_image_title_buildings_hangstr">Hangstr. Gebäudeplan</string>
+    <string name="buildings_image_title_map_hangstr">Hangstraße Lageplan</string>
+    <string name="buildings_image_title_buildings_hangstr">Hangstraße Gebäudeplan</string>
     
     
 </resources>

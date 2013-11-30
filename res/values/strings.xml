@@ -49,9 +49,10 @@
     <string name="de_app_start_info_simon">Simon Riedinger</string>
     <string name="de_app_start_info_introducion">This app was created in a student project of computer science faculty at the University of Cooperative Education Loerrach.</string>
     <string name="de_app_start_info_version">Version: </string>
+    <string name="app_start_info_study_center_compuet_sience">Center study computer science DHBW Lörrach</string>
     <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstrasse 46-50 \n79539 Loerrach \nGermany</string>
     <string name="de_app_start_info_project_develpment_by">The initiators of this project: </string>
-    <string name="de_app_start_info_suppliers">With the support of Mensa app and the kind support of University of Cooperative Education Karlsruhe</string>
+    <string name="de_app_start_info_suppliers"></string>
     <string name="de_app_start_info_copyright_icons">COPYRIGHT:
         \nThe copyright of the icons of Site Map, Mensa and Moodle are at the students of the course MWI at Cooperative State University Karlsruhe and under the direction of Prof. Dr. Wengler.</string>
     <string name="de_app_start_info_copyright_code">LICENSE: GPL v3
