@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */
 -->
 
 
@@ -61,7 +61,8 @@
 
     <!-- MENSA -->
     <string name="mensa_error_not_installed">Die DHBW Mensa App ist nicht installiert! </string>
-        <string name="mensa_playstore_id">de.dhbw.mensa</string>
+    <string name="mensa_playstore_id">de.dhbw.mensa</string>
+    <string name="mensa_playstore_not_installed">Du hast den Google Playstore nicht installiert</string>
 
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->

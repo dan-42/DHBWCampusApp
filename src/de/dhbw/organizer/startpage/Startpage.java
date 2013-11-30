@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -91,7 +92,7 @@ public class Startpage extends Activity {
 
 	public void startMensaActivity(View v) {
 		PackageManager pm = getPackageManager();
-		final String mensaId =getString(R.string.mensa_playstore_id);
+		final String mensaId = getString(R.string.mensa_playstore_id);
 		Intent intent = pm.getLaunchIntentForPackage(mensaId);
 
 		if (intent != null) {
@@ -101,22 +102,31 @@ public class Startpage extends Activity {
 				startActivity(intent);
 			} else {
 				Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
-				
+
 				// Start Playstore and go to Mensa App
-				Intent intentMensa = new Intent(Intent.ACTION_VIEW);
-				intentMensa.setData(Uri.parse("market://details?id="+mensaId));
-				startActivity(intentMensa);
+				try {
+					Intent intentMensa = new Intent(Intent.ACTION_VIEW);
+					intentMensa.setData(Uri.parse("market://details?id=" + mensaId));
+					startActivity(intentMensa);
+				} catch (ActivityNotFoundException e) {
+					// the device hasn't installed Google Play
+					Toast.makeText(this, R.string.mensa_playstore_not_installed, Toast.LENGTH_LONG).show();
+				}
 			}
 
 		} else {
 			Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
 			Toast.makeText(this, getString(R.string.mensa_error_not_installed), Toast.LENGTH_LONG).show();
-			
+
 			// Start Playstore and go to Mensa App
-			Intent intentMensa = new Intent(Intent.ACTION_VIEW);
-			intentMensa.setData(Uri.parse("market://details?id="+mensaId));
-			startActivity(intentMensa);
-			
+			try {
+				Intent intentMensa = new Intent(Intent.ACTION_VIEW);
+				intentMensa.setData(Uri.parse("market://details?id=" + mensaId));
+				startActivity(intentMensa);
+			} catch (ActivityNotFoundException e) {
+				// the device hasn't installed Google Play
+				Toast.makeText(this, R.string.mensa_playstore_not_installed, Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 
@@ -149,8 +159,11 @@ public class Startpage extends Activity {
 		final View textEntryView = factory.inflate(R.layout.info_dialog, null);
 		final ViewFlipper flipper = (ViewFlipper) textEntryView.findViewById(R.id.flipper);
 		flipper.startFlipping();
-		flipper.setInAnimation((AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left)));
-		flipper.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right));
+		//flipper.setInAnimation((AnimationUtils.loadAnimation(this, android.R.anim.slide_in_right)));
+		flipper.setInAnimation((AnimationUtils.loadAnimation(this,R.anim.slide_in_right)));
+		flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
+		//AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
+		//flipper.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.slide_out_left));
 		TextView versionNumber = (TextView) textEntryView.findViewById(R.id.start_app_version_string);
 		String versionName = "";
 		try {

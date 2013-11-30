@@ -74,6 +74,7 @@
     <!-- MENSA -->
     <string name="mensa_error_not_installed">The DHBW Mensa App is not installed!</string>
     <string name="mensa_playstore_id">de.dhbw.mensa</string>
+    <string name="mensa_playstore_not_installed">You dont have Google Play installed</string>
 
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->
