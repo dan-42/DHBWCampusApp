@@ -6,25 +6,31 @@ import java.util.ArrayList;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SyncStatusObserver;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
@@ -234,23 +240,7 @@ public class Vorlesungsplan extends Activity {
 
 		case R.id.de_calendar_menu_delete_calendar:
 			// delete Calendar
-			de.dhbw.organizer.calendar.backend.manager.CalendarManager cm = de.dhbw.organizer.calendar.backend.manager.CalendarManager.get(this);
-			if (mCalendarName != null) {
-				cm.deleteCalendar(mCalendarName);
-				mCalendarList.remove(mCalendarName);
-
-				if (mCalendarList.size() > 0) {
-					mCalendarName = mCalendarList.get(0);
-					setListContent(this, mCalendarName);
-				} else {
-					mCalendarName = null;
-					setListContent(this, null);
-
-					final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
-					this.startActivity(intent);
-				}
-			}
-
+			getConfirmDeleteDialog();
 			break;
 
 		case R.id.jumptotoday:
@@ -423,4 +413,43 @@ public class Vorlesungsplan extends Activity {
 
 		}
 	}
+
+	/**
+	 * creates a Dialog to confirm delete of calendar
+	 * 
+	 * @return
+	 */
+	private void getConfirmDeleteDialog() {
+		new AlertDialog.Builder(this).setTitle(R.string.calendar_frontend_delete_calendar_dialog_heading).setMessage(R.string.calendar_frontend_delete_calendar)
+				.setPositiveButton(R.string.general_yes, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						deleteCalendar();
+					}
+				}).setNegativeButton(R.string.general_no, null).show();
+	}
+
+	/**
+	 * Delete the actual Calendar
+	 */
+	private void deleteCalendar() {
+		de.dhbw.organizer.calendar.backend.manager.CalendarManager cm = de.dhbw.organizer.calendar.backend.manager.CalendarManager.get(this);
+		if (mCalendarName != null) {
+			cm.deleteCalendar(mCalendarName);
+			mCalendarList.remove(mCalendarName);
+
+			if (mCalendarList.size() > 0) {
+				mCalendarName = mCalendarList.get(0);
+				setListContent(this, mCalendarName);
+			} else {
+				mCalendarName = null;
+				setListContent(this, null);
+
+				final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
+				this.startActivity(intent);
+			}
+		}
+
+	}
+
 }

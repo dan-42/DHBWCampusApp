@@ -26,6 +26,10 @@
 <!-- @author: friedrda, riedings -->
 <resources>
 
+    <!-- GENERAL -->
+    <string name="general_yes">Ja</string>
+    <string name="general_no">Nein</string>
+    
     <!-- MAIN VIEW -->
     <string name="app_name">CampusApp</string>
     <string name="app_start_calendar">Kalender</string>
@@ -102,6 +106,8 @@
     <string name="hide_old_events">Alle vergangenen Termine ausblenden</string>
     <string name="hide_private_appointments">Private Termine ausblenden</string>
     <string name="startpage_menu_info">Info</string>
+    <string name="calendar_frontend_delete_calendar">Willst Du diesen Kalender wirklich löschen</string>
+    <string name="calendar_frontend_delete_calendar_dialog_heading">Bitte bestätigen</string>
 	
 	<!-- CALENDAR FRONTEND -->
 	<!-- MENU -->

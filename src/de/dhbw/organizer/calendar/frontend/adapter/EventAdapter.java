@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.dhbw.organizer.R;
+import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.frontend.parser.FbEventParser;
 import de.dhbw.organizer.calendar.helper.IntentHelper;
 
@@ -76,15 +77,12 @@ public class EventAdapter extends BaseAdapter {
 		LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.linearLayout2);
 		LinearLayout linearLayout1 = (LinearLayout) convertView.findViewById(R.id.linearLayout1);
 
-		// setze die Hintergrundfarbe
+		// set background Colors
 
 		if (endTime < System.currentTimeMillis()) {
-			// linearLayout.setBackgroundColor(Color.LTGRAY);
 			linearLayout1.setBackgroundColor(Color.LTGRAY);
 		} else if (entry.getColor()) {
-			// linearLayout.setBackgroundColor(Constants.CALENDAR_COLORS[0]);
-			// linearLayout.setBackground(context.getResources().getDrawable(R.drawable.farbverlauf));
-			linearLayout1.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.farbverlauf));
+			linearLayout1.setBackgroundColor(Constants.CALENDAR_COLORS[0]);
 		} else {
 			linearLayout1.setBackgroundColor(entry.getBackgroundColor());
 

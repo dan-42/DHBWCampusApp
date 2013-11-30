@@ -25,6 +25,10 @@
 
 <!-- @author: friedrda, riedings -->
 <resources>
+    
+    <!-- GENERAL -->
+    <string name="general_yes">Yes</string>
+    <string name="general_no">No</string>
 
     <!-- MAIN VIEW -->
     <string name="app_name">CampusApp</string>
@@ -40,6 +44,7 @@
     <string name="start_app_testversion_timeover">Test period ended, please install the current Version from the Google PlayStore.
         \n\nOn any problems, please contact us at 
         \nfriedrda@dhbw-loerrach.de</string>
+    
     
     <!-- MAIN VIEW -->
     <!-- INFO -->
@@ -112,6 +117,8 @@
     <string name="hide_old_events">Hide all past appointments</string>
     <string name="hide_private_appointments">hide all private appointments</string>
     <string name="startpage_menu_info">Info</string>
+    <string name="calendar_frontend_delete_calendar">Are you sure to delete the actual calendar</string>
+    <string name="calendar_frontend_delete_calendar_dialog_heading">Please confirm</string>
 
     <!-- CALENDAR FRONTEND -->
     <!-- MENU -->
