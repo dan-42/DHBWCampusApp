@@ -100,7 +100,7 @@
     <string name="calendar_backend_account_ical_url">iCal URL</string>
 
     <!-- CALENDAR FRONTEND -->
-    <string name="calendar_frontend_updateing_calendar">Aktualisiere Kalender...</string>
+    
     <string name="calendar_frontend_list_goto_today">Gehe zu nächstem Termin</string>
     <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
     <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
@@ -109,6 +109,7 @@
     <string name="calendar_frontend_facebook_started">Facebook gestartet. Bitte warten...</string>
     <string name="calendar_frontend_no_events">In diesem Kalender sind keine Einträge</string>
     <string name="calendar_frontend_notice">Hinweis</string>
+    <string name="calendar_frontend_updateing_calendar">Aktualisiere Kalender...</string>
 
     <!-- CALENDAR FRONTEND -->
     <!-- MENU -->

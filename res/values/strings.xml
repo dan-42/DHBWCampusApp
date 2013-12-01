@@ -19,14 +19,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */
 -->
 
 
-<!-- 
+<!--
 /**
  * @author: friedrda, riedings 
- */
+ */
 -->
 <resources>
 
@@ -112,7 +112,7 @@
     <string name="calendar_backend_account_ical_url">iCal URL</string>
 
     <!-- CALENDAR FRONTEND -->
-    <string name="calendar_frontend_updateing_calendar">updating calendar...</string>
+
     <string name="calendar_frontend_list_goto_today">goto today</string>
     <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
     <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
@@ -121,8 +121,7 @@
     <string name="calendar_frontend_facebook_started">Facebook started. Please wait...</string>
     <string name="calendar_frontend_no_events">There are no events in this Calendar</string>
     <string name="calendar_frontend_notice">Notice</string>
-    
-    
+    <string name="calendar_frontend_updateing_calendar">updating calendar...</string>
 
     <!-- CALENDAR FRONTEND -->
     <!-- MENU -->
