@@ -444,10 +444,12 @@ public class AuthenticatorActivityTabed extends Activity {
 
 				} else {
 					mInfoMessage.setText(R.string.calendar_backend_input_error_calendar_already_exists);
+					mProgressDialog.dismiss();
 				}
 
 			} else {
 				Log.e(TAG, "addCalendar ERROR cannot add Calendar");
+				mProgressDialog.dismiss();
 			}
 		}
 	}

@@ -37,6 +37,8 @@ import java.util.TimeZone;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.google.ical.values.RRule;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
@@ -173,7 +175,26 @@ public class CalendarManager {
 
 		}
 
-		return selectableCalendars;
+		// filter alreay existing / inserted calendars
+		ArrayList<String> existingCalendars = getCalendars();
+		ArrayList<SpinnerItem> filterdList = new ArrayList<SpinnerItem>();
+
+		for (SpinnerItem si : selectableCalendars) {
+			boolean exists = false;
+			for (String s : existingCalendars) {
+				if (si.getmDisplayName().equals(s)) {
+					exists = true;
+					break;
+				}
+			}
+
+			if (!exists) {
+				filterdList.add(si);
+			}
+
+		}
+
+		return filterdList;
 	}
 
 	/**
@@ -262,6 +283,39 @@ public class CalendarManager {
 
 		cur.close();
 		return calendarExists;
+	}
+
+	/**
+	 * returns all in DB existings CalendarNames filterd by ACCOUNT_TYPE
+	 * 
+	 * 
+	 * @return List of Strings
+	 */
+	public ArrayList<String> getCalendars() {
+
+		Cursor cur = null;
+		ArrayList<String> cals = new ArrayList<String>();
+
+		ContentResolver cr = mContext.getContentResolver();
+
+		String[] projection = new String[] { Calendars.NAME };
+		String selection = "( (" + Calendars.ACCOUNT_TYPE + " = ?) )";
+		String[] selectionArgs = new String[] { Constants.ACCOUNT_TYPE };
+
+		cur = cr.query(Calendars.CONTENT_URI, projection, selection, selectionArgs, null);
+
+		if (cur.getCount() >= 1 && cur.moveToFirst()) {
+
+			do {
+				cals.add(new String(cur.getString(0)));
+			} while (cur.moveToNext());
+
+		} else {
+			Log.e(TAG, "getCalendars() FATAL ERROR cur.getCount()=" + cur.getCount());
+		}
+
+		cur.close();
+		return cals;
 	}
 
 	/**
