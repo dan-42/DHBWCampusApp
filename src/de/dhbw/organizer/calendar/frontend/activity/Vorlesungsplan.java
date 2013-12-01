@@ -45,6 +45,8 @@ import de.dhbw.organizer.calendar.helper.FileHelper;
 
 public class Vorlesungsplan extends Activity {
 
+	private static final String TAG = "calendar frontend Vorlesungsplan";
+	
 	private ListView mEventList;
 	private ListView mDrawerListView;
 	private DrawerLayout mDrawerLayout;
@@ -61,6 +63,8 @@ public class Vorlesungsplan extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.i(TAG, "onCreate() ");
+		
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		setContentView(R.layout.calendar_activity_vorlesungsplan);
@@ -134,6 +138,7 @@ public class Vorlesungsplan extends Activity {
 
 	protected void onResume() {
 		super.onResume();
+		Log.i(TAG, "onResume() ");
 		mCalendarList = mCalendarManager.getCalendarList(this);
 
 		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
