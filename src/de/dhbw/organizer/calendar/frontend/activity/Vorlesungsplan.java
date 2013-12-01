@@ -115,15 +115,7 @@ public class Vorlesungsplan extends Activity {
 
 		setDrawerContent();
 
-		try {
-			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
-			setListContent(this, mCalendarName);
-		} catch (Exception e) {
-			// create File
-			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
-			// Toast: Bitte f�ge einen neuen Kalender hinzu
-			mCalendarName = null;
-		}
+		
 
 	}
 
@@ -135,6 +127,18 @@ public class Vorlesungsplan extends Activity {
 	protected void onResume() {
 		super.onResume();
 		Log.i(TAG, "onResume() ");
+		
+		try {
+			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
+			setListContent(this, mCalendarName);
+		} catch (Exception e) {
+			// create File
+			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
+			// Toast: Bitte f�ge einen neuen Kalender hinzu
+			mCalendarName = null;
+		}
+		
+		
 		mCalendarList = mCalendarManager.getCalendarList(this);
 
 		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
@@ -308,8 +312,9 @@ public class Vorlesungsplan extends Activity {
 			Log.i("setListContent", "goto today");
 			goToActualEvent();
 
-			// Toast.makeText(mContext, mCalendarName,
-			// Toast.LENGTH_SHORT).show();
+			if(mCalendarName != null){
+			 Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
+			}
 
 		}
 

@@ -57,6 +57,8 @@ import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.backend.manager.CalendarManager;
 import de.dhbw.organizer.calendar.backend.manager.NetworkManager;
 import de.dhbw.organizer.calendar.backend.objects.SpinnerItem;
+import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
+import de.dhbw.organizer.calendar.helper.FileHelper;
 
 /**
  * @author friedrda
@@ -434,6 +436,11 @@ public class AuthenticatorActivityTabed extends Activity {
 					cm.createCalendar(account, mCalendarColor);
 
 					triggerSync(account);
+					try {
+						FileHelper.writeFileAsString(this, "lastCalendarOpened", mCalendarDisplayName);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 
 				} else {
 					mInfoMessage.setText(R.string.calendar_backend_input_error_calendar_already_exists);
