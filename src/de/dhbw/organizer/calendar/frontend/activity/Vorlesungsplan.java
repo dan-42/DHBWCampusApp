@@ -323,8 +323,8 @@ public class Vorlesungsplan extends Activity {
 		// go to actual Date
 		if (mCalendarManager != null && mCalendarManager.mIndexOfActualEvent > 0) {
 			Log.d("Index of Actual Event", String.valueOf(mCalendarManager.mIndexOfActualEvent));
-			mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
-
+			//mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
+			mEventList.smoothScrollToPositionFromTop(mCalendarManager.mIndexOfActualEvent, 0, 500);
 		} else {
 			Log.i("goToActualEvent()", "Index of Actual Event not set, no Calendar");
 		}
