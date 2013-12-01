@@ -174,6 +174,7 @@ public class Vorlesungsplan extends Activity {
 	protected void onPause() {
 		super.onPause();
 		ContentResolver.removeStatusChangeListener(mChangeListenerHandle);
+		
 
 	};
 

@@ -39,7 +39,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncStatusObserver;
-import android.graphics.Color;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -57,7 +57,6 @@ import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.backend.manager.CalendarManager;
 import de.dhbw.organizer.calendar.backend.manager.NetworkManager;
 import de.dhbw.organizer.calendar.backend.objects.SpinnerItem;
-import de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan;
 import de.dhbw.organizer.calendar.helper.FileHelper;
 
 /**
@@ -81,6 +80,11 @@ public class AuthenticatorActivityTabed extends Activity {
 	private static final int DISPLAY_NAME_MIN_LENGTH = 3;
 
 	private static final int DISPLAY_NAME_MAX_LENGTH = 16;
+
+	public static final String STATE_INFO_IS_SHOWING_DIALOG = "de.dhbw.campusapp.calendar.backend.showwaitdialog";
+	public static final String STATE_INFO_CALENDAR_DISPLAY_NAME = "de.dhbw.campusapp.calendar.backend.cal.displayname";
+	public static final String STATE_INFO_CALENDAR_URL = "de.dhbw.campusapp.calendar.backend.cal.url";
+	public static final String STATE_INFO_CALENDAR_COLOR = "de.dhbw.campusapp.calendar.backend.cal.color";
 
 	private AccountManager mAccountManager;
 
@@ -116,7 +120,7 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	private String mCalendarICalUrl = null;
 
-	private Color mCalendarColor = null;
+	private int mCalendarColor = -1;
 
 	private HttpConnectionTester mHttpConnectionTester = null;
 
@@ -136,6 +140,7 @@ public class AuthenticatorActivityTabed extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		CalendarManager cm = CalendarManager.get(this);
 		mAccountManager = AccountManager.get(this);
 
@@ -210,6 +215,18 @@ public class AuthenticatorActivityTabed extends Activity {
 		mProgressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.setMessage(getString(R.string.calendar_backend_adding_new_calendar));
 
+		if (savedInstanceState != null) {
+			if (savedInstanceState.getBoolean(STATE_INFO_IS_SHOWING_DIALOG)) {
+				mProgressDialog.show();
+			} else {
+				mProgressDialog.dismiss();
+			}
+			mCalendarDisplayName = savedInstanceState.getString(STATE_INFO_CALENDAR_DISPLAY_NAME);
+			mCalendarICalUrl = savedInstanceState.getString(STATE_INFO_CALENDAR_URL);
+			mCalendarColor = savedInstanceState.getInt(STATE_INFO_CALENDAR_COLOR);
+
+		}
+
 	}
 
 	@Override
@@ -237,6 +254,17 @@ public class AuthenticatorActivityTabed extends Activity {
 	protected void onPause() {
 		super.onPause();
 		ContentResolver.removeStatusChangeListener(mCalenderSyncStatusObserverHandle);
+		mProgressDialog.dismiss();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle saveState) {
+		super.onSaveInstanceState(saveState);
+		saveState.putBoolean(STATE_INFO_IS_SHOWING_DIALOG, mProgressDialog.isShowing());
+		saveState.putString(STATE_INFO_CALENDAR_DISPLAY_NAME, mCalendarDisplayName);
+		saveState.putString(STATE_INFO_CALENDAR_URL, mCalendarICalUrl);
+		saveState.putInt(STATE_INFO_CALENDAR_COLOR, mCalendarColor);
+
 	}
 
 	/**
@@ -507,7 +535,7 @@ public class AuthenticatorActivityTabed extends Activity {
 					} else {
 						Log.i(TAG, "onStatusChanged() NOT the Same UUID a.name = " + a.name);
 					}
-				
+
 				}
 			}
 		}

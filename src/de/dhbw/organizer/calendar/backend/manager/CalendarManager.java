@@ -358,7 +358,7 @@ public class CalendarManager {
 	 *            , can be null for default!
 	 * @return calendar id
 	 */
-	public long createCalendar(Account account, Color color) {
+	public long createCalendar(Account account, int color) {
 		Log.d(TAG, "Calendar With by Account Name");
 
 		ContentResolver cr = mContext.getContentResolver();
@@ -366,7 +366,7 @@ public class CalendarManager {
 		Uri creationUri = asSyncAdapter(Calendars.CONTENT_URI, account.name, account.type);
 
 		int colorInHex;
-		if (color == null) {
+		if (color < 0) {
 			colorInHex = getNextCalendarColor();
 		} else {
 			// colorInHex = Color.r

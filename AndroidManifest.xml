@@ -107,15 +107,17 @@
 
         <activity
             android:name="de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed"
-            android:configChanges="orientation"
+            android:configChanges="orientation" 
             android:excludeFromRecents="false"
-            android:label="@string/calendar_backend_account_label" >
+            android:label="@string/calendar_backend_account_label" 
+            >
         </activity>
         <!-- CALENDAR FRONTEND -->
         <activity
             android:name="de.dhbw.organizer.calendar.frontend.activity.Vorlesungsplan"            
             android:icon="@drawable/ic_calendar"
-            android:label="@string/app_start_calendar" >
+            android:label="@string/app_start_calendar" 
+            android:configChanges="orientation|keyboardHidden" >
         </activity>
         <activity android:name="de.dhbw.organizer.calendar.frontend.activity.Settings" >
         </activity>

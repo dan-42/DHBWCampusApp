@@ -78,13 +78,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 		HttpResponse httpResponse = null;
 		Log.i(TAG, "SYNCC ME UP!");
-		
+
 		long lastSyncMarker = getLastServerSyncMarker(account);
 
 		// make sure Calendar exists, other wise create it
 		// could be deleted, by user interaction or by first Sync
 		if (!mCalendarManager.calendarExists(account)) {
-			mCalendarManager.createCalendar(account, null);
+			mCalendarManager.createCalendar(account, -1);
 		}
 
 		long nowInMillis = System.currentTimeMillis();
@@ -125,18 +125,24 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 						instream.close();
 
-						ArrayList<VEvent> events = (ArrayList<VEvent>) ical.getEvents();
+						if (ical != null) {
 
-						// mCalendarManager.deleteAllEvents(account,
-						// calendarId);
+							ArrayList<VEvent> events = (ArrayList<VEvent>) ical.getEvents();
 
-						// mCalendarManager.insertEvents(account, calendarId,
-						// events);
+							// mCalendarManager.deleteAllEvents(account,
+							// calendarId);
 
-						mCalendarManager.updateEvents(account, calendarId, events, true);
-						
-						// save timestamp of last succsessful sync
-						setLastServerSyncMarker(account, System.currentTimeMillis());
+							// mCalendarManager.insertEvents(account,
+							// calendarId,
+							// events);
+
+							mCalendarManager.updateEvents(account, calendarId, events, true);
+
+							// save timestamp of last succsessful sync
+							setLastServerSyncMarker(account, System.currentTimeMillis());
+						} else {
+							Log.i(TAG, "ical == null");
+						}
 
 					} else {
 						Log.i(TAG, "entity == null");
@@ -183,5 +189,4 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		mAccountManager.setUserData(account, SYNC_MARKER_KEY, Long.toString(marker));
 	}
 
-	
 }
