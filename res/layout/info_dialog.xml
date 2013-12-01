@@ -47,7 +47,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_app_start_info_introducion" />
+            android:text="@string/app_start_info_introducion" />
 
         <TextView
             android:id="@+id/start_app_version_string"
@@ -59,7 +59,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_app_start_info_version" />
+            android:text="@string/app_start_info_version" />
 
         <TextView
             android:id="@+id/textView2"
@@ -71,7 +71,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_app_start_info_impressum" />
+            android:text="@string/app_start_info_impressum" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"
@@ -116,7 +116,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_app_start_info_project_develpment_by" />
+            android:text="@string/app_start_info_project_develpment_by" />
 
          <!--  
             Thanks to:
@@ -135,21 +135,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/de_app_start_info_daniel"
+                android:text="@string/app_start_info_daniel"
                 android:textSize="22sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/de_app_start_info_patrick"
+                android:text="@string/app_start_info_patrick"
                 android:textSize="22sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/de_app_start_info_simon"
+                android:text="@string/app_start_info_simon"
                 android:textSize="22sp" />
         </ViewFlipper>
 
@@ -165,7 +165,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_app_start_info_suppliers" />
+            android:text="@string/app_start_info_suppliers" />
 
         <TextView
             android:id="@+id/textView6"
@@ -179,7 +179,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_app_start_info_copyright_icons"
+            android:text="@string/app_start_info_copyright_icons"
             android:textSize="10dip" />
 
         <TextView
@@ -192,7 +192,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="4dp"
-            android:text="@string/de_app_start_info_copyright_code"
+            android:text="@string/app_start_info_copyright_code"
             android:textSize="10sp" />
     </LinearLayout>
 

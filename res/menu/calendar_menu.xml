@@ -19,28 +19,89 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */
 -->
 
 
 <!--
 /**
  * @author: riedings 
- */
+ */
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/de_calendar_menu_new_calendar"
-        android:title="@string/de_calendar_menu_new_calendar">
-    </item>
-    <!--
-   see Vorlesungsplan.java function onOptionsItemSelected  
-   <item android:id="@+id/de_calendar_menu_preferences" android:title="@string/de_calendar_menu_preferences"></item> 
-    -->
+        android:id="@+id/refresh"
+        android:icon="@drawable/ic_menu_refresh"
+        android:showAsAction="ifRoom"
+        android:title="@string/calendar_menu_refresh_the_calendar"/>
     <item
-        android:id="@+id/de_calendar_menu_delete_calendar"
-        android:title="@string/de_calendar_menu_delete_calendar">
+        android:id="@+id/jumptotoday"
+        android:icon="@android:drawable/ic_menu_today"
+        android:showAsAction="ifRoom"
+        android:title="@string/calendar_menu_jump_to_today"/>
+    <item
+        android:id="@+id/calendar_menu_new_calendar"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom"
+        android:title="@string/calendar_menu_new_calendar">
+    </item>
+
+    <item
+        android:id="@+id/calendar_menu_delete_calendar"
+        android:title="@string/calendar_menu_delete_calendar">
     </item>
 
 </menu>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

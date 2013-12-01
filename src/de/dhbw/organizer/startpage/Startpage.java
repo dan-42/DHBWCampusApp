@@ -207,6 +207,6 @@ public class Startpage extends Activity {
 	 */
 	public void openSZIFacebookPage(View v) {
 		// Open Facebook Page of "Informatik an der DHBW Loerrach"
-		IntentHelper.openFacebook(this, this.getResources().getString(R.string.de_app_start_facebook_profile_id_szi), IntentHelper.Facebook.PROFILE);
+		IntentHelper.openFacebook(this, this.getResources().getString(R.string.app_start_facebook_profile_id_szi), IntentHelper.Facebook.PROFILE);
 	}
 }

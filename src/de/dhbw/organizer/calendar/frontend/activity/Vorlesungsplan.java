@@ -216,11 +216,6 @@ public class Vorlesungsplan extends Activity {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.calendar_menu, menu);
-
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.calendar_refresh, menu);
-		super.onCreateOptionsMenu(menu);
-
 		return true;
 	}
 
@@ -229,7 +224,7 @@ public class Vorlesungsplan extends Activity {
 
 		// Handle the New Calendar and the Settings Menu
 		switch (item.getItemId()) {
-		case R.id.de_calendar_menu_new_calendar:
+		case R.id.calendar_menu_new_calendar:
 			final Intent newCalendar = new Intent(this, AuthenticatorActivityTabed.class);
 			this.startActivity(newCalendar);
 
@@ -242,7 +237,7 @@ public class Vorlesungsplan extends Activity {
 		 * break;
 		 */
 
-		case R.id.de_calendar_menu_delete_calendar:
+		case R.id.calendar_menu_delete_calendar:
 			// delete Calendar
 			getConfirmDeleteDialog();
 			break;

@@ -51,19 +51,19 @@
     <!-- MAIN VIEW -->
     <!-- INFO -->
     <string name="startpage_menu_info">Info</string>
-    <string name="de_app_start_facebook_profile_id_szi">189992694374119</string>
-    <string name="de_app_start_info_daniel">Daniel Friedrich</string>
-    <string name="de_app_start_info_patrick">Patrick Strittmatter</string>
-    <string name="de_app_start_info_simon">Simon Riedinger</string>
-    <string name="de_app_start_info_introducion">This app was created in a student project of computer science faculty at the University of Cooperative Education Loerrach.</string>
-    <string name="de_app_start_info_version">Version: </string>
+    <string name="app_start_facebook_profile_id_szi">189992694374119</string>
+    <string name="app_start_info_daniel">Daniel Friedrich</string>
+    <string name="app_start_info_patrick">Patrick Strittmatter</string>
+    <string name="app_start_info_simon">Simon Riedinger</string>
+    <string name="app_start_info_introducion">This app was created in a student project of computer science faculty at the University of Cooperative Education Loerrach.</string>
+    <string name="app_start_info_version">Version: </string>
     <string name="app_start_info_study_center_compuet_sience">Center study computer science DHBW Lörrach</string>
-    <string name="de_app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstrasse 46-50 \n79539 Loerrach \nGermany</string>
-    <string name="de_app_start_info_project_develpment_by">The initiators of this project: </string>
-    <string name="de_app_start_info_suppliers"></string>
-    <string name="de_app_start_info_copyright_icons">COPYRIGHT:
+    <string name="app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstrasse 46-50 \n79539 Loerrach \nGermany</string>
+    <string name="app_start_info_project_develpment_by">The initiators of this project: </string>
+    <string name="app_start_info_suppliers"></string>
+    <string name="app_start_info_copyright_icons">COPYRIGHT:
         \nThe copyright of the icons of Site Map, Mensa and Moodle are at the students of the course MWI at Cooperative State University Karlsruhe and under the direction of Prof. Dr. Wengler.</string>
-    <string name="de_app_start_info_copyright_code">LICENSE: GPL v3
+    <string name="app_start_info_copyright_code">LICENSE: GPL v3
         \nCopyright (c) 2013 by
         \nDaniel Friedrich friedrda@dhbw-loerrach.de
         \nSimon Riedinger riedings@dhbw-loerrach.de        
@@ -125,9 +125,11 @@
 
     <!-- CALENDAR FRONTEND -->
     <!-- MENU -->
-    <string name="de_calendar_menu_new_calendar">new calendar</string>
-    <string name="de_calendar_menu_preferences">settings</string>
-    <string name="de_calendar_menu_delete_calendar">delete calendar</string>
+    <string name="calendar_menu_new_calendar">new calendar</string>
+    <string name="calendar_menu_preferences">settings</string>
+    <string name="calendar_menu_delete_calendar">delete calendar</string>
+    <string name="calendar_menu_refresh_the_calendar">Refresh the Calendar</string>
+    <string name="calendar_menu_jump_to_today">Jump to Today</string>
 
     <!-- BUILDINGS -->
     <string name="buildings_image_title_map_kbc">KBC site plan</string>
