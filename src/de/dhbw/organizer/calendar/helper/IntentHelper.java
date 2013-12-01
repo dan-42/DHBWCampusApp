@@ -13,7 +13,7 @@ import android.net.Uri;
 import android.util.Log;
 
 /**
- * This Class holds static functions to call for excample either the facebook
+ * This Class holds static functions to call for example either the facebook
  * App or the Browser with the given url
  * 
  * @author friedrda
@@ -48,6 +48,12 @@ public class IntentHelper {
 		context.startActivity(intent);
 	}
 
+	/**
+	 * Opens the Facebook Intent
+	 * @param context the actual context
+	 * @param id The id of the Facebook Page
+	 * @param fb Event for opening an event page and profile for open a profile page
+	 */
 	public static void openFacebook(Context context, String id, Facebook fb) {
 		String url = "";
 
@@ -87,6 +93,11 @@ public class IntentHelper {
 		context.startActivity(intent);
 	}
 
+	/**
+	 * Checks if a Facebook app is installed on the smartphone
+	 * @param context the actual context
+	 * @return true for fb app is installed
+	 */
 	private static boolean isFacebookInstalled(Context context) {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		final String urlFb = "fb://event/";

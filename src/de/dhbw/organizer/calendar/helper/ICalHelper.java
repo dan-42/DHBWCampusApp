@@ -231,6 +231,12 @@ public class ICalHelper {
 		return null;
 	}
 
+	/**
+	 * extract the exception dates
+	 * 
+	 * @param e
+	 * @return
+	 */
 	private static List<Date> extractExceptionDates(VEvent e) {
 		List<Date> dateList = new ArrayList<Date>();
 
@@ -723,6 +729,15 @@ public class ICalHelper {
 
 	}
 
+	/**
+	 * Pase the Ical Date to a String
+	 * 
+	 * @param date
+	 *            the date
+	 * @param tz
+	 *            timezone
+	 * @return the parsed Date as a String
+	 */
 	private static String parseIcalDateToString(Date date, TimeZone tz) {
 
 		StringBuilder sb = new StringBuilder();
@@ -748,6 +763,13 @@ public class ICalHelper {
 		return sb.toString();
 	}
 
+	/**
+	 * 
+	 * @param is
+	 * @return
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
 	public static ArrayList<SpinnerItem> parseXmlFromInputStream(InputStream is) throws IOException, XmlPullParserException {
 
 		CalendarXmlParser cxp = new CalendarXmlParser(is);
@@ -756,12 +778,6 @@ public class ICalHelper {
 	}
 
 	/**
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * 
 	 * @author friedrda
 	 * 
@@ -782,6 +798,12 @@ public class ICalHelper {
 		private XmlPullParserFactory mParserfactory = null;
 		private XmlPullParser mParser = null;
 
+		/**
+		 * 
+		 * @param is
+		 *            the input stream
+		 * @throws IOException
+		 */
 		public CalendarXmlParser(InputStream is) throws IOException {
 			try {
 				mParserfactory = XmlPullParserFactory.newInstance();
@@ -806,6 +828,13 @@ public class ICalHelper {
 
 		}
 
+		/**
+		 * 
+		 * @return
+		 * @throws XmlPullParserException
+		 * @throws IOException
+		 */
+
 		public ArrayList<SpinnerItem> readCalendars() throws XmlPullParserException, IOException {
 			ArrayList<SpinnerItem> cals = new ArrayList<SpinnerItem>();
 
@@ -827,6 +856,13 @@ public class ICalHelper {
 
 		}
 
+		/**
+		 * 
+		 * @param parser
+		 * @return
+		 * @throws XmlPullParserException
+		 * @throws IOException
+		 */
 		private SpinnerItem readCalendar(XmlPullParser parser) throws XmlPullParserException, IOException {
 
 			parser.require(XmlPullParser.START_TAG, mNameSpace, XML_TAG_CALENDAR);
@@ -850,6 +886,12 @@ public class ICalHelper {
 			return new SpinnerItem(displayName, iCalUrl);
 		}
 
+		/**
+		 * 
+		 * @param parser
+		 * @throws XmlPullParserException
+		 * @throws IOException
+		 */
 		private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
 			if (parser.getEventType() != XmlPullParser.START_TAG) {
 				throw new IllegalStateException();
@@ -867,6 +909,13 @@ public class ICalHelper {
 			}
 		}
 
+		/**
+		 * 
+		 * @param parser
+		 * @return
+		 * @throws XmlPullParserException
+		 * @throws IOException
+		 */
 		private String readICalUrl(XmlPullParser parser) throws XmlPullParserException, IOException {
 
 			parser.require(XmlPullParser.START_TAG, mNameSpace, XML_TAG_ICAL_URL);
@@ -875,6 +924,13 @@ public class ICalHelper {
 			return iCalUrl;
 		}
 
+		/**
+		 * 
+		 * @param parser
+		 * @return
+		 * @throws XmlPullParserException
+		 * @throws IOException
+		 */
 		private String readDisplayName(XmlPullParser parser) throws XmlPullParserException, IOException {
 
 			parser.require(XmlPullParser.START_TAG, mNameSpace, XML_TAG_DISPLAY_NAME);
@@ -883,7 +939,13 @@ public class ICalHelper {
 			return displayName;
 		}
 
-		// For the tags title and summary, extracts their text values.
+		/**
+		 * For the tags title and summary, extracts their text values.
+		 * @param parser
+		 * @return
+		 * @throws IOException
+		 * @throws XmlPullParserException
+		 */
 		private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
 			String result = "";
 			if (parser.next() == XmlPullParser.TEXT) {

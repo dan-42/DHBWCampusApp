@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+/**
+ * LICENSE: GPL v3 
+ * 
+ * Copyright (c) 2013 by
+ * Daniel Friedrich <friedrda@dhbw-loerrach.de>
+ * Simon Riedinger <riedings@dhbw-loerrach.de>
+ * Patrick Strittmatter <strittpa@dhbw-loerrach.de> 
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3.0 as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ -->
+
+
+<!--
+/**
+ * @author: friedrda 
+ */
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -176,8 +205,6 @@
 
                 <!-- BANNER TEST VERSION -->
 
-                
-
                 <ImageView
                     android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
@@ -185,16 +212,16 @@
                     android:layout_gravity="center"
                     android:layout_margin="10dip"
                     android:src="@drawable/img_start_banner_testversion" />
-                
+
                 <TextView
                     android:id="@+id/start_app_testversion_timeleft_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="10dip"
+                    android:text=""
                     android:textColor="@color/darkGray"
                     android:textSize="25dip"
-                    android:text=""
                     android:textStyle="bold" />
 
                 <!-- BANNER RAUM FUER WEITERE IDEEN -->

@@ -7,11 +7,13 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,7 +38,6 @@ public class Startpage extends Activity {
 
 	private static final String TAG = "Startpage";
 	private TextView mTextViewTimeLeft;
-
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ", Locale.getDefault());
 
 	@Override
@@ -50,9 +51,7 @@ public class Startpage extends Activity {
 			mTextViewTimeLeft.setText(text + " " + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
-
 		}
-
 	}
 
 	@Override
@@ -66,9 +65,7 @@ public class Startpage extends Activity {
 			mTextViewTimeLeft.setText(text + " " + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
 		} else {
 			setContentView(R.layout.startpage_activity_deaktivated);
-
 		}
-
 	};
 
 	@Override
@@ -78,36 +75,78 @@ public class Startpage extends Activity {
 		return true;
 	}
 
+	/**
+	 * Start the calendar activity
+	 * 
+	 * @param v
+	 */
 	public void startCalendarActivity(View v) {
 		Intent myIntent = new Intent(v.getContext(), Vorlesungsplan.class);
 		startActivityForResult(myIntent, 0);
 	}
 
+	/**
+	 * Start the Activity to the Building plans
+	 * 
+	 * @param v
+	 */
 	public void startGebaudeActivity(View v) {
 		Intent myIntent = new Intent(v.getContext(), Gebaudeplan.class);
 		startActivityForResult(myIntent, 0);
 	}
 
+	/**
+	 * Search if the MensaApp is installed and start it. Otherwise go to the
+	 * Google Play Store
+	 * 
+	 * @param v
+	 *            View
+	 */
 	public void startMensaActivity(View v) {
 		PackageManager pm = getPackageManager();
-		Intent intent = pm.getLaunchIntentForPackage("de.dhbw.mensa");
+		final String mensaId = getString(R.string.mensa_playstore_id);
+		Intent intent = pm.getLaunchIntentForPackage(mensaId);
 
 		if (intent != null) {
-
 			List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 			if (list.size() > 0) {
 				startActivity(intent);
 			} else {
 				Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
+
+				// Start Playstore and go to Mensa App
+				try {
+					Intent intentMensa = new Intent(Intent.ACTION_VIEW);
+					intentMensa.setData(Uri.parse("market://details?id=" + mensaId));
+					startActivity(intentMensa);
+				} catch (ActivityNotFoundException e) {
+					// the device hasn't installed Google Play
+					Toast.makeText(this, R.string.mensa_playstore_not_installed, Toast.LENGTH_LONG).show();
+				}
 			}
 
 		} else {
 			Log.e(TAG, "startMensaActivity() cant start MensaApp, there is non");
 			Toast.makeText(this, getString(R.string.mensa_error_not_installed), Toast.LENGTH_LONG).show();
 
+			// Start Playstore and go to Mensa App
+			try {
+				Intent intentMensa = new Intent(Intent.ACTION_VIEW);
+				intentMensa.setData(Uri.parse("market://details?id=" + mensaId));
+				startActivity(intentMensa);
+			} catch (ActivityNotFoundException e) {
+				// the device hasn't installed Google Play
+				Toast.makeText(this, R.string.mensa_playstore_not_installed, Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 
+	/**
+	 * Call the browser to open the online feedback site
+	 * 
+	 * @param v
+	 *            View
+	 */
 	public void startOnlineFeedback(View v) {
 		IntentHelper.openWebBrowser(this, Constants.ONLINE_FEEDBACK_URL);
 	}
@@ -121,14 +160,12 @@ public class Startpage extends Activity {
 			break;
 		default:
 			break;
-
 		}
-
 		return super.onOptionsItemSelected(item);
 	}
 
 	/**
-	 * erstellt ein Dialog, welches u.a. das Impressum enth�lt
+	 * Creates the Dialog where the Copyright is shown
 	 * 
 	 * @return
 	 */
@@ -136,25 +173,30 @@ public class Startpage extends Activity {
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View textEntryView = factory.inflate(R.layout.info_dialog, null);
 		final ViewFlipper flipper = (ViewFlipper) textEntryView.findViewById(R.id.flipper);
+
 		flipper.startFlipping();
-		flipper.setInAnimation((AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left)));
-		flipper.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right));
+		flipper.setInAnimation((AnimationUtils.loadAnimation(this, R.anim.slide_in_right)));
+		flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_left));
 		TextView versionNumber = (TextView) textEntryView.findViewById(R.id.start_app_version_string);
 		String versionName = "";
 		try {
 			versionName = "Version: " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {
 		}
-
 		versionNumber.setText(versionName);
 
-		return new AlertDialog.Builder(this).setTitle("Info").setView(textEntryView).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int whichButton) {
-				dialog.cancel();
-			}
-		}).setCancelable(false).create();
-
+		return new AlertDialog.Builder(this).setTitle(R.string.startpage_menu_info).setView(textEntryView)
+				.setPositiveButton(R.string.general_ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.cancel();
+					}
+				}).setCancelable(true).setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						dialog.cancel();
+					}
+				}).create();
 	}
 
 	/**
@@ -164,10 +206,7 @@ public class Startpage extends Activity {
 	 *            View, which opens the function
 	 */
 	public void openSZIFacebookPage(View v) {
-		// Open Facebook Page of "Informatik an der DHBW L�rrach"
-
+		// Open Facebook Page of "Informatik an der DHBW Loerrach"
 		IntentHelper.openFacebook(this, this.getResources().getString(R.string.de_app_start_facebook_profile_id_szi), IntentHelper.Facebook.PROFILE);
-
 	}
-
 }

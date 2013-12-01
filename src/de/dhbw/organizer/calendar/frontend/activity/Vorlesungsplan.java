@@ -6,25 +6,31 @@ import java.util.ArrayList;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SyncStatusObserver;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 import de.dhbw.organizer.R;
 import de.dhbw.organizer.calendar.Constants;
 import de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed;
@@ -68,8 +74,8 @@ public class Vorlesungsplan extends Activity {
 		mActionBarDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 		mDrawerLayout, /* DrawerLayout object */
 		R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
-		R.string.drawer_open, /* "open drawer" description */
-		R.string.drawer_close /* "close drawer" description */
+		R.string.calendar_frontend_drawer_open, /* "open drawer" description */
+		R.string.calendar_frontend_drawer_close /* "close drawer" description */
 		) {
 			/**
 			 * Called when a drawer has settled in a completely closed state.
@@ -111,6 +117,7 @@ public class Vorlesungsplan extends Activity {
 
 		try {
 			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
+			setListContent(this, mCalendarName);
 		} catch (Exception e) {
 			// create File
 			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
@@ -171,7 +178,6 @@ public class Vorlesungsplan extends Activity {
 
 		if (mCalendarList.isEmpty()) {
 			return;
-
 		} else {
 
 			Log.d("Kalendar: ", mCalendarList.get(0));
@@ -189,8 +195,6 @@ public class Vorlesungsplan extends Activity {
 
 		try {
 			String Calendarname = FileHelper.readFileAsString(this, "lastCalendarOpened");
-			setListContent(this, Calendarname);
-
 			int actualSelectedCalendar = mCalendarList.indexOf(Calendarname);
 			mDrawerListView.setItemChecked(actualSelectedCalendar, true);
 		} catch (Exception e) {
@@ -234,23 +238,7 @@ public class Vorlesungsplan extends Activity {
 
 		case R.id.de_calendar_menu_delete_calendar:
 			// delete Calendar
-			de.dhbw.organizer.calendar.backend.manager.CalendarManager cm = de.dhbw.organizer.calendar.backend.manager.CalendarManager.get(this);
-			if (mCalendarName != null) {
-				cm.deleteCalendar(mCalendarName);
-				mCalendarList.remove(mCalendarName);
-
-				if (mCalendarList.size() > 0) {
-					mCalendarName = mCalendarList.get(0);
-					setListContent(this, mCalendarName);
-				} else {
-					mCalendarName = null;
-					setListContent(this, null);
-
-					final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
-					this.startActivity(intent);
-				}
-			}
-
+			getConfirmDeleteDialog();
 			break;
 
 		case R.id.jumptotoday:
@@ -276,6 +264,7 @@ public class Vorlesungsplan extends Activity {
 	}
 
 	/**
+	 * Set the content of the List and go to the actual event
 	 * 
 	 * @param context
 	 *            The actual context
@@ -298,9 +287,22 @@ public class Vorlesungsplan extends Activity {
 			EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);
 			// DayAdapter mEvents = mCalendarManager.getCalendarDays(this,
 			// calendarName);
+			try {
+				if (mEvents.getCount() == 0) {
+					showDialogListEmpty();
+				}
+
+			} catch (IndexOutOfBoundsException e) {
+
+				showDialogListEmpty();
+			}
+
 			mCalendarName = calendarName;
 			// set Adapter to display List
 			mEventList.setAdapter(mEvents);
+			// if(mEventList.is == null){
+			// showDialogListEmpty();
+			// }
 			Log.i("setListContent", "goto today");
 			goToActualEvent();
 
@@ -361,6 +363,11 @@ public class Vorlesungsplan extends Activity {
 		}
 	}
 
+	/**
+	 * 
+	 * @author friedrda
+	 * 
+	 */
 	public class CalenderSyncStatusObserver implements SyncStatusObserver {
 		private static final String TAG = "calendar CalenderSyncStatusObserver";
 
@@ -391,6 +398,10 @@ public class Vorlesungsplan extends Activity {
 			}
 		}
 
+		/**
+		 * 
+		 * @param isSyncing
+		 */
 		public void notifyView(final boolean isSyncing) {
 
 			if (!mmStartSync && isSyncing) {
@@ -423,4 +434,58 @@ public class Vorlesungsplan extends Activity {
 
 		}
 	}
+
+	/**
+	 * creates a Dialog to confirm delete of calendar
+	 * 
+	 * @return
+	 */
+	private void getConfirmDeleteDialog() {
+		new AlertDialog.Builder(this).setTitle(R.string.calendar_frontend_delete_calendar_dialog_heading)
+				.setMessage(R.string.calendar_frontend_delete_calendar)
+				.setPositiveButton(R.string.general_yes, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						deleteCalendar();
+					}
+				}).setNegativeButton(R.string.general_no, null).show();
+	}
+
+	/**
+	 * Delete the actual Calendar
+	 */
+	private void deleteCalendar() {
+		de.dhbw.organizer.calendar.backend.manager.CalendarManager cm = de.dhbw.organizer.calendar.backend.manager.CalendarManager.get(this);
+		if (mCalendarName != null) {
+			cm.deleteCalendar(mCalendarName);
+			mCalendarList.remove(mCalendarName);
+
+			if (mCalendarList.size() > 0) {
+				mCalendarName = mCalendarList.get(0);
+				setListContent(this, mCalendarName);
+			} else {
+				mCalendarName = null;
+				setListContent(this, null);
+
+				final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
+				this.startActivity(intent);
+			}
+		}
+
+	}
+
+	/**
+	 * show a dialog to inform the user, that the list is empty, and not broken
+	 */
+	private void showDialogListEmpty() {
+		// TODO Auto-generated method stub
+		new AlertDialog.Builder(this).setTitle(R.string.calendar_frontend_notice).setMessage(R.string.calendar_frontend_no_events)
+				.setPositiveButton(R.string.general_ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				}).show();
+	}
+
 }

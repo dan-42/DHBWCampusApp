@@ -19,12 +19,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */
 -->
 
 
-<!-- @author: friedrda, riedings -->
+<!-- 
+/**
+ * @author: friedrda, riedings 
+ */
+-->
 <resources>
+
+    <!-- GENERAL -->
+    <string name="general_yes">Yes</string>
+    <string name="general_no">No</string>
+    <string name="general_ok">Ok</string>
 
     <!-- MAIN VIEW -->
     <string name="app_name">CampusApp</string>
@@ -34,15 +43,14 @@
     <string name="app_start_buildings">Site Plan</string>
     <string name="app_start_hello_world">Hello Droid</string>
     <string name="app_start_feedback">Feedback</string>
-
-     <string name="start_app_testversion_timeleft">Testversion ends on: </string>
-    
+    <string name="start_app_testversion_timeleft">Testversion ends on: </string>
     <string name="start_app_testversion_timeover">Test period ended, please install the current Version from the Google PlayStore.
         \n\nOn any problems, please contact us at 
         \nfriedrda@dhbw-loerrach.de</string>
-    
+
     <!-- MAIN VIEW -->
     <!-- INFO -->
+    <string name="startpage_menu_info">Info</string>
     <string name="de_app_start_facebook_profile_id_szi">189992694374119</string>
     <string name="de_app_start_info_daniel">Daniel Friedrich</string>
     <string name="de_app_start_info_patrick">Patrick Strittmatter</string>
@@ -70,6 +78,8 @@
 
     <!-- MENSA -->
     <string name="mensa_error_not_installed">The DHBW Mensa App is not installed!</string>
+    <string name="mensa_playstore_id">de.dhbw.mensa</string>
+    <string name="mensa_playstore_not_installed">You dont have Google Play installed</string>
 
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->
@@ -101,17 +111,15 @@
     <string name="calendar_backend_account_display_name">Display Name</string>
     <string name="calendar_backend_account_ical_url">iCal URL</string>
 
-    <!-- CALENDAR FRONTEND -->   
-    
-    <string name="calendar_frontend_updateing_calendar">updating calendar...</string>
+    <!-- CALENDAR FRONTEND -->
     <string name="calendar_frontend_list_goto_today">goto today</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Web search</string>
-    <string name="app_not_available">ERROR: there&#8217;s no web browser available!</string>
-    <string name="hide_old_events">Hide all past appointments</string>
-    <string name="hide_private_appointments">hide all private appointments</string>
-    <string name="startpage_menu_info">Info</string>
+    <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
+    <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
+    <string name="calendar_frontend_delete_calendar">Are you sure to delete the actual calendar</string>
+    <string name="calendar_frontend_delete_calendar_dialog_heading">Please confirm</string>
+    <string name="calendar_frontend_facebook_started">Facebook started. Please wait...</string>
+    <string name="calendar_frontend_no_events">There are no events in this Calendar</string>
+    <string name="calendar_frontend_notice">Notice</string>
 
     <!-- CALENDAR FRONTEND -->
     <!-- MENU -->

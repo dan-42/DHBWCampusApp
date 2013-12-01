@@ -5,31 +5,7 @@ package de.dhbw.organizer.calendar.frontend.parser;
  * @author Strittpa
  *
  */
-
 public class FbEventParser {
-
-	
-	/**
-	 * 
-	 * @param id
-	 * @param input
-	 */
-	/*private static void testIt(int id, String input)
-	{
-		// Ausgabe des Testfalls:
-		System.out.println(id + ": " + input);
-		
-		// Test
-		String result = parseFbEvent(input);
-		
-		if(result != null)
-		{
-			// Event-ID erfolgreich erkannt
-			System.out.println("=> " + result);
-		}
-		
-		System.out.println();
-	}*/
 	
 	/**
 	 * Parsing Logic for parsing a String with a FB Url to only the FB Url
@@ -45,12 +21,12 @@ public class FbEventParser {
 			
 			if (positionBegin < 0)
 			{
-				// input enth�lt kein Link zu einem Facebook-Event
+				// input enthaelt kein Link zu einem Facebook-Event
 				return null;							
 			}
 			else
 			{
-				// input enth�lt Link zu einem Facebook-Event
+				// input enthaelt Link zu einem Facebook-Event
 				String cutted = input.substring(positionBegin + detection.length());
 				
 				
@@ -67,7 +43,7 @@ public class FbEventParser {
 						
 						
 						if(cutted.matches(".\\d.")){
-							 // Verbleibender String ist eine Zahl => wom�glich ist der gesamte String die Event-ID
+							 // Verbleibender String ist eine Zahl => womoeglich ist der gesamte String die Event-ID
 							
 							positionEnd = cutted.length();
 						}

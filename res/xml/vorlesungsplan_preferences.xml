@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-        <PreferenceCategory android:title="Einstellungen">
-            <CheckBoxPreference android:title="Private Termine ausblenden" android:summary="blendet alle als privat gekennzeichneten Termine aus"/>
-            <CheckBoxPreference android:title="Alle vergangenen Termine ausblenden" android:summary="blendet die vergangenen Termine in der Liste aus"/>
-        </PreferenceCategory>
-    </PreferenceScreen>
+<!--
+/**
+ * LICENSE: GPL v3 
+ * 
+ * Copyright (c) 2013 by
+ * Daniel Friedrich <friedrda@dhbw-loerrach.de>
+ * Simon Riedinger <riedings@dhbw-loerrach.de>
+ * Patrick Strittmatter <strittpa@dhbw-loerrach.de> 
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3.0 as published by
+ * the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+
+<!-- 
+/**
+ * @author: riedings 
+ */
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Einstellungen" >
+        <CheckBoxPreference
+            android:summary="blendet alle als privat gekennzeichneten Termine aus"
+            android:title="Private Termine ausblenden" />
+        <CheckBoxPreference
+            android:summary="blendet die vergangenen Termine in der Liste aus"
+            android:title="Alle vergangenen Termine ausblenden" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
