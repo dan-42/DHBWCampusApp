@@ -94,9 +94,15 @@
             android:id="@+id/flipper"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:flipInterval="1700" >
+            android:flipInterval="1700"
+            android:inAnimation="@anim/slide_in_right"
+            android:outAnimation="@anim/slide_out_left" >
 
-            <TextView
+            <!--  
+            Thanks to:
+            http://wptrafficanalyzer.in/blog/image-slideshow-from-right-to-left-using-viewflipper-in-android/				
+            -->
+            <TextView                                
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
