@@ -214,6 +214,7 @@ public class AuthenticatorActivityTabed extends Activity {
 
 		mProgressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.setMessage(getString(R.string.calendar_backend_adding_new_calendar));
+		mProgressDialog.setCancelable(false);
 
 		if (savedInstanceState != null) {
 			if (savedInstanceState.getBoolean(STATE_INFO_IS_SHOWING_DIALOG)) {
