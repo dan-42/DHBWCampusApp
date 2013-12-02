@@ -214,6 +214,7 @@ public class AuthenticatorActivityTabed extends Activity {
 
 		mProgressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.setMessage(getString(R.string.calendar_backend_adding_new_calendar));
+		mProgressDialog.setCancelable(false);
 
 		if (savedInstanceState != null) {
 			if (savedInstanceState.getBoolean(STATE_INFO_IS_SHOWING_DIALOG)) {
@@ -362,10 +363,13 @@ public class AuthenticatorActivityTabed extends Activity {
 			mICalUrlEditText.setError(getString(R.string.calendar_backend_input_error_icalurl_to_short));
 			mFormIsValid = false;
 
-		} else if (!android.util.Patterns.WEB_URL.matcher(mCalendarICalUrl).matches()) {
+		}
+		if (!android.util.Patterns.WEB_URL.matcher(mCalendarICalUrl).matches()) {
 			mICalUrlEditText.setError(getString(R.string.calendar_backend_input_error_icalurl_invalid));
 			mFormIsValid = false;
-		} else if (mFormIsValid) {
+		}		
+		
+		if (mFormIsValid) {
 
 			mProgressDialog.show();
 
@@ -476,6 +480,7 @@ public class AuthenticatorActivityTabed extends Activity {
 				}
 
 			} else {
+				mErrorMessageByhand.setText(R.string.calendar_backend_input_error_icalurl_invalid);
 				Log.e(TAG, "addCalendar ERROR cannot add Calendar");
 				mProgressDialog.dismiss();
 			}

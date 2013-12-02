@@ -109,16 +109,20 @@ public class CalendarManager {
 			}
 			i++;
 		}
-
-		// set Adapter for List
-		EventAdapter adapter = new EventAdapter(context, listOfEvents);
 		cur.close();
-		return adapter;
+
+		if (listOfEvents.isEmpty()) {
+			return null;
+		} else {
+			// set Adapter for List
+			EventAdapter adapter = new EventAdapter(context, listOfEvents);
+			return adapter;
+		}
 	}
-	
 
 	/**
 	 * get the List of the calendar
+	 * 
 	 * @return ArrayList with calendar names with account type
 	 *         Calendars.ACCOUNT_TYPE
 	 */

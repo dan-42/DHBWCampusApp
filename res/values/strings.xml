@@ -57,7 +57,7 @@
     <string name="app_start_info_simon">Simon Riedinger</string>
     <string name="app_start_info_introducion">This app was created in a student project of computer science faculty at the University of Cooperative Education Loerrach.</string>
     <string name="app_start_info_version">Version: </string>
-    <string name="app_start_info_study_center_compuet_sience">Center study computer science DHBW Lörrach</string>
+    <string name="app_start_info_study_center_compuet_sience">Studycenter computer science DHBW Lörrach</string>
     <string name="app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstrasse 46-50 \n79539 Loerrach \nGermany</string>
     <string name="app_start_info_project_develpment_by">The initiators of this project: </string>
     <string name="app_start_info_suppliers"></string>
@@ -113,10 +113,10 @@
 
     <!-- CALENDAR FRONTEND -->
 
-    <string name="calendar_frontend_list_goto_today">goto today</string>
+    <string name="calendar_frontend_list_goto_today">Go to the next event</string>
     <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
     <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
-    <string name="calendar_frontend_delete_calendar">Are you sure to delete the actual calendar</string>
+    <string name="calendar_frontend_delete_calendar">Are you sure to delete the actual calendar?</string>
     <string name="calendar_frontend_delete_calendar_dialog_heading">Please confirm</string>
     <string name="calendar_frontend_facebook_started">Facebook started. Please wait...</string>
     <string name="calendar_frontend_no_events">There are no events in this Calendar</string>
