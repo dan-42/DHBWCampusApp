@@ -302,8 +302,10 @@ public class Vorlesungsplan extends Activity {
 			// showDialogListEmpty();
 			// }
 			Log.i("setListContent", "goto today");
-			goToActualEvent();
+			//goToActualEvent();
 
+			mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 100);
+			
 			if (mCalendarName != null) {
 				Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
 			}
@@ -325,7 +327,9 @@ public class Vorlesungsplan extends Activity {
 			mEventList.smoothScrollToPositionFromTop(mCalendarManager.mIndexOfActualEvent, 100, 1500);
 		} else {
 			Log.i("goToActualEvent()", "Index of Actual Event not set, no Calendar");
+			mEventList.smoothScrollToPositionFromTop(0, 100, 1500);
 		}
+		
 	}
 
 	/**
