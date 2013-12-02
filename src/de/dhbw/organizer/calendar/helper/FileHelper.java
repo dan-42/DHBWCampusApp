@@ -189,6 +189,7 @@ public class FileHelper {
 	public static void writeFileAsString(Context context, String fileName, String data) throws IOException {				
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(context.getFilesDir() + File.separator + fileName)));
 		bufferedWriter.write(data);
+		bufferedWriter.flush();
 		bufferedWriter.close();
 	}	
 

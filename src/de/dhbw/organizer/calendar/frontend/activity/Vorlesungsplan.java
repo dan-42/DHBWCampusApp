@@ -19,7 +19,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -54,6 +53,7 @@ public class Vorlesungsplan extends Activity {
 	private CalenderSyncStatusObserver mCalenderSyncStatusObserver;
 	private AccountManager mAccountManager;
 	private ProgressDialog mUpdateViewDialog;
+	private AlertDialog mDialogListEmpty;
 	private Object mChangeListenerHandle;
 	private boolean isAddCalendarActivityShown = false;
 
@@ -115,8 +115,6 @@ public class Vorlesungsplan extends Activity {
 
 		setDrawerContent();
 
-		
-
 	}
 
 	@Override
@@ -127,9 +125,12 @@ public class Vorlesungsplan extends Activity {
 	protected void onResume() {
 		super.onResume();
 		Log.i(TAG, "onResume() ");
-		
+
 		try {
 			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
+			if (mCalendarName.length() <= 0) {
+				mCalendarName = null;
+			}
 			setListContent(this, mCalendarName);
 		} catch (Exception e) {
 			// create File
@@ -137,8 +138,7 @@ public class Vorlesungsplan extends Activity {
 			// Toast: Bitte f�ge einen neuen Kalender hinzu
 			mCalendarName = null;
 		}
-		
-		
+
 		mCalendarList = mCalendarManager.getCalendarList(this);
 
 		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
@@ -174,7 +174,9 @@ public class Vorlesungsplan extends Activity {
 	protected void onPause() {
 		super.onPause();
 		ContentResolver.removeStatusChangeListener(mChangeListenerHandle);
-		
+		if (mDialogListEmpty != null) {
+			mDialogListEmpty.dismiss();
+		}
 
 	};
 
@@ -201,8 +203,10 @@ public class Vorlesungsplan extends Activity {
 
 		try {
 			String Calendarname = FileHelper.readFileAsString(this, "lastCalendarOpened");
-			int actualSelectedCalendar = mCalendarList.indexOf(Calendarname);
-			mDrawerListView.setItemChecked(actualSelectedCalendar, true);
+			if (Calendarname.length() > 0) {
+				int actualSelectedCalendar = mCalendarList.indexOf(Calendarname);
+				mDrawerListView.setItemChecked(actualSelectedCalendar, true);
+			}
 		} catch (Exception e) {
 			// create File
 			FileHelper.createCacheFile(this, "lastCalendarOpened", ".txt");
@@ -243,7 +247,7 @@ public class Vorlesungsplan extends Activity {
 			break;
 
 		case R.id.jumptotoday:
-			Toast.makeText(mContext, R.string.calendar_frontend_list_goto_today, Toast.LENGTH_LONG).show();
+			Toast.makeText(mContext, R.string.calendar_frontend_list_goto_today, Toast.LENGTH_SHORT).show();
 			goToActualEvent();
 			break;
 
@@ -289,13 +293,7 @@ public class Vorlesungsplan extends Activity {
 			EventAdapter mEvents = mCalendarManager.getCalendarEvents(this, calendarName);
 			// DayAdapter mEvents = mCalendarManager.getCalendarDays(this,
 			// calendarName);
-			try {
-				if (mEvents.getCount() == 0) {
-					showDialogListEmpty();
-				}
-
-			} catch (IndexOutOfBoundsException e) {
-
+			if (mEvents == null) {
 				showDialogListEmpty();
 			}
 
@@ -308,8 +306,8 @@ public class Vorlesungsplan extends Activity {
 			Log.i("setListContent", "goto today");
 			goToActualEvent();
 
-			if(mCalendarName != null){
-			 Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
+			if (mCalendarName != null) {
+				Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
 			}
 
 		}
@@ -323,8 +321,9 @@ public class Vorlesungsplan extends Activity {
 		// go to actual Date
 		if (mCalendarManager != null && mCalendarManager.mIndexOfActualEvent > 0) {
 			Log.d("Index of Actual Event", String.valueOf(mCalendarManager.mIndexOfActualEvent));
-			//mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
-			mEventList.smoothScrollToPositionFromTop(mCalendarManager.mIndexOfActualEvent, 0, 500);
+			// mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent,
+			// 0);
+			mEventList.smoothScrollToPositionFromTop(mCalendarManager.mIndexOfActualEvent, 100, 1500);
 		} else {
 			Log.i("goToActualEvent()", "Index of Actual Event not set, no Calendar");
 		}
@@ -397,6 +396,11 @@ public class Vorlesungsplan extends Activity {
 			} else {
 				mCalendarName = null;
 				setListContent(this, null);
+				try {
+					FileHelper.writeFileAsString(Vorlesungsplan.this, "lastCalendarOpened", "");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
 				final Intent intent = new Intent(this, AuthenticatorActivityTabed.class);
 				this.startActivity(intent);
@@ -411,14 +415,18 @@ public class Vorlesungsplan extends Activity {
 	private void showDialogListEmpty() {
 		// only if its currently not updating
 		if (!mUpdateViewDialog.isShowing()) {
-			// TODO Auto-generated method stub
-			new AlertDialog.Builder(this).setTitle(R.string.calendar_frontend_notice).setMessage(R.string.calendar_frontend_no_events)
-					.setPositiveButton(R.string.general_ok, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.cancel();
-						}
-					}).show();
+
+			// only if its NULL or not showing
+			if (mDialogListEmpty == null || !mDialogListEmpty.isShowing()) {
+				mDialogListEmpty = new AlertDialog.Builder(this).setTitle(R.string.calendar_frontend_notice)
+						.setMessage(R.string.calendar_frontend_no_events)
+						.setPositiveButton(R.string.general_ok, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.cancel();
+							}
+						}).show();
+			}
 		}
 	}
 
