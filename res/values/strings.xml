@@ -113,7 +113,7 @@
 
     <!-- CALENDAR FRONTEND -->
 
-    <string name="calendar_frontend_list_goto_today">goto today</string>
+    <string name="calendar_frontend_list_goto_today">Go to the next event</string>
     <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
     <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
     <string name="calendar_frontend_delete_calendar">Are you sure to delete the actual calendar?</string>

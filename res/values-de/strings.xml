@@ -101,7 +101,7 @@
 
     <!-- CALENDAR FRONTEND -->
     
-    <string name="calendar_frontend_list_goto_today">Gehe zu nächstem Termin</string>
+    <string name="calendar_frontend_list_goto_today">Gehe zum nächsten Termin</string>
     <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
     <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
     <string name="calendar_frontend_delete_calendar">Willst Du diesen Kalender wirklich löschen?</string>
