@@ -316,6 +316,7 @@ public class Vorlesungsplan extends Activity {
 	 * Method to set the selection to the actual event
 	 */
 	private void goToActualEvent() {
+		
 		// go to actual Date
 		if (mCalendarManager != null && mCalendarManager.mIndexOfActualEvent > 0) {
 			Log.d("Index of Actual Event", String.valueOf(mCalendarManager.mIndexOfActualEvent));
