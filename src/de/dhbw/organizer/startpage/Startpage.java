@@ -68,6 +68,15 @@ public class Startpage extends Activity {
 		}
 	};
 
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.i(TAG, "onDestroy()");
+		finish();	
+	};
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
