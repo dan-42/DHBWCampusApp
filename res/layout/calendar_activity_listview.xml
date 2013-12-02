@@ -34,7 +34,8 @@
     android:layout_alignParentLeft="true"
     android:layout_alignParentRight="true"
     android:clickable="false"
-    android:gravity="left|right" >
+    android:gravity="left|right"
+    android:overScrollMode="always" >
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -44,7 +45,8 @@
         android:layout_weight="1"
         android:clickable="false"
         android:gravity="left"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:overScrollMode="always" >
 
         <TextView
             android:id="@+id/name"
