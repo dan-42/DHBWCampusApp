@@ -95,6 +95,9 @@ public class NetworkManager {
 
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(url);
+			
+			
+			
 
 			if (!httpGet.containsHeader("Accept-Encoding")) {
 				httpGet.addHeader("Accept-Encoding", "gzip");
@@ -114,6 +117,10 @@ public class NetworkManager {
 				Log.e(TAG, "ERROR: " + e.getMessage());
 				return 0;
 			} catch (IOException e) {
+				Log.e(TAG, "ERROR: " + e.getMessage());
+				e.printStackTrace();
+				return 0;
+			} catch (IllegalStateException e){
 				Log.e(TAG, "ERROR: " + e.getMessage());
 				e.printStackTrace();
 				return 0;
