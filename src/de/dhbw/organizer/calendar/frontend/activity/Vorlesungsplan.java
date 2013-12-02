@@ -99,11 +99,7 @@ public class Vorlesungsplan extends Activity {
 		mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
 		mAccountManager = AccountManager.get(this);
-
-		mAccountManager = AccountManager.get(this);
-
 		mCalenderSyncStatusObserver = new CalenderSyncStatusObserver();
-		mAccountManager = AccountManager.get(this);
 
 		/*
 		 * Methode zum speichern des letzten ausgewaehlten Kalenders erstellen
@@ -126,9 +122,11 @@ public class Vorlesungsplan extends Activity {
 		super.onResume();
 		Log.i(TAG, "onResume() ");
 
+		mCalendarList = mCalendarManager.getCalendarList(this);
+		
 		try {
 			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
-			if (mCalendarName.length() <= 0) {
+			if (mCalendarName.length() <= 0 || !mCalendarList.contains(mCalendarName)) {
 				mCalendarName = null;
 			}
 			setListContent(this, mCalendarName);
@@ -139,7 +137,7 @@ public class Vorlesungsplan extends Activity {
 			mCalendarName = null;
 		}
 
-		mCalendarList = mCalendarManager.getCalendarList(this);
+		
 
 		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
 
