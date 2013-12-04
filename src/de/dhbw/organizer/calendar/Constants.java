@@ -83,14 +83,6 @@ public class Constants {
 	
 	
 	
-	/**
-	 * TEST VERSION ends on 2013-12-31  23:59
-	 * 1388530740
-	 * 
-	 */
-	public static final long TIME_END_TEST_VERSION = 1388530740000l;
-	//	public static final long TIME_END_TEST_VERSION = System.currentTimeMillis();
-	public static final String ONLINE_FEEDBACK_URL = "https://www.umfrageonline.com/s/78754de";
 
 	
 }

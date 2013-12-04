@@ -44,39 +44,23 @@ public class Startpage extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (Constants.TIME_END_TEST_VERSION > System.currentTimeMillis()) {
-			setContentView(R.layout.startpage_activity);
-			String text = getString(R.string.start_app_testversion_timeleft);
-			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft_textview);
-			mTextViewTimeLeft.setText(text + " " + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
-		} else {
-			setContentView(R.layout.startpage_activity_deaktivated);
-		}
+		setContentView(R.layout.startpage_activity);
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		if (Constants.TIME_END_TEST_VERSION > System.currentTimeMillis()) {
-			setContentView(R.layout.startpage_activity);
-			String text = getString(R.string.start_app_testversion_timeleft);
-			mTextViewTimeLeft = (TextView) findViewById(R.id.start_app_testversion_timeleft_textview);
-			mTextViewTimeLeft.setText(text + " " + sdf.format(new Date(Constants.TIME_END_TEST_VERSION)));
-		} else {
-			setContentView(R.layout.startpage_activity_deaktivated);
-		}
 	};
 
-	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.i(TAG, "onDestroy()");
-		finish();	
+		finish();
 	};
-	
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -156,9 +140,10 @@ public class Startpage extends Activity {
 	 * @param v
 	 *            View
 	 */
-	public void startOnlineFeedback(View v) {
+	/*public void startOnlineFeedback(View v) {
 		IntentHelper.openWebBrowser(this, Constants.ONLINE_FEEDBACK_URL);
-	}
+		}
+	*/
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
