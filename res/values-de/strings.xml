@@ -55,7 +55,7 @@
     <string name="app_start_info_daniel">Daniel Friedrich</string>
     <string name="app_start_info_patrick">Patrick Strittmatter</string>
     <string name="app_start_info_simon">Simon Riedinger</string>
-    <string name="app_start_info_introducion">Diese App entstand in einem studentischen Projekt des Studiumzentrums Informatik an  der DHBW Lörrach.</string>
+    <string name="app_start_info_introducion">Diese App entstand in einem studentischen Projekt des Studienzentrums Informatik an  der DHBW Lörrach.</string>
     <string name="app_start_info_version">Version:</string>
     <string name="app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstraße 46-50 \n79539 Lörrach</string>
     <string name="app_start_info_study_center_compuet_sience">Studienzentrum Informatik DHBW-Lörrach</string>
@@ -113,7 +113,7 @@
 
     <!-- CALENDAR FRONTEND -->
     <!-- MENU -->
-    <string name="calendar_menu_new_calendar">Neuen Kalender</string>
+    <string name="calendar_menu_new_calendar">Kalender hinzfügen</string>
     <string name="calendar_menu_preferences">Einstellungen</string>
     <string name="calendar_menu_delete_calendar">Kalender löschen</string>
     <string name="calendar_menu_refresh_the_calendar">Kalender aktualisieren</string>
