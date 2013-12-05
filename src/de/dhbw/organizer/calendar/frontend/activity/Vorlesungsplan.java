@@ -123,7 +123,7 @@ public class Vorlesungsplan extends Activity {
 		Log.i(TAG, "onResume() ");
 
 		mCalendarList = mCalendarManager.getCalendarList(this);
-		
+
 		try {
 			mCalendarName = FileHelper.readFileAsString(this, "lastCalendarOpened");
 			if (mCalendarName.length() <= 0 || !mCalendarList.contains(mCalendarName)) {
@@ -136,8 +136,6 @@ public class Vorlesungsplan extends Activity {
 			// Toast: Bitte f�ge einen neuen Kalender hinzu
 			mCalendarName = null;
 		}
-
-		
 
 		mChangeListenerHandle = ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, mCalenderSyncStatusObserver);
 
@@ -302,10 +300,8 @@ public class Vorlesungsplan extends Activity {
 			// showDialogListEmpty();
 			// }
 			Log.i("setListContent", "goto today");
-			//goToActualEvent();
+			goToActualEvent();
 
-			mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 100);
-			
 			if (mCalendarName != null) {
 				Toast.makeText(mContext, mCalendarName, Toast.LENGTH_SHORT).show();
 			}
@@ -318,23 +314,18 @@ public class Vorlesungsplan extends Activity {
 	 * Method to set the selection to the actual event
 	 */
 	private void goToActualEvent() {
-		
+
 		// go to actual Date
 		if (mCalendarManager != null && mCalendarManager.mIndexOfActualEvent > 0) {
 			Log.d("Index of Actual Event", String.valueOf(mCalendarManager.mIndexOfActualEvent));
-
-			//mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
-			mEventList.smoothScrollToPositionFromTop(mCalendarManager.mIndexOfActualEvent, 0,500);
-
-			// mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent,
-			// 0);
-			mEventList.smoothScrollToPositionFromTop(mCalendarManager.mIndexOfActualEvent, 100, 1500);
+			mEventList.setSelectionFromTop(mCalendarManager.mIndexOfActualEvent, 0);
 
 		} else {
 			Log.i("goToActualEvent()", "Index of Actual Event not set, no Calendar");
-			mEventList.smoothScrollToPositionFromTop(0, 100, 1500);
+
+			mEventList.setSelectionFromTop(0, 0);
 		}
-		
+
 	}
 
 	/**
