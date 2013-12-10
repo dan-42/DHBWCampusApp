@@ -130,6 +130,8 @@ public class AuthenticatorActivityTabed extends Activity {
 
 	private Object mCalenderSyncStatusObserverHandle;
 
+	private boolean mIsManualInput = false;
+
 	/**
 	 * used to make sure therevare no refresh problems, e.g. when an accout with
 	 * the same name is added, removed an added very quickly in a row
@@ -296,6 +298,7 @@ public class AuthenticatorActivityTabed extends Activity {
 		mCalendarDisplayName = selected.getmDisplayName();
 		mFormIsValid = true;
 
+		mIsManualInput = false;
 		mProgressDialog.show();
 
 		// test in background if file is accessable
@@ -367,10 +370,11 @@ public class AuthenticatorActivityTabed extends Activity {
 		if (!android.util.Patterns.WEB_URL.matcher(mCalendarICalUrl).matches()) {
 			mICalUrlEditText.setError(getString(R.string.calendar_backend_input_error_icalurl_invalid));
 			mFormIsValid = false;
-		}		
-		
+		}
+
 		if (mFormIsValid) {
 
+			mIsManualInput = true;
 			mProgressDialog.show();
 
 			// test in background if file is accessable
@@ -480,7 +484,11 @@ public class AuthenticatorActivityTabed extends Activity {
 				}
 
 			} else {
-				mErrorMessageByhand.setText(R.string.calendar_backend_input_error_icalurl_invalid);
+				if (mIsManualInput) {
+					mICalUrlEditText.setError(getString(R.string.calendar_backend_input_error_icalurl_invalid));
+				} else {
+					mErrorMessageByhand.setText(R.string.calendar_backend_input_error_icalurl_invalid);
+				}
 				Log.e(TAG, "addCalendar ERROR cannot add Calendar");
 				mProgressDialog.dismiss();
 			}
