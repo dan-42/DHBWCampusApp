@@ -109,6 +109,7 @@
             android:name="de.dhbw.organizer.calendar.backend.activity.AuthenticatorActivityTabed"
             android:configChanges="orientation" 
             android:excludeFromRecents="false"
+            android:icon="@drawable/ic_calendar"
             android:label="@string/calendar_backend_account_label" 
             >
         </activity>

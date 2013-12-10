@@ -72,7 +72,7 @@
     <!-- CALENDAR -->
     <!-- CALENDAR BACKEND -->
     <string name="calendar_backend_account_action_settings">Einstellungen</string>
-    <string name="calendar_backend_account_label">CampusApp</string>
+    <string name="calendar_backend_account_label">CampusApp - Kalender</string>
     <string name="calendar_backend_account_tab_title_by_list">Standard</string>
     <string name="calendar_backend_account_tab_title_by_hand">Erweitert</string>
     <string name="calendar_backend_account_ui_activity_authenticating">ui_activity_authenticating</string>
