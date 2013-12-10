@@ -33,7 +33,7 @@
     <!-- GENERAL -->
     <string name="general_yes">Yes</string>
     <string name="general_no">No</string>
-    <string name="general_ok">Ok</string>
+    <string name="general_ok">OK</string>
 
     <!-- MAIN VIEW -->
     <string name="app_name">CampusApp</string>
@@ -109,7 +109,7 @@
 
     <!-- CALENDAR FRONTEND -->
 
-    <string name="calendar_frontend_list_goto_today">Go to the next event</string>
+    <string name="calendar_frontend_list_goto_today">Go to the next event.</string>
     <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
     <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
     <string name="calendar_frontend_delete_calendar">Are you sure to delete the selected calendar?</string>
@@ -125,7 +125,7 @@
     <string name="calendar_menu_preferences">settings</string>
     <string name="calendar_menu_delete_calendar">delete calendar</string>
     <string name="calendar_menu_refresh_the_calendar">Refresh the calendar</string>
-    <string name="calendar_menu_jump_to_today">Jump to today</string>
+    <string name="calendar_menu_jump_to_today">Go to the next event.</string>
 
     <!-- BUILDINGS -->
     <string name="buildings_image_title_map_kbc">KBC site plan</string>

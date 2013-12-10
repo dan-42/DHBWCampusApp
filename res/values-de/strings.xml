@@ -33,7 +33,7 @@
     <!-- GENERAL -->
     <string name="general_yes">Ja</string>
     <string name="general_no">Nein</string>
-    <string name="general_ok">Ok</string>
+    <string name="general_ok">OK</string>
 
     <!-- MAIN VIEW -->
     <string name="app_name">CampusApp</string>
@@ -108,11 +108,11 @@
 
     <!-- CALENDAR FRONTEND -->
     <!-- MENU -->
-    <string name="calendar_menu_new_calendar">Kalender hinzfügen</string>
+    <string name="calendar_menu_new_calendar">Kalender hinzufügen</string>
     <string name="calendar_menu_preferences">Einstellungen</string>
     <string name="calendar_menu_delete_calendar">Kalender löschen</string>
     <string name="calendar_menu_refresh_the_calendar">Kalender aktualisieren</string>
-    <string name="calendar_menu_jump_to_today">Gehe zu heute</string>
+    <string name="calendar_menu_jump_to_today">Gehe zum nächsten Termin.</string>
 
     <!-- BUILDINGS -->
     <string name="buildings_image_title_map_kbc">KBC Lageplan</string>
