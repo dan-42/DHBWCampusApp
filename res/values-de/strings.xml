@@ -43,11 +43,7 @@
     <string name="app_start_buildings">Lageplan</string>
     <string name="app_start_hello_world">Hallo Droide</string>
     <string name="app_start_feedback">Feedback</string>
-    <string name="start_app_testversion_timeleft">Testversion endet am: </string>
-    <string name="start_app_testversion_timeover">Die Testperiode ist vorbei, bitte installiere die aktuelle Version vom Google PlayStore.
-                \n\nBei Problemen oder Fragen, melde dich bitte bei uns unter: 
-                \nfriedrda@dhbw-loerrach.de</string>
-
+    
     <!-- MAIN VIEW -->
     <!-- INFO -->
     <string name="startpage_menu_info">Info</string>
@@ -61,7 +57,7 @@
     <string name="app_start_info_study_center_compuet_sience">Studienzentrum Informatik DHBW-Lörrach</string>
     <string name="app_start_info_project_develpment_by">Die Initiatoren des Projekts: </string>
     <string name="app_start_info_suppliers"></string>
-    <string name="app_start_info_copyright_icons">Das Copyright der Icons von Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studenten des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler. </string>
+    <string name="app_start_info_copyright_icons">Das Copyright der Icons von Lageplan, Mensa und Moodle liegen bei der DHBW Karlsruhe bei den Studierenden des Kurses MWI unter der Leitung von Frau Prof. Dr. Wengler. </string>
     <string name="app_start_facebook_prodile_id_szi">189992694374119</string>
 
     <!-- MENSA -->
@@ -76,12 +72,12 @@
     <string name="calendar_backend_account_tab_title_by_list">Standard</string>
     <string name="calendar_backend_account_tab_title_by_hand">Erweitert</string>
     <string name="calendar_backend_account_ui_activity_authenticating">ui_activity_authenticating</string>
-    <string name="calendar_backend_account_select_ical_activity_newaccount_text">Kalenderauswahl:</string>
+    <string name="calendar_backend_account_select_ical_activity_newaccount_text"></string>
     <string name="calendar_backend_account_select_ical_ok_button">OK</string>
     <string name="calendar_backend_account_select_ical_cancel_button">Abbrechen</string>
     <string name="calendar_backend_account_select_ical_update_button">Kalenderliste aktualisieren</string>
-    <string name="calendar_backend_account_select_ical_new_calendar">Neuen Kalender hinzufügen</string>
-    <string name="calendar_backend_input_select_calendar">Bitte Kalender auswählen</string>
+    <string name="calendar_backend_account_select_ical_new_calendar">Kalender hinzufügen</string>
+    <string name="calendar_backend_input_select_calendar">Bitte Kalender auswählen.</string>
     <string name="calendar_backend_input_error_no_calendar_selected">FEHLER: Es wurde kein Kalender ausgewählt!</string>
     <string name="calendar_backend_input_error_displayname_to_short">FEHLER: Eingabe zu kurz, min. 3 Zeichen!</string>
     <string name="calendar_backend_input_error_displayname_to_long">FEHLER: Eingabe zu lang, max. 16 Zeichen!</string>
@@ -90,23 +86,22 @@
     <string name="calendar_backend_input_error_icalurl_invalid">FEHLER: Die URL ist ungültig!</string>
     <string name="calendar_backend_input_error_calendar_already_exists">FEHLER: Der Kalender ist bereits vorhanden!</string>
     <string name="calendar_backend_network_error">Es ist keine Internetverbindung vorhanden: Der Kalender konnte nicht hinzugefügt werden.</string>
-    <string name="calendar_backend_update_already_done">Die Kalenderliste ist bereits aktuell</string>
+    <string name="calendar_backend_update_already_done">Die Kalenderliste ist bereits aktuell.</string>
     <string name="calendar_backend_update_updating">Die Kalenderliste wird aktualisiert ...</string>
     <string name="calendar_backend_update_xml_error">FEHLER: Die Kalenderliste konnte nicht aktualisiert werden!</string>
-    <string name="calendar_backend_update_successful">Die Kalenderliste wurde erfolgreich aktualisiert</string>
-    <string name="calendar_backend_adding_new_calendar">Neuer Kalender wird  hinzugefügt</string>
+    <string name="calendar_backend_update_successful">Die Kalenderliste wurde erfolgreich aktualisiert.</string>
+    <string name="calendar_backend_adding_new_calendar">Kalender wird  hinzugefügt.</string>
     <string name="calendar_backend_account_add_calendar_manual">Kalender hinzufügen</string>
     <string name="calendar_backend_account_display_name">Anzeigename</string>
     <string name="calendar_backend_account_ical_url">iCal URL</string>
 
     <!-- CALENDAR FRONTEND -->
     
-    <string name="calendar_frontend_list_goto_today">Gehe zum nächsten Termin</string>
-    <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
+    <string name="calendar_frontend_list_goto_today">Gehe zum nächsten Termin.</string>    
     <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
     <string name="calendar_frontend_delete_calendar">Willst Du diesen Kalender wirklich löschen?</string>
     <string name="calendar_frontend_delete_calendar_dialog_heading">Bitte bestätigen</string>
-    <string name="calendar_frontend_facebook_started">Facebook gestartet. Bitte warten...</string>
+    <string name="calendar_frontend_facebook_started">Facebook wird gestartet. Bitte warten...</string>
     <string name="calendar_frontend_no_events">In diesem Kalender sind keine Einträge</string>
     <string name="calendar_frontend_notice">Hinweis</string>
     <string name="calendar_frontend_updateing_calendar">Aktualisiere Kalender...</string>

@@ -40,13 +40,9 @@
     <string name="app_start_calendar">Calendar</string>
     <string name="app_start_moodle">Moodle</string>
     <string name="app_start_mensa">Mensa</string>
-    <string name="app_start_buildings">Site Plan</string>
-    <string name="app_start_hello_world">Hello Droid</string>
+    <string name="app_start_buildings">Site plan</string>
     <string name="app_start_feedback">Feedback</string>
-    <string name="start_app_testversion_timeleft">Testversion ends on: </string>
-    <string name="start_app_testversion_timeover">Test period ended, please install the current Version from the Google PlayStore.
-        \n\nOn any problems, please contact us at 
-        \nfriedrda@dhbw-loerrach.de</string>
+   
 
     <!-- MAIN VIEW -->
     <!-- INFO -->
@@ -55,14 +51,14 @@
     <string name="app_start_info_daniel">Daniel Friedrich</string>
     <string name="app_start_info_patrick">Patrick Strittmatter</string>
     <string name="app_start_info_simon">Simon Riedinger</string>
-    <string name="app_start_info_introducion">This app was created in a student project of studycenter computer science at the University of Cooperative Education Loerrach.</string>
+    <string name="app_start_info_introducion">This app was created in a student project of studycenter computer science at University of Cooperative Education Loerrach.</string>
     <string name="app_start_info_version">Version: </string>
     <string name="app_start_info_study_center_compuet_sience">Studycenter computer science DHBW Lörrach</string>
     <string name="app_start_info_impressum">Impressum: \nProf. Dr. Klemens Schnattinger \nHangstrasse 46-50 \n79539 Loerrach \nGermany</string>
     <string name="app_start_info_project_develpment_by">The initiators of this project: </string>
     <string name="app_start_info_suppliers"></string>
     <string name="app_start_info_copyright_icons">COPYRIGHT:
-        \nThe copyright of the icons of Site Map, Mensa and Moodle are at the students of the course MWI at Cooperative State University Karlsruhe and under the direction of Prof. Dr. Wengler.</string>
+        \nThe copyright of the icons of Site Map, Mensa and Moodle belong to the students of the course MWI at Cooperative State University Karlsruhe and under direction of Prof. Dr. Wengler.</string>
     <string name="app_start_info_copyright_code">LICENSE: GPL v3
         \nCopyright (c) 2013 by
         \nDaniel Friedrich friedrda@dhbw-loerrach.de
@@ -85,30 +81,30 @@
     <!-- CALENDAR BACKEND -->
     <string name="calendar_backend_account_action_settings">Settings</string>
     <string name="calendar_backend_account_label">CampusApp - Calendar</string>
-    <string name="calendar_backend_account_tab_title_by_list">standard</string>
-    <string name="calendar_backend_account_tab_title_by_hand">advanced</string>
+    <string name="calendar_backend_account_tab_title_by_list">Standard</string>
+    <string name="calendar_backend_account_tab_title_by_hand">Advanced</string>
     <string name="calendar_backend_account_ui_activity_authenticating">ui_activity_authenticating</string>
-    <string name="calendar_backend_account_select_ical_activity_newaccount_text">select a calendar:</string>
-    <string name="calendar_backend_account_select_ical_ok_button">ok</string>
-    <string name="calendar_backend_account_select_ical_cancel_button">cancel</string>
-    <string name="calendar_backend_account_select_ical_update_button">update calendar list</string>
-    <string name="calendar_backend_account_select_ical_new_calendar">add new Calendar</string>
-    <string name="calendar_backend_input_select_calendar">select calendar</string>
-    <string name="calendar_backend_input_error_no_calendar_selected">ERROR: no calendar selected!</string>
-    <string name="calendar_backend_input_error_displayname_to_short">ERROR: input too short, min. 3 letters!</string>
-    <string name="calendar_backend_input_error_displayname_to_long">ERROR: input too long, max. 16 letters!</string>
-    <string name="calendar_backend_input_error_displayname_invalid">ERROR: only letters, numbers and whitespaces!</string>
-    <string name="calendar_backend_input_error_icalurl_to_short">ERROR: too short, min. 11 letters!</string>
-    <string name="calendar_backend_input_error_icalurl_invalid">ERROR: ical URL is invalid!</string>
-    <string name="calendar_backend_input_error_calendar_already_exists">ERROR: calendar already exists!</string>
-    <string name="calendar_backend_network_error">No network connection, can&#8217;t add new calendar</string>
-    <string name="calendar_backend_update_already_done">calendar list is already up to date</string>
-    <string name="calendar_backend_update_updating">calendar list is updating ...</string>
-    <string name="calendar_backend_update_xml_error">ERROR: can&#8217;t update caledar list!</string>
-    <string name="calendar_backend_update_successful">update was successful</string>
-    <string name="calendar_backend_adding_new_calendar">adding new calendar</string>
-    <string name="calendar_backend_account_add_calendar_manual">add calendar</string>
-    <string name="calendar_backend_account_display_name">Display Name</string>
+    <string name="calendar_backend_account_select_ical_activity_newaccount_text"></string>
+    <string name="calendar_backend_account_select_ical_ok_button">OK</string>
+    <string name="calendar_backend_account_select_ical_cancel_button">Cancel</string>
+    <string name="calendar_backend_account_select_ical_update_button">Update calendar list.</string>
+    <string name="calendar_backend_account_select_ical_new_calendar">New calendar</string>
+    <string name="calendar_backend_input_select_calendar">Select calendar</string>
+    <string name="calendar_backend_input_error_no_calendar_selected">ERROR: No calendar selected!</string>
+    <string name="calendar_backend_input_error_displayname_to_short">ERROR: Input too short, min. 3 letters!</string>
+    <string name="calendar_backend_input_error_displayname_to_long">ERROR: Input too long, max. 16 letters!</string>
+    <string name="calendar_backend_input_error_displayname_invalid">ERROR: Only letters, numbers and whitespaces!</string>
+    <string name="calendar_backend_input_error_icalurl_to_short">ERROR: Too short, min. 11 letters!</string>
+    <string name="calendar_backend_input_error_icalurl_invalid">ERROR: iCal URL is invalid!</string>
+    <string name="calendar_backend_input_error_calendar_already_exists">ERROR: Calendar already exists!</string>
+    <string name="calendar_backend_network_error">No network connection, can&#8217;t add  calendar</string>
+    <string name="calendar_backend_update_already_done">Calendar list is already up to date</string>
+    <string name="calendar_backend_update_updating">Calendar list is updating ...</string>
+    <string name="calendar_backend_update_xml_error">ERROR: Van&#8217;t update caledar list!</string>
+    <string name="calendar_backend_update_successful">Update was successful.</string>
+    <string name="calendar_backend_adding_new_calendar">Adding new calendar...</string>
+    <string name="calendar_backend_account_add_calendar_manual">Add calendar</string>
+    <string name="calendar_backend_account_display_name">Display name</string>
     <string name="calendar_backend_account_ical_url">iCal URL</string>
 
     <!-- CALENDAR FRONTEND -->
@@ -116,10 +112,10 @@
     <string name="calendar_frontend_list_goto_today">Go to the next event</string>
     <string name="calendar_frontend_drawer_open">Open navigation drawer</string>
     <string name="calendar_frontend_drawer_close">Close navigation drawer</string>
-    <string name="calendar_frontend_delete_calendar">Are you sure to delete the actual calendar?</string>
+    <string name="calendar_frontend_delete_calendar">Are you sure to delete the selected calendar?</string>
     <string name="calendar_frontend_delete_calendar_dialog_heading">Please confirm</string>
     <string name="calendar_frontend_facebook_started">Facebook started. Please wait...</string>
-    <string name="calendar_frontend_no_events">There are no events in this Calendar</string>
+    <string name="calendar_frontend_no_events">There are no events in this calendar</string>
     <string name="calendar_frontend_notice">Notice</string>
     <string name="calendar_frontend_updateing_calendar">updating calendar...</string>
 
@@ -128,8 +124,8 @@
     <string name="calendar_menu_new_calendar">new calendar</string>
     <string name="calendar_menu_preferences">settings</string>
     <string name="calendar_menu_delete_calendar">delete calendar</string>
-    <string name="calendar_menu_refresh_the_calendar">Refresh the Calendar</string>
-    <string name="calendar_menu_jump_to_today">Jump to Today</string>
+    <string name="calendar_menu_refresh_the_calendar">Refresh the calendar</string>
+    <string name="calendar_menu_jump_to_today">Jump to today</string>
 
     <!-- BUILDINGS -->
     <string name="buildings_image_title_map_kbc">KBC site plan</string>
