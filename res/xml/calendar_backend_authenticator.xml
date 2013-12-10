@@ -30,6 +30,6 @@
  
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
     android:accountType="de.dhbw.organizer.icalsync"
-    android:icon="@drawable/ic_calendar_main"
+    android:icon="@drawable/ic_calendar_small"
     android:label="@string/calendar_backend_account_label"
     android:smallIcon="@drawable/ic_calendar_main" />
