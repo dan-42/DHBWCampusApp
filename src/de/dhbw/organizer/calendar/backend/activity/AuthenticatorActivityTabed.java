@@ -185,6 +185,7 @@ public class AuthenticatorActivityTabed extends Activity {
 		mProgress = (ProgressBar) findViewById(R.id.calendar_backend_account_calendar_list_update_progressbar);
 
 		mInfoMessage = (TextView) findViewById(R.id.calendar_backend_account_information_message);
+		mInfoMessage.setBackgroundColor(0);
 
 		mErrorMessageByhand = (TextView) findViewById(R.id.calendar_backend_account_warning_message_manual);
 
@@ -284,11 +285,14 @@ public class AuthenticatorActivityTabed extends Activity {
 		} else {
 			mErrorMessageSpinner.setText(null);
 			mErrorMessageByhand.setText(null);
+			mInfoMessage.setBackgroundColor(0);
 		}
 
 		SpinnerItem selected = (SpinnerItem) mIcalSpinner.getSelectedItem();
 		if (mIcalSpinner.getSelectedItemPosition() == 0 || selected.equals(getString(R.string.calendar_backend_input_select_calendar))) {
+			
 			mInfoMessage.setText(R.string.calendar_backend_input_error_no_calendar_selected);
+			mInfoMessage.setBackgroundColor(getResources().getColor(R.color.red));
 			return;
 		}
 
@@ -387,6 +391,7 @@ public class AuthenticatorActivityTabed extends Activity {
 	}
 
 	public void updateCalendarList(View view) {
+		mInfoMessage.setBackgroundColor(0);
 
 		if (mListUpdated == false) {
 
