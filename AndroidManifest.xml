@@ -31,7 +31,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dhbw.organizer"
     android:versionCode="100"
-    android:versionName="V1.0.0_RC4_20131210" >
+    android:versionName="V1.0.0_20131218" >
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
